@@ -1,0 +1,11 @@
+<div class="login-page">
+<app-auth-layout/>
+<div class="login-form">
+    <h2>Welcome Back</h2>
+    <form (ngSubmit)="onLogin()">
+        <input [ngModel]="email" name="email" placeholder="Email" required/>
+        <input [ngModel]="password" name="password" placeholder="password" required/>
+        <p>New user? <a routerLink="/signup">Sign up Here</a></p>
+        <button type="submit">Let's Go!</button>
+    </form>
+</div>
