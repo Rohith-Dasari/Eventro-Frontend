@@ -10,6 +10,7 @@ import { jwtDecode } from 'jwt-decode';
   providedIn: 'root'
 })
 export class AuthService {
+  
   userSignal = signal<User | null>(null)
   private httpClient=inject(HttpClient)
   private router=inject(Router)
@@ -31,7 +32,9 @@ export class AuthService {
       try {
         const user = this.tokenParser(val.token)
         this.userSignal.set(user)
-        localStorage.setItem('user', JSON.stringify(user))
+        localStorage.setItem('role', JSON.stringify(user.role))
+        localStorage.setItem('email', JSON.stringify(user.email))
+        localStorage.setItem('user_id', JSON.stringify(user.user_id))
         localStorage.setItem('token',val.token)
         // console.log('hit3')
       } catch (e) {
@@ -47,5 +50,21 @@ export class AuthService {
       email: decoded.email,
       role: decoded.role
     }
+  }
+
+
+  logoutUser(){
+    localStorage.clear();
+  }
+
+  isLoggedIn():boolean{
+    return !!localStorage.getItem('token');
+  }
+
+  getRole(): string|null{
+    if (this.userSignal()){
+      return (this.userSignal()as User).role
+    }
+    else return null    
   }
 }
