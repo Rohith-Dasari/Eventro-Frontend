@@ -1,0 +1,29 @@
+<header class="header">
+  <div class="left-section">
+    <span class="logo">Eventro</span>
+
+    <input type="text" placeholder="Search events..." class="search-bar">
+
+    <select class="location-select">
+      <option>Hyderabad</option>
+      <option>Bangalore</option>
+      <option>Mumbai</option>
+    </select>
+  </div>
+
+  <div class="right-section">
+    <span class="username">{{ username }}</span>
+    <button class="logout-btn">Logout</button>
+  </div>
+</header>
+
+<nav class="pill-navbar">
+  <a routerLink="/dashboard/events" routerLinkActive="active">Events</a>
+  <a routerLink="/dashboard/artists" routerLinkActive="active">Venues</a>
+  <a routerLink="/dashboard/venues" routerLinkActive="active">Artists</a>
+  <a routerLink="/dashboard/profile" routerLinkActive="active">Profile</a>
+</nav>
+
+<main class="main-content">
+  <router-outlet></router-outlet>
+</main>
