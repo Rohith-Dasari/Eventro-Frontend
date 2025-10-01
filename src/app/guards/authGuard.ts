@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { CanActivate, CanActivateChild, Router, UrlTree } from "@angular/router";
 import { AuthService } from "../services/auth.service";
 
@@ -7,9 +7,8 @@ import { AuthService } from "../services/auth.service";
 })
 
 export class AuthGuard implements CanActivate, CanActivateChild {
-    constructor(private auth: AuthService, private router: Router){
-
-    }
+    private auth=inject(AuthService)
+    private router=inject(Router)
 
     canActivate(): boolean | UrlTree {
         return this.checkLogin();

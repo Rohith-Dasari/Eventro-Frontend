@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable,inject,signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoginResponse } from '../models/login-response';
+import { AuthResponse} from '../models/login-response';
 import { tap } from 'rxjs';
 import { User } from '../models/user';
 import { jwtDecode } from 'jwt-decode';
@@ -10,41 +10,51 @@ import { jwtDecode } from 'jwt-decode';
   providedIn: 'root'
 })
 export class AuthService {
-  
-  userSignal = signal<User | null>(null)
-  private httpClient=inject(HttpClient)
-  private router=inject(Router)
+  userSignal = signal<User | null>(null);
+  private httpClient=inject(HttpClient);
+  // private router=inject(Router)
 
   constructor() {
-    const localUser = localStorage.getItem('user')
+    const localUser = localStorage.getItem('user');
 
     if (localUser) {
-      this.userSignal.set(JSON.parse(localUser) as User)
+      this.userSignal.set(JSON.parse(localUser) as User);
     }
   }
 
   login(email: string, password: string) {
     // console.log('hit')
-    return this.httpClient.post<LoginResponse>('login', {
+    return this.httpClient.post<AuthResponse>('login', {
       email: email,
       password: password
     }).pipe(tap(val => {
       try {
-        const user = this.tokenParser(val.token)
-        this.userSignal.set(user)
-        localStorage.setItem('role', JSON.stringify(user.role))
-        localStorage.setItem('email', JSON.stringify(user.email))
-        localStorage.setItem('user_id', JSON.stringify(user.user_id))
-        localStorage.setItem('token',val.token)
+        const user = this.tokenParser(val.token);
+        this.userSignal.set(user);
+        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('token',val.token);
         // console.log('hit3')
       } catch (e) {
-        console.log(e)
+        console.log(e);
       }
     }))
   }
 
+  logout(){
+    localStorage.clear();
+    
+  }
+
+  isLoggedIn():Boolean{
+    if(localStorage.getItem('token')){
+      return true;
+    }else{
+      return false
+    }
+  }
+
   private tokenParser(token: string): User {
-    const decoded = jwtDecode<User>(token)
+    const decoded = jwtDecode<User>(token);
     return {
       user_id:decoded.user_id,
       email: decoded.email,
@@ -52,19 +62,22 @@ export class AuthService {
     }
   }
 
-
-  logoutUser(){
-    localStorage.clear();
-  }
-
-  isLoggedIn():boolean{
-    return !!localStorage.getItem('token');
-  }
-
-  getRole(): string|null{
-    if (this.userSignal()){
-      return (this.userSignal()as User).role
-    }
-    else return null    
-  }
+ signup(username:string,email:string,phoneNumber:string,password:string){
+  return this.httpClient.post<AuthResponse>('signup', {
+    username:username,
+    phone_number:phoneNumber,
+      email: email,
+      password: password
+    }).pipe(tap(val => {
+      try {
+        const user = this.tokenParser(val.token);
+        this.userSignal.set(user);
+        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('token',val.token);
+        // console.log('hit3')
+      } catch (e) {
+        console.log(e);
+      }
+    }))
+ }
 }

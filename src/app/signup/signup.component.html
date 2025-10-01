@@ -1,19 +1,52 @@
-<div class="Signup-page">
-<app-auth-layout/>
-<div class="login-form">
-    <h2>Welcome Back</h2>
-    <form (ngSubmit)="onSignup()">
-        <input [(ngModel)]="username" name="username" placeholder="Username" required/>
-        <br>
-        <input [(ngModel)]="email" name="email" placeholder="Email" required/>
-        <br>
-        <input [(ngModel)]="phoneNumber" name="phoneNumber" placeholder="Phone Number" required type="number"/>
-        <br>
-        <input [(ngModel)]="password" name="password" placeholder="Password" required type="password"/>
-        <br>
-        <input [(ngModel)]="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required type="password"/>
-        <br>
-        <button type="submit">Let's Go!</button>
+<div class="signup-page">
+  <div class="left-side">
+    <app-auth-layout></app-auth-layout>
+  </div>
+
+  <div class="right-side">
+    <div class="brand">
+    <div class="brand-name">EVENTRO </div>
+    <p class="caption">Your gateway to amazing events</p>
+    </div>
+    <div class="signup-form">
+      <form #signupForm="ngForm" (ngSubmit)="onSignup()" novalidate>
+        <input [(ngModel)]="username" name="username" placeholder="Username" required #usernameModel="ngModel" />
+        <div class="error" *ngIf="usernameModel.invalid && usernameModel.touched">
+          Username cannot be blank
+        </div>
+        <input [(ngModel)]="email" 
+               name="email" 
+               placeholder="Email" 
+               required 
+               email
+               #emailModel="ngModel" />
+        <div class="error" *ngIf="emailModel.invalid && emailModel.touched">
+          Invalid email address
+        </div>
+        <input [(ngModel)]="phoneNumber" name="phoneNumber" placeholder="Phone Number" required 
+               type="number"
+               #phoneModel="ngModel" />
+        <div class="error" *ngIf="phoneModel.invalid && phoneModel.touched">
+          Phone number cannot be blank
+        </div>
+        <input [(ngModel)]="password" 
+               name="password" 
+               placeholder="Password" 
+               required 
+               type="password"
+               #passwordModel="ngModel" />
+        <div class="error" *ngIf="passwordModel.invalid && passwordModel.touched">
+          Password cannot be blank
+        </div>
+        <div class="error" *ngIf="signupError">
+          {{ signupError }}
+        </div>
+
+        <button type="submit" [disabled]="loading || signupForm.invalid">
+          {{ loading ? 'Please wait...' : "Signup" }}
+        </button>
         <p>Already a user? <a routerLink="/login">Log in Here</a></p>
-    </form>
+      </form>
+    </div>
+  </div>
 </div>
