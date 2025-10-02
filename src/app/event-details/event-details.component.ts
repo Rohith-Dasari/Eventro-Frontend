@@ -38,12 +38,14 @@ export class EventDetailsComponent implements OnInit {
 
   loadEvent(eventId: string) {
     this.eventService.getShows(eventId).subscribe((shows: any[]) => {
+      console.log(shows);
       this.shows = shows;
 
       if (!shows.length) return;
       this.shows.forEach(s => {
         s.ShowDate = new Date(s.ShowDate);
       });
+      
       const firstDate = this.shows[0].ShowDate;
       this.availableDates = Array.from({ length: 5 }, (_, i) => {
         const d = new Date(firstDate);
