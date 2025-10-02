@@ -15,6 +15,7 @@
     </div>
   </div>
 
+  <div class="date-filter-container">
   <div class="date-pills">
     <button
       *ngFor="let date of availableDates"
@@ -27,10 +28,17 @@
     </button>
   </div>
 
+  <div class="price-filter">
+    <p-slider [(ngModel)]="rangeValues" [range]="true" [min]="0" [max]="500" [step]="100" class="price-slider"></p-slider>
+    <button pButton icon="pi pi-refresh" class="refresh-btn" (click)="refreshShows()"></button>
+  </div>
+</div>
+
+
   <div class="venues" *ngIf="venues.length">
   <div class="venue-card" *ngFor="let venue of venues">
     <h4 class="venue-name">{{ venue.name }}</h4>
-    
+
     <div class="show-timings">
       <div 
         *ngFor="let show of venue.shows"

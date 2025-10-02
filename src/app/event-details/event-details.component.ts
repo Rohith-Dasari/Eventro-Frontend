@@ -1,17 +1,16 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EventService } from '../services/event.service';
-import { forkJoin } from 'rxjs';
 import { Shows } from '../models/shows';
-import {Venues } from '../models/venues';
 import { Event } from '../models/events';
 import { CommonModule, DatePipe } from '@angular/common';
-import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
+import { SliderModule } from 'primeng/slider';
 
 @Component({
   selector: 'app-event-details',
-  imports: [CommonModule, ButtonModule,DatePipe],
+  imports: [CommonModule, ButtonModule, DatePipe, SliderModule, FormsModule],
   templateUrl: './event-details.component.html',
   styleUrl: './event-details.component.scss'
 })
@@ -63,30 +62,36 @@ export class EventDetailsComponent implements OnInit {
   }
 
   loadVenues(date: Date | null) {
-    if (!date) return;
+  if (!date) return;
 
-    const showsForDate = this.shows.filter(
-      s => new Date(s.ShowDate).toDateString() === date.toDateString()
-    );
+  const showsForDate = this.shows.filter(
+    s =>
+      new Date(s.ShowDate).toDateString() === date.toDateString() &&
+      s.Price >= this.rangeValues[0] &&
+      s.Price <= this.rangeValues[1]
+  );
 
-    const groupedByVenue: { [venueId: string]: { name: string; shows: { id: string; time: string; price: number }[] } } = {};
+  const groupedByVenue: {
+    [venueId: string]: { name: string; shows: { id: string; time: string; price: number }[] };
+  } = {};
 
-    showsForDate.forEach(show => {
-      if (!groupedByVenue[show.Venue.ID]) {
-        groupedByVenue[show.Venue.ID] = {
-          name: show.Venue.Name,
-          shows: []
-        };
-      }
-      groupedByVenue[show.Venue.ID].shows.push({
-        id: show.ID,
-        time: show.ShowTime,
-        price: show.Price
-      });
+  showsForDate.forEach(show => {
+    if (!groupedByVenue[show.Venue.ID]) {
+      groupedByVenue[show.Venue.ID] = {
+        name: show.Venue.Name,
+        shows: []
+      };
+    }
+    groupedByVenue[show.Venue.ID].shows.push({
+      id: show.ID,
+      time: show.ShowTime,
+      price: show.Price
     });
+  });
 
-    this.venues = Object.values(groupedByVenue);
-  }
+  this.venues = Object.values(groupedByVenue);
+}
+
 
   selectShow(show: { id: string; time: string; price: number }) {
     this.selectedShow = this.shows.find(s => s.ID === show.id) || null;
@@ -99,6 +104,13 @@ export class EventDetailsComponent implements OnInit {
   if (availableSeats > 60) return 'green';
   if (availableSeats > 30) return 'orange';
   return 'red';
+}
+rangeValues: number[] = [0, 3000]; 
+
+refreshShows() {
+  if (this.selectedDate) {
+    this.loadVenues(this.selectedDate);
+  }
 }
 
 

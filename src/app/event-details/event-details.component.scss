@@ -40,16 +40,38 @@
   }
 }
 
-.date-pills {
+.date-filter-container {
   display: flex;
-  gap: 0.5rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
   flex-wrap: wrap;
 
-  button {
-    border-radius: 20px;
-    &.selected {
-      background-color: #1976d2;
-      color: white;
+  .date-pills {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+
+    .date-pill {
+      border-radius: 20px;
+      &.selected {
+        background-color: #1976d2;
+        color: white;
+      }
+    }
+  }
+
+  .price-filter {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    .price-slider {
+      width: 200px;
+    }
+
+    .refresh-btn {
+      border-radius: 50%;
     }
   }
 }
