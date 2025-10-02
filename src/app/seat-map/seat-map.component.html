@@ -1,5 +1,6 @@
 <p-dialog 
   [(visible)]="visible" 
+  (onHide)="onDialogHide()" 
   [modal]="true" 
   [style]="{width: '70vw'}" 
   header="Seat Map"

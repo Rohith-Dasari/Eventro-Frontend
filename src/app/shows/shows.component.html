@@ -6,6 +6,7 @@
       <div
         *ngFor="let show of venue.shows"
         class="show-card"
+        (click)="openSeatMap(show)"
         [ngStyle]="{'border-color': getAvailabilityColor(show), 'color': getAvailabilityColor(show)}">
         <div class="show-time">{{ show.ShowTime }}</div>
         <div class="show-price">₹{{ show.Price }}</div>
@@ -17,3 +18,9 @@
 <div *ngIf="!venues.length">
   <p>No shows available for this date.</p>
 </div>
+
+<app-seat-map 
+  [(visible)]="seatMapVisible" 
+  [show]="selectedShow" 
+  [price]="selectedShow?.Price">
+</app-seat-map>

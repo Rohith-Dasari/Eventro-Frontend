@@ -3,11 +3,12 @@ import { Component } from '@angular/core';
 import { Input } from '@angular/core';
 import { OnChanges, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { SeatMapComponent } from '../seat-map/seat-map.component';
 // import { Shows } from '../models/shows';
 
 @Component({
   selector: 'app-shows',
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule,FormsModule,SeatMapComponent],
   templateUrl: './shows.component.html',
   styleUrl: './shows.component.scss'
 })
@@ -17,6 +18,8 @@ export class ShowsComponent implements OnChanges {
   @Input() priceRange!: number[];
 
   venues: { name: string; shows: any[] }[] = [];
+  selectedShow: any = null;
+  seatMapVisible: boolean = false;
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['shows'] || changes['selectedDate'] || changes['priceRange']) {
@@ -49,13 +52,15 @@ export class ShowsComponent implements OnChanges {
   }
 
   getAvailabilityColor(show: any): string {
-    console.log(show);
     const totalSeats = 100; 
-    const availableSeats = totalSeats - (show.BookedSeats!.length || 0);
+    const availableSeats = totalSeats - (show.BookedSeats?.length || 0);
 
     if (availableSeats > 60) return 'green';
     if (availableSeats > 30) return 'orange';
     return 'red';
   }
-
+  openSeatMap(show: any) {
+    this.selectedShow = show;
+    this.seatMapVisible = true;
+  }
 }

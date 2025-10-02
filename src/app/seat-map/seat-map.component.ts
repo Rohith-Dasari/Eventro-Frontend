@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
 import { Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -12,7 +12,9 @@ import { Seat } from '../models/seats';
   styleUrl: './seat-map.component.scss'
 })
 export class SeatMapComponent implements OnInit {
-  @Input() visible = false;
+@Input() visible = false;
+  @Output() visibleChange = new EventEmitter<boolean>();   // 🔹 needed for [(visible)]
+
   @Input() show: any;      
   @Input() price: number = 0;
 
@@ -46,10 +48,10 @@ export class SeatMapComponent implements OnInit {
   getRowLetter(row: number): string {
     return String.fromCharCode(64 + row); 
   }
-  getSeat(row: number, col: number): Seat | undefined {
-  return this.seats.find(s => s.row === row && s.seat === col);
-}
 
+  getSeat(row: number, col: number): Seat | undefined {
+    return this.seats.find(s => s.row === row && s.seat === col);
+  }
 
   toggleSeat(row: number, seat: number) {
     this.seats = this.seats.map(s =>
@@ -78,7 +80,13 @@ export class SeatMapComponent implements OnInit {
     if (seat.isSelected) return 'selected';
     return 'available';
   }
+
   onConfirmBooking(){
-    console.log('clicked booking confirmed')
+    console.log('clicked booking confirmed');
+  }
+
+  onDialogHide() {
+    this.visible = false;
+    this.visibleChange.emit(this.visible);
   }
 }
