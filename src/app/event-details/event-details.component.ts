@@ -19,7 +19,7 @@ import { ButtonModule } from 'primeng/button';
 
 export class EventDetailsComponent implements OnInit {
   event!: Event; 
-  shows!: Shows[];
+  shows=[];
   venuesMap: { [venueId: string]: Venues } = {};
   availableDates!:Date[];
   selectedDate: Date | null = null;
@@ -27,6 +27,7 @@ export class EventDetailsComponent implements OnInit {
   selectedShow: Shows | null = null;
 
   private eventService=inject(EventService);
+  private route=inject(ActivatedRoute);
 
   ngOnInit(): void {
     this.event = history.state?.selectedEvent;
@@ -41,8 +42,8 @@ export class EventDetailsComponent implements OnInit {
 
   loadEvent(eventId: string) {
     this.eventService.getShows(eventId).subscribe((shows: Shows[]) => {
-      this.shows = shows;
-
+      
+      this.shows = shows as any;
       if (!shows.length) return;
       const firstDate = new Date(shows[0].show_date);
       this.availableDates = Array.from({ length: 5 }, (_, i) => {
@@ -52,18 +53,8 @@ export class EventDetailsComponent implements OnInit {
       });
 
       this.selectedDate = this.availableDates[0];
-      const venueIds = Array.from(new Set(shows.map(s => s.venue_id)));
-      
-      const venueRequests = venueIds.map(id => this.eventService.getVenue(id));
-
-      forkJoin(venueRequests).subscribe((venues: Venues[]) => {
-        console.log(venues)
-        venues.forEach(v => {
-          this.venuesMap[v.ID] = v;
-        });
 
         this.loadVenues(this.selectedDate);
-      });
     });
   }
 
@@ -76,22 +67,22 @@ export class EventDetailsComponent implements OnInit {
     if (!date) return;
 
     const showsForDate = this.shows.filter(
-      s => new Date(s.show_date).toDateString() === date.toDateString()
+      s => new Date((s as any).ShowDate).toDateString() === date.toDateString()
     );
 
     const groupedByVenue: { [venueId: string]: { name: string; shows: { id: string; time: string; price: number }[] } } = {};
 
-    showsForDate.forEach(show => {
-      if (!groupedByVenue[show.venue_id]) {
+    showsForDate.forEach((show:any) => {
+      if (!groupedByVenue[show .VenueID]) {
         const venueInfo = this.venuesMap[show.venue_id];
         console.log(venueInfo)
         
-        groupedByVenue[show.venue_id] = {
+        groupedByVenue[show.VenueID] = {
           name: venueInfo?.Name || 'Unknown',
           shows: []
         };
       }
-      groupedByVenue[show.venue_id].shows.push({
+      groupedByVenue[show.VenueID].shows.push({
         id: show.id,
         time: show.show_time,
         price: show.price
