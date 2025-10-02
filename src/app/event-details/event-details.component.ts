@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EventService } from '../services/event.service';
 import { forkJoin } from 'rxjs';
@@ -9,10 +9,6 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 
-
-
-
-
 @Component({
   selector: 'app-event-details',
   imports: [CommonModule, ButtonModule,DatePipe],
@@ -22,35 +18,25 @@ import { ButtonModule } from 'primeng/button';
 
 
 export class EventDetailsComponent implements OnInit {
-  event: Event | null = null; 
-  shows: Shows[] = [];
+  event!: Event; 
+  shows!: Shows[];
   venuesMap: { [venueId: string]: Venues } = {};
-  availableDates: Date[] = [];
+  availableDates!:Date[];
   selectedDate: Date | null = null;
   venues: { name: string; shows: { id: string; time: string; price: number }[] }[] = [];
   selectedShow: Shows | null = null;
 
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private eventService: EventService
-  ) {}
+  private eventService=inject(EventService);
 
   ngOnInit(): void {
-    const eventId = this.route.snapshot.paramMap.get('id');
-
-    // Get event object from router state
-    const navigation = this.router.getCurrentNavigation();
-    this.event = navigation?.extras.state?.['selectedEvent'] || null;
-
-    if (!this.event && !eventId) {
+    this.event = history.state?.selectedEvent;
+    console.log(this.event);
+    if (!this.event) {
       console.error('No event info available.');
       return;
     }
-
-    if (eventId) {
-      this.loadEvent(eventId);
-    }
+    console.log(this.event)
+    this.loadEvent(this.event.id);
   }
 
   loadEvent(eventId: string) {
@@ -58,8 +44,6 @@ export class EventDetailsComponent implements OnInit {
       this.shows = shows;
 
       if (!shows.length) return;
-
-      // Generate next 5 dates from first upcoming show
       const firstDate = new Date(shows[0].show_date);
       this.availableDates = Array.from({ length: 5 }, (_, i) => {
         const d = new Date(firstDate);
@@ -68,12 +52,12 @@ export class EventDetailsComponent implements OnInit {
       });
 
       this.selectedDate = this.availableDates[0];
-
-      // Fetch unique venues
       const venueIds = Array.from(new Set(shows.map(s => s.venue_id)));
+      
       const venueRequests = venueIds.map(id => this.eventService.getVenue(id));
 
       forkJoin(venueRequests).subscribe((venues: Venues[]) => {
+        console.log(venues)
         venues.forEach(v => {
           this.venuesMap[v.ID] = v;
         });
@@ -100,6 +84,8 @@ export class EventDetailsComponent implements OnInit {
     showsForDate.forEach(show => {
       if (!groupedByVenue[show.venue_id]) {
         const venueInfo = this.venuesMap[show.venue_id];
+        console.log(venueInfo)
+        
         groupedByVenue[show.venue_id] = {
           name: venueInfo?.Name || 'Unknown',
           shows: []
