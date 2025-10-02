@@ -1,11 +1,13 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Input } from '@angular/core';
 import { OnChanges, SimpleChanges } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 // import { Shows } from '../models/shows';
 
 @Component({
   selector: 'app-shows',
-  imports: [],
+  imports: [CommonModule,FormsModule],
   templateUrl: './shows.component.html',
   styleUrl: './shows.component.scss'
 })
