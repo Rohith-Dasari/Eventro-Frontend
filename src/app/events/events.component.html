@@ -1,9 +1,17 @@
-<div class="events-container">
-    <h2>Events Near You</h2>
-    <div class="cards-row">
-        <div class="card" *ngFor="let event of events">
-            <img src="images/hp3.jpg">
-            <h3>{{ events.length }}</h3>
-        </div>
-    </div>
+<div class="events-row">
+  <h2>Events Near You</h2>
+
+  <div class="cards-container">
+    <p-card *ngFor="let event of events" class="event-card">
+      <ng-template pTemplate="header">
+        <img [src]="defaultImage" alt="{{ event.name }}" class="event-img" />
+      </ng-template>
+      <ng-template pTemplate="title">
+        {{ event.name }}
+      </ng-template>
+      <ng-template pTemplate="subtitle">
+        Artist: {{ event.artist_ids.join(', ') || 'Unknown' }}
+      </ng-template>
+    </p-card>
+  </div>
 </div>

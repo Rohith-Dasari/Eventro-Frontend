@@ -2,10 +2,11 @@ import { Component, OnInit, inject } from '@angular/core';
 import { EventService } from '../services/event.service';
 import { CommonModule } from '@angular/common';
 import { Event } from '../models/events';
+import { CardModule } from 'primeng/card';
 
 @Component({
   selector: 'app-events',
-  imports: [CommonModule],
+  imports: [CommonModule, CardModule],
   templateUrl: './events.component.html',
   styleUrl: './events.component.scss'
 })
@@ -14,6 +15,7 @@ export class EventsComponent implements OnInit{
   private eventService=inject(EventService);
   upcomingBookings=[];
   events:Event[]=[];
+  defaultImage = 'images/h3.jpg';
 
   ngOnInit(): void {
     // console.log('hit')

@@ -29,7 +29,6 @@ export const routes: Routes = [
       { path: 'profile', component: ProfileComponent },
       { path: '', redirectTo: 'events', pathMatch: 'full' } 
     ],
-
   },
   {
     path: '**',
