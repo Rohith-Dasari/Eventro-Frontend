@@ -5,6 +5,7 @@ import { DashboardLayoutComponent } from './dashboard-layout/dashboard-layout.co
 import { EventsComponent } from './events/events.component';
 import { ProfileComponent } from './profile/profile.component';
 import { AuthGuard } from './guards/authGuard';
+import { EventDetailsComponent } from './event-details/event-details.component';
 
 export const routes: Routes = [
   {
@@ -26,7 +27,8 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       { path: 'events', component: EventsComponent },
-      { path: 'profile', component: ProfileComponent },
+      { path: 'events/:id', component: EventDetailsComponent },
+      { path: 'profile', component: ProfileComponent },      
       { path: '', redirectTo: 'events', pathMatch: 'full' } 
     ],
   },
