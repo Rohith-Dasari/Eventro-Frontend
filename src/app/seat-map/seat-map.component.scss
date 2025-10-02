@@ -1,0 +1,131 @@
+.seatmap-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem;
+
+  .screen {
+    text-align: center;
+    margin-bottom: 1rem;
+
+    .screen-bar {
+      width: 80%;
+      height: 10px;
+      background: linear-gradient(to right, transparent, #aaa, transparent);
+      border-radius: 6px;
+      margin: 0 auto 6px;
+    }
+
+    p {
+      font-size: 0.8rem;
+      color: #666;
+      letter-spacing: 2px;
+    }
+  }
+
+  .seat-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+
+      .row-label {
+        width: 24px;
+        text-align: right;
+        margin-right: 0.5rem;
+        font-weight: 600;
+        color: #444;
+      }
+
+      button {
+        width: 32px;
+        height: 32px;
+        font-size: 0.75rem;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        background: #fff;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover:not(.booked):not(.selected) {
+          border-color: #28a745;
+        }
+      }
+    }
+  }
+
+  .legend {
+    display: flex;
+    gap: 2rem;
+    font-size: 0.85rem;
+    margin-top: 1rem;
+
+    div {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: #444;
+    }
+
+    span {
+      width: 16px;
+      height: 16px;
+      border: 1px solid #aaa;
+      border-radius: 4px;
+
+      &.available {
+        background: #fff;
+      }
+      &.selected {
+        background: #28a745;
+        border-color: #28a745;
+      }
+      &.booked {
+        background: #999;
+      }
+    }
+  }
+
+  .summary {
+    margin-top: 1rem;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 400px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    font-size: 0.95rem;
+
+    div:first-child {
+      flex: 1;
+    }
+
+    button {
+      margin-left: 1rem;
+    }
+  }
+
+  .available {
+    background: #fff;
+    border: 1px solid #aaa;
+  }
+  .selected {
+    background: #28a745;
+    color: white;
+    border: 1px solid #28a745;
+  }
+  .booked {
+    background: #999;
+    color: white;
+    cursor: not-allowed;
+  }
+}
