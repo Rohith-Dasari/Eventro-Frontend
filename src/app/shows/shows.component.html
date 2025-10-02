@@ -20,6 +20,7 @@
 </div>
 
 <app-seat-map 
+*ngIf="seatMapVisible && selectedShow"
   [(visible)]="seatMapVisible" 
   [show]="selectedShow" 
   [price]="selectedShow?.Price">
