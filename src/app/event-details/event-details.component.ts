@@ -91,6 +91,17 @@ export class EventDetailsComponent implements OnInit {
   selectShow(show: { id: string; time: string; price: number }) {
     this.selectedShow = this.shows.find(s => s.ID === show.id) || null;
     console.log('Selected show:', this.selectedShow);
-    // Later: trigger seatmap modal/component
+
+    //TODO
   }
+
+  getAvailabilityColor(show: any): string {
+  const totalSeats = 100; 
+  const availableSeats = totalSeats - show.booked_seats.length;
+
+  if (availableSeats > 60) return 'green';
+  if (availableSeats > 30) return 'orange';
+  return 'red';
+}
+
 }

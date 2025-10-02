@@ -30,12 +30,14 @@
   <div class="venues" *ngIf="venues.length">
     <div class="venue-card" *ngFor="let venue of venues">
       <h4 class="venue-name">{{ venue.name }}</h4>
+      <p class="show-timings-label">Show Timings:</p>
       <div class="show-timings">
         <button
           *ngFor="let show of venue.shows"
           pButton
           type="button"
           class="show-card"
+          [ngStyle]="{'border-color': getAvailabilityColor(show), 'color': getAvailabilityColor(show)}"
           (click)="selectShow(show)">
           <div class="show-time">{{ show.time }}</div>
           <div class="show-price">₹{{ show.price }}</div>
