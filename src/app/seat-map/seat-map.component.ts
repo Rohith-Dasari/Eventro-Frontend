@@ -13,12 +13,14 @@ import { Seat } from '../models/seats';
 })
 export class SeatMapComponent implements OnInit {
 @Input() visible = false;
-  @Output() visibleChange = new EventEmitter<boolean>();   // 🔹 needed for [(visible)]
+  @Output() visibleChange = new EventEmitter<boolean>(); 
 
   @Input() show: any;      
   @Input() price: number = 0;
 
   seats: Seat[] = [];
+
+  
 
   ngOnInit() {
     if (this.show) {
@@ -53,17 +55,33 @@ export class SeatMapComponent implements OnInit {
     return this.seats.find(s => s.row === row && s.seat === col);
   }
 
-  toggleSeat(row: number, seat: number) {
-    this.seats = this.seats.map(s =>
-      s.row === row && s.seat === seat && !s.isBooked
-        ? { ...s, isSelected: !s.isSelected }
-        : s
-    );
+errorMessage: string = '';
+
+toggleSeat(row: number, seat: number) {
+  const seatObj = this.seats.find(s => s.row === row && s.seat === seat);
+
+  if (!seatObj || seatObj.isBooked) return;
+
+  if (!seatObj.isSelected && this.selectedSeats.length >= 7) {
+    this.errorMessage = 'You can only book up to 7 seats at once.';
+    return;
   }
+
+  this.errorMessage = ''; 
+
+  this.seats = this.seats.map(s =>
+    s.row === row && s.seat === seat && !s.isBooked
+      ? { ...s, isSelected: !s.isSelected }
+      : s
+  );
+}
+
 
   get selectedSeats() {
     return this.seats.filter(s => s.isSelected);
   }
+
+  
 
   get selectedSeatCodes(): string[] {
     return this.selectedSeats.map(

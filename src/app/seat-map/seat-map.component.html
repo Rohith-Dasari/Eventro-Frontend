@@ -2,10 +2,14 @@
   [(visible)]="visible" 
   (onHide)="onDialogHide()" 
   [modal]="true" 
-  [style]="{width: '70vw'}" 
-  header="Seat Map"
+  [style]="{width: '70vw'}"
+  [showHeader]="false"
 >
   <div class="seatmap-container">
+
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
 
     <div class="screen">
       <div class="screen-bar"></div>
@@ -34,15 +38,23 @@
     </div>
 
     <div class="summary" *ngIf="selectedSeats.length">
-      <div>
-        Seats: {{ selectedSeatCodes.join(', ') }}
+      <div class="summary-left">
+        <div class="seats-list">
+          Seats: {{ selectedSeatCodes.join(', ') }}
+        </div>
+        <div class="total">
+          Total: ₹{{ totalPrice }}
+        </div>
       </div>
-      <div>Total: ₹{{ totalPrice }}</div>
-      <button 
-        pButton 
-        label="Confirm Booking" 
-        (click)="onConfirmBooking()"
-      ></button>
+
+      <div class="summary-right">
+        <button 
+          pButton 
+          label="Confirm Booking" 
+          class="p-button-success"
+          (click)="onConfirmBooking()"
+        ></button>
+      </div>
     </div>
   </div>
 </p-dialog>

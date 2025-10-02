@@ -97,20 +97,34 @@
     border: 1px solid #ddd;
     border-radius: 10px;
     width: 100%;
-    max-width: 400px;
+    max-width: 500px;
 
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 1rem;
 
-    font-size: 0.95rem;
+    .summary-left {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
 
-    div:first-child {
-      flex: 1;
+      .seats-list {
+        font-size: 0.9rem;
+        font-weight: 500;
+      }
+
+      .total {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #1976d2;
+      }
     }
 
-    button {
-      margin-left: 1rem;
+    .summary-right {
+      button {
+        min-width: 140px;
+      }
     }
   }
 
@@ -128,4 +142,11 @@
     color: white;
     cursor: not-allowed;
   }
+  .error-message {
+  color: #d32f2f; 
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
 }
