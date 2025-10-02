@@ -41,7 +41,10 @@ export class EventDetailsComponent implements OnInit {
       this.shows = shows;
 
       if (!shows.length) return;
-      const firstDate = new Date(shows[0].ShowDate);
+      this.shows.forEach(s => {
+        s.ShowDate = new Date(s.ShowDate);
+      });
+      const firstDate = this.shows[0].ShowDate;
       this.availableDates = Array.from({ length: 5 }, (_, i) => {
         const d = new Date(firstDate);
         d.setDate(d.getDate() + i);
@@ -58,9 +61,14 @@ export class EventDetailsComponent implements OnInit {
 
   refreshShows() {
     this.refreshing = true;
-    this.eventService.getShows(this.event.id).subscribe((shows: Shows[]) => {
+    this.eventService.getShows(this.event.id).subscribe((shows: any[]) => {
       this.shows = shows;
-      this.refreshing = false; 
+
+      this.shows.forEach(s => {
+        s.ShowDate = new Date(s.ShowDate);
+      });
+
+      this.refreshing = false;
     });
   }
 }
