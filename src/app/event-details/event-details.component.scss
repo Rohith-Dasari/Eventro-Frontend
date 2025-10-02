@@ -75,32 +75,27 @@
       gap: 0.5rem;
 
       .show-card {
-        flex: 0 0 120px;
+        width: 90px;
+        padding: 0.5rem 0.3rem;
+        border: 2px solid;
+        border-radius: 10px;
+        text-align: center;
+        cursor: pointer;
         display: flex;
         flex-direction: column;
-        text-align: center;
-        border: 2px solid;
-        border-radius: 12px;
-        padding: 0.5rem;
-        cursor: pointer;
-        background-color: transparent;
-        transition: box-shadow 0.2s;
+        justify-content: center;
 
         .show-time {
           font-weight: 600;
+          font-size: 0.9rem;
         }
         .show-price {
-          font-size: 0.9rem;
-          color: inherit;
+          font-size: 0.8rem;
+          margin-top: 2px;
         }
 
         &:hover {
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-        }
-
-        &.selected {
-          border-color: #1976d2;
-          background-color: #e3f2fd;
+          background-color: rgba(0,0,0,0.05);
         }
       }
     }

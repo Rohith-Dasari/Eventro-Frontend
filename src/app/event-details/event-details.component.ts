@@ -94,14 +94,12 @@ export class EventDetailsComponent implements OnInit {
 
     //TODO
   }
-
   getAvailabilityColor(show: any): string {
-  const totalSeats = 100; 
-  const availableSeats = totalSeats - show.booked_seats.length;
-
+  const availableSeats = show.totalSeats - (show.bookedSeats?.length || 0);
   if (availableSeats > 60) return 'green';
   if (availableSeats > 30) return 'orange';
   return 'red';
 }
+
 
 }
