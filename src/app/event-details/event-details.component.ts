@@ -1,5 +1,4 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { EventService } from '../services/event.service';
 import { Shows } from '../models/shows';
 import { Event } from '../models/events';
@@ -19,11 +18,12 @@ import { ShowsComponent } from '../shows/shows.component';
 
 export class EventDetailsComponent implements OnInit {
   event!: Event;
-  shows: Shows[] = [];
+  shows: any[] = [];
   availableDates: Date[] = [];
   selectedDate!: Date;
-  rangeValues: number[] = [0, 500];
+  rangeValues: number[] = [0, 3000];
   refreshing = false;
+
   private eventService = inject(EventService);
 
   ngOnInit(): void {
@@ -32,6 +32,7 @@ export class EventDetailsComponent implements OnInit {
       console.error('No event info available.');
       return;
     }
+
     this.loadEvent(this.event.id);
   }
 
@@ -40,7 +41,6 @@ export class EventDetailsComponent implements OnInit {
       this.shows = shows;
 
       if (!shows.length) return;
-
       const firstDate = new Date(shows[0].ShowDate);
       this.availableDates = Array.from({ length: 5 }, (_, i) => {
         const d = new Date(firstDate);
