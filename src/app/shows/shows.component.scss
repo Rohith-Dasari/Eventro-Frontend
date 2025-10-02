@@ -1,0 +1,64 @@
+.venues {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+
+  .venue-card {
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+
+    .venue-name {
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .show-timings-label {
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      color: #444;
+    }
+
+    .show-timings {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+
+      .show-card {
+        width: 90px;
+        padding: 0.5rem 0.3rem;
+        border: 2px solid;
+        border-radius: 10px;
+        text-align: center;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        transition: background-color 0.2s ease;
+
+        .show-time {
+          font-weight: 600;
+          font-size: 0.9rem;
+        }
+        .show-price {
+          font-size: 0.8rem;
+          margin-top: 2px;
+        }
+
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        &.selected {
+          border-color: #1976d2;
+          background-color: #e3f2fd;
+        }
+      }
+    }
+  }
+
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+  }
+}

@@ -7,25 +7,24 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { SliderModule } from 'primeng/slider';
+import { ShowsComponent } from '../shows/shows.component';
 
 @Component({
   selector: 'app-event-details',
-  imports: [CommonModule, ButtonModule, DatePipe, SliderModule, FormsModule],
+  imports: [CommonModule, ButtonModule, DatePipe, SliderModule, FormsModule, ShowsComponent],
   templateUrl: './event-details.component.html',
   styleUrl: './event-details.component.scss'
 })
 
 
 export class EventDetailsComponent implements OnInit {
-  event!: Event; 
-  shows: any[] = [];
+  event!: Event;
+  shows: Shows[] = [];
   availableDates: Date[] = [];
-  selectedDate: Date | null = null;
-  venues: { name: string; shows: { id: string; time: string; price: number }[] }[] = [];
-  selectedShow: Shows | null = null;
-
+  selectedDate!: Date;
+  rangeValues: number[] = [0, 500];
+  refreshing = false;
   private eventService = inject(EventService);
-  private route = inject(ActivatedRoute);
 
   ngOnInit(): void {
     this.event = history.state?.selectedEvent;
@@ -33,7 +32,6 @@ export class EventDetailsComponent implements OnInit {
       console.error('No event info available.');
       return;
     }
-
     this.loadEvent(this.event.id);
   }
 
@@ -43,7 +41,6 @@ export class EventDetailsComponent implements OnInit {
 
       if (!shows.length) return;
 
-      // generate next 5 days from first show
       const firstDate = new Date(shows[0].ShowDate);
       this.availableDates = Array.from({ length: 5 }, (_, i) => {
         const d = new Date(firstDate);
@@ -52,66 +49,18 @@ export class EventDetailsComponent implements OnInit {
       });
 
       this.selectedDate = this.availableDates[0];
-      this.loadVenues(this.selectedDate);
     });
   }
 
   selectDate(date: Date) {
     this.selectedDate = date;
-    this.loadVenues(date);
   }
 
-  loadVenues(date: Date | null) {
-  if (!date) return;
-
-  const showsForDate = this.shows.filter(
-    s =>
-      new Date(s.ShowDate).toDateString() === date.toDateString() &&
-      s.Price >= this.rangeValues[0] &&
-      s.Price <= this.rangeValues[1]
-  );
-
-  const groupedByVenue: {
-    [venueId: string]: { name: string; shows: { id: string; time: string; price: number }[] };
-  } = {};
-
-  showsForDate.forEach(show => {
-    if (!groupedByVenue[show.Venue.ID]) {
-      groupedByVenue[show.Venue.ID] = {
-        name: show.Venue.Name,
-        shows: []
-      };
-    }
-    groupedByVenue[show.Venue.ID].shows.push({
-      id: show.ID,
-      time: show.ShowTime,
-      price: show.Price
+  refreshShows() {
+    this.refreshing = true;
+    this.eventService.getShows(this.event.id).subscribe((shows: Shows[]) => {
+      this.shows = shows;
+      this.refreshing = false; 
     });
-  });
-
-  this.venues = Object.values(groupedByVenue);
-}
-
-
-  selectShow(show: { id: string; time: string; price: number }) {
-    this.selectedShow = this.shows.find(s => s.ID === show.id) || null;
-    console.log('Selected show:', this.selectedShow);
-
-    //TODO
   }
-  getAvailabilityColor(show: any): string {
-  const availableSeats = show.totalSeats - (show.bookedSeats?.length || 0);
-  if (availableSeats > 60) return 'green';
-  if (availableSeats > 30) return 'orange';
-  return 'red';
-}
-rangeValues: number[] = [0, 3000]; 
-
-refreshShows() {
-  if (this.selectedDate) {
-    this.loadVenues(this.selectedDate);
-  }
-}
-
-
 }

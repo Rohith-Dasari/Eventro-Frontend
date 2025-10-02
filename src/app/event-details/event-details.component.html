@@ -16,45 +16,28 @@
   </div>
 
   <div class="date-filter-container">
-  <div class="date-pills">
-    <button
-      *ngFor="let date of availableDates"
-      pButton
-      type="button"
-      class="date-pill"
-      [class.selected]="date === selectedDate"
-      (click)="selectDate(date)">
-      {{ date | date:'EEE, MMM d' }}
-    </button>
-  </div>
+    <div class="date-pills">
+      <button
+        *ngFor="let date of availableDates"
+        pButton
+        type="button"
+        class="date-pill"
+        [class.selected]="date === selectedDate"
+        (click)="selectDate(date)">
+        {{ date | date:'EEE, MMM d' }}
+      </button>
+    </div>
 
-  <div class="price-filter">
-    <p-slider [(ngModel)]="rangeValues" [range]="true" [min]="0" [max]="500" [step]="100" class="price-slider"></p-slider>
-    <button pButton icon="pi pi-refresh" class="refresh-btn" (click)="refreshShows()"></button>
-  </div>
-</div>
-
-
-  <div class="venues" *ngIf="venues.length">
-  <div class="venue-card" *ngFor="let venue of venues">
-    <h4 class="venue-name">{{ venue.name }}</h4>
-
-    <div class="show-timings">
-      <div 
-        *ngFor="let show of venue.shows"
-        class="show-card"
-        [ngStyle]="{'border-color': getAvailabilityColor(show), 'color': getAvailabilityColor(show)}"
-        (click)="selectShow(show)">
-        <div class="show-time">{{ show.time }}</div>
-        <div class="show-price">₹{{ show.price }}</div>
-      </div>
+    <div class="price-filter">
+      <p-slider [(ngModel)]="rangeValues" [range]="true" [min]="0" [max]="500" [step]="10" class="price-slider"></p-slider>
+      <button pButton icon="pi pi-refresh" class="refresh-btn" (click)="refreshShows()"></button>
     </div>
   </div>
-</div>
 
-
-  <div *ngIf="!venues.length">
-    <p>No shows available for this date.</p>
-  </div>
-
+  <app-shows
+    *ngIf="!refreshing"
+    [shows]="shows"
+    [selectedDate]="selectedDate"
+    [priceRange]="rangeValues">
+  </app-shows>
 </div>
