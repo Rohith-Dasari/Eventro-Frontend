@@ -2,16 +2,23 @@
   <h2>Events Near You</h2>
 
   <div class="cards-container">
-    <p-card *ngFor="let event of events" class="event-card">
+    <p-card 
+      *ngFor="let event of events" 
+      class="event-card"
+      (click)="goToEventDetails(event)">
+      
       <ng-template pTemplate="header">
         <img [src]="defaultImage" alt="{{ event.name }}" class="event-img" />
       </ng-template>
+
       <ng-template pTemplate="title">
         {{ event.name }}
       </ng-template>
+
       <ng-template pTemplate="subtitle">
         {{ event.artist_names.join(', ') || 'Unknown' }}
       </ng-template>
+
     </p-card>
   </div>
 </div>

@@ -1,1 +1,54 @@
-<p>event-details works!</p>
+<div *ngIf="event" class="event-details-container">
+
+  <div class="event-header">
+    <div class="event-image">
+      <img src="./images/h3.jpg'" alt="{{ event.name }}">
+    </div>
+    <div class="event-info">
+      <h2 class="event-name">{{ event.name }}</h2>
+      <p class="event-artists">
+        Artists: {{ event.artist_names.join(', ')}}
+      </p>
+      <p class="event-description">
+        {{ event.description || 'No description available.' }}
+      </p>
+    </div>
+  </div>
+
+  <div class="date-pills">
+    <button
+      *ngFor="let date of availableDates"
+      pButton
+      type="button"
+      class="p-button-rounded"
+      [class.p-button-info]="date === selectedDate"
+      (click)="selectDate(date)">
+      {{ date | date:'EEE, MMM d' }}
+    </button>
+  </div>
+
+  <div class="venues" *ngIf="venues.length">
+    <div *ngFor="let venue of venues" class="venue-card">
+      <h4 class="venue-name">{{ venue.name }}</h4>
+      <div class="show-timings">
+        <button
+          *ngFor="let show of venue.shows"
+          pButton
+          type="button"
+          class="p-button-rounded p-button-outlined"
+          (click)="selectShow(show)">
+          {{ show.time }} - ₹{{ show.price }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!venues.length">
+    <p>No shows available for this date.</p>
+  </div>
+
+</div>
+
+<div *ngIf="!event">
+  <p>Loading event details...</p>
+</div>

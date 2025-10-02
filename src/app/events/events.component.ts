@@ -3,6 +3,7 @@ import { EventService } from '../services/event.service';
 import { CommonModule } from '@angular/common';
 import { Event } from '../models/events';
 import { CardModule } from 'primeng/card';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-events',
@@ -12,6 +13,8 @@ import { CardModule } from 'primeng/card';
 })
 
 export class EventsComponent implements OnInit{
+  private router=inject(Router)
+  private route=inject(ActivatedRoute)
   private eventService=inject(EventService);
   upcomingBookings=[];
   events:Event[]=[];
@@ -36,6 +39,12 @@ export class EventsComponent implements OnInit{
      error:(err)=>{
         console.log(err);
      }
+    });
+  }
+
+  goToEventDetails(event: Event){
+    this.router.navigate(['/dashboard/events', event.id], {
+    state: { selectedEvent: event }
     });
   }
 }
