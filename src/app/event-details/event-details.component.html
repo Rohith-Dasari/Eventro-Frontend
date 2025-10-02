@@ -7,7 +7,7 @@
     <div class="event-info">
       <h2 class="event-name">{{ event.name }}</h2>
       <p class="event-artists">
-        Artists: {{ event.artist_names.join(', ')}}
+        Artists: {{ event.artist_names.join(', ') || 'Unknown' }}
       </p>
       <p class="event-description">
         {{ event.description || 'No description available.' }}
@@ -20,24 +20,25 @@
       *ngFor="let date of availableDates"
       pButton
       type="button"
-      class="p-button-rounded"
-      [class.p-button-info]="date === selectedDate"
+      class="date-pill"
+      [class.selected]="date === selectedDate"
       (click)="selectDate(date)">
       {{ date | date:'EEE, MMM d' }}
     </button>
   </div>
 
   <div class="venues" *ngIf="venues.length">
-    <div *ngFor="let venue of venues" class="venue-card">
+    <div class="venue-card" *ngFor="let venue of venues">
       <h4 class="venue-name">{{ venue.name }}</h4>
       <div class="show-timings">
         <button
           *ngFor="let show of venue.shows"
           pButton
           type="button"
-          class="p-button-rounded p-button-outlined"
+          class="show-card"
           (click)="selectShow(show)">
-          {{ show.time }} - ₹{{ show.price }}
+          <div class="show-time">{{ show.time }}</div>
+          <div class="show-price">₹{{ show.price }}</div>
         </button>
       </div>
     </div>
@@ -48,4 +49,3 @@
   </div>
 
 </div>
-

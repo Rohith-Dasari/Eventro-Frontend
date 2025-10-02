@@ -44,11 +44,19 @@
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
+
+  button {
+    border-radius: 20px;
+    &.selected {
+      background-color: #1976d2; 
+      color: white;
+    }
+  }
 }
 
 .venues {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr; 
   gap: 1rem;
 
   .venue-card {
@@ -58,12 +66,46 @@
 
     .venue-name {
       margin-bottom: 0.5rem;
+      font-weight: 600;
     }
 
     .show-timings {
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem;
+
+      .show-card {
+        flex: 0 0 120px; 
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        border: 1px solid #bbb;
+        border-radius: 6px;
+        padding: 0.5rem;
+        cursor: pointer;
+        transition: box-shadow 0.2s;
+
+        .show-time {
+          font-weight: 600;
+        }
+        .show-price {
+          font-size: 0.9rem;
+          color: #555;
+        }
+
+        &:hover {
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        &.selected {
+          border-color: #1976d2;
+          background-color: #e3f2fd;
+        }
+      }
     }
+  }
+
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
   }
 }
