@@ -10,7 +10,7 @@
         {{ event.name }}
       </ng-template>
       <ng-template pTemplate="subtitle">
-        Artist: {{ event.artist_ids.join(', ') || 'Unknown' }}
+        {{ event.artist_names.join(', ') || 'Unknown' }}
       </ng-template>
     </p-card>
   </div>

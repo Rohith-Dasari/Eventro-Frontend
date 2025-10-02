@@ -15,7 +15,7 @@ export class EventsComponent implements OnInit{
   private eventService=inject(EventService);
   upcomingBookings=[];
   events:Event[]=[];
-  defaultImage = 'images/h3.jpg';
+  defaultImage = './images/hp3.jpg';
 
   ngOnInit(): void {
     // console.log('hit')
@@ -31,6 +31,7 @@ export class EventsComponent implements OnInit{
     this.eventService.getEvents().subscribe({
      next:(data)=>{
         this.events=data as Event[];
+        console.log(data)
      },
      error:(err)=>{
         console.log(err);

@@ -6,4 +6,5 @@ export interface Event{
     category: string,
     is_blocked:boolean,
     artist_ids: string[]
+    artist_names:string[]
 }
