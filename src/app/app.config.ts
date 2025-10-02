@@ -4,9 +4,21 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { routes } from './app.routes';
 import { BaseUrlInterceptor } from './interceptors/base-url.interceptor';
 import { authInterceptor } from './interceptors/auth.interceptor';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { providePrimeNG } from 'primeng/config';
+import { customPreset } from './themePreset';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideAnimationsAsync(),
+    providePrimeNG({
+      theme: {
+        preset: customPreset,
+        options: {
+          darkModeSelector: '.dark'
+        }
+      }      
+      }),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor,BaseUrlInterceptor])),

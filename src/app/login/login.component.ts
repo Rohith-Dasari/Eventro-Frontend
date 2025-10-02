@@ -4,12 +4,19 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { matSearch } from "@ng-icons/material-icons/baseline";
 
 @Component({
   selector: 'app-login',
-  imports: [AuthLayoutComponent, FormsModule,RouterLink,CommonModule],
+  imports: [AuthLayoutComponent, FormsModule,RouterLink,CommonModule,NgIcon],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  styleUrl: './login.component.scss',
+  viewProviders: [
+    provideIcons(
+      {matSearch}
+    )
+  ]
 })
 
 export class LoginComponent {

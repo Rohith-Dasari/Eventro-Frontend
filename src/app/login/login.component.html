@@ -14,7 +14,7 @@
       <h2>Welcome Back</h2>
       <form #loginForm="ngForm" (ngSubmit)="onLogin()">
         <div class="input-field">
-          
+        <ng-icon name="matSearch" />
           <input [(ngModel)]="email" name="email" placeholder="Email" required email #emailModel="ngModel"/>
         </div>
         <div class="error" *ngIf="emailModel.invalid && emailModel.touched">

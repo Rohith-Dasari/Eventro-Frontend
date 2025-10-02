@@ -1,5 +1,5 @@
 export interface User{
     'user_id':string,
     'email':string,
-    'role':string,    
+    'role':string
 }

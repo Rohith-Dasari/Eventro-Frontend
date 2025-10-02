@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { EventService } from '../services/event.service';
 import { CommonModule } from '@angular/common';
+import { Event } from '../models/events';
 
 @Component({
   selector: 'app-events',
@@ -8,29 +9,31 @@ import { CommonModule } from '@angular/common';
   templateUrl: './events.component.html',
   styleUrl: './events.component.scss'
 })
+
 export class EventsComponent implements OnInit{
   private eventService=inject(EventService);
-  upcomingBookings=[]
-  events=[]
+  upcomingBookings=[];
+  events:Event[]=[];
 
   ngOnInit(): void {
-    console.log('hit')
+    // console.log('hit')
     this.loadData();
-    console.log('done')
+    // console.log('done')
   }
 
   loadData(){
     const bookingSub=this.eventService.getBookings().subscribe(data => {
-            console.log(data);
-        },);
+      // this.upcomingBookings=data;
+    },);
+
     this.eventService.getEvents().subscribe({
-       next:(data)=>{
-                console.log(data);
-      },
-      error:(err)=>{
-                console.log(err);
-      }
+     next:(data)=>{
+        this.events=data as Event[];
+     },
+     error:(err)=>{
+        console.log(err);
+     }
     });
   }
-
 }
+    
