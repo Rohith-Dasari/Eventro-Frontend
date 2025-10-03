@@ -1,98 +1,180 @@
 .signup-page {
   display: flex;
-  height: 100vh;      
-  width: 100vw;        
+  height: 100vh;
+  width: 100vw;
+  background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .left-side {
-  flex: 1;             
-}
-
-.form-field {
-  margin-bottom: 1.5rem;
-  width: 100%;
+  flex: 1;
 }
 
 .right-side {
-  display: flex;   
-  flex:1;
-  align-items: center; 
-  justify-content: center; 
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-direction: column;
-}
-
-* {
-  box-sizing: border-box;
-  font-family:  'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 14px;          
-  line-height: 1.4;
+  padding: 2rem;
 }
 
 .signup-form {
   background: #ffffff;
-  padding: 2rem;             
-  border-radius: 10px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+  padding: 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 360px;
+  max-width: 420px;
   text-align: center;
+
+  h2 {
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #374151;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
 }
 
-.signup-form h2 {
-  margin-bottom: 1.5rem;
-  font-size: 16px;          
-  font-weight: 600;
-  color: #333;
-}
+.form-field {
+  position: relative;
+  text-align: left;
 
-.signup-form form {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;                 
-}
+  input[pInputText] {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border-radius: 8px;
+    border: 2px solid #e5e7eb;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+    
+    &:focus {
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
 
-.signup-form input {
-  width: 100%;
-  padding: 0.6rem 0.8rem;    
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 14px;          
-  outline: none;
-  transition: border 0.2s ease, box-shadow 0.2s ease;
-}
+    &::placeholder {
+      color: #9ca3af;
+    }
+  }
 
-.signup-form input:focus {
-  border-color: #4f46e5;
-  box-shadow: 0 0 0 2px rgba(79,70,229,0.1);
-}
+  .phone-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    transition: all 0.2s ease;
 
-.signup-form button {
-  padding: 0.6rem;
-  background: #4f46e5;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
+    &:focus-within {
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
 
-.signup-form button:hover {
-  background: #4338ca;
-}
+    .country-code {
+      padding: 0.875rem 0.75rem 0.875rem 1rem;
+      color: #6b7280;
+      font-weight: 500;
+      background: #f9fafb;
+      border-right: 1px solid #e5e7eb;
+    }
 
-.signup-form p {
-  margin-top: 1rem;
-  font-size: 12px;     
-  color: #555;
+    .phone-input {
+      flex: 1;
+      padding: 0.875rem 1rem;
+      border: none;
+      outline: none;
+      border-radius: 0 8px 8px 0;
+      font-size: 1rem;
+
+      &::placeholder {
+        color: #9ca3af;
+      }
+    }
+  }
+
+  ::ng-deep .p-password {
+    width: 100%;
+    
+    .p-password-input {
+      width: 100%;
+      border-radius: 8px;
+      border: 2px solid #e5e7eb;
+      font-size: 1rem;
+      padding: 0.875rem 1rem;
+      transition: all 0.2s ease;
+      box-sizing: border-box;
+      
+      &:focus {
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+      }
+
+      &::placeholder {
+        color: #9ca3af;
+      }
+    }
+
+    .p-password-toggle-mask {
+      color: #6b7280;
+      
+      &:hover {
+        color: #4f46e5;
+      }
+    }
+  }
 }
 
 .error {
-  color: #e11d48;
-  font-size: 12px;
-  margin-top: 2px;
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
   text-align: left;
+  line-height: 1.4;
+  
+  &.signup-error {
+    text-align: center;
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 6px;
+  }
+}
+
+::ng-deep .signup-btn {
+  margin-top: 0.5rem;
+  padding: 0.875rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  
+  .p-button-label {
+    font-weight: 600;
+  }
+}
+
+.login-link {
+  margin-top: 1.5rem;
+  font-size: 0.95rem;
+  color: #6b7280;
+  
+  a {
+    color: #4f46e5;
+    text-decoration: none;
+    font-weight: 600;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
 
 
