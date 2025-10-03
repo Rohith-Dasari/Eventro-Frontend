@@ -4,10 +4,11 @@ import { Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Seat } from '../models/seats';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-seat-map',
-  imports: [DialogModule,CommonModule,FormsModule],
+  imports: [DialogModule,CommonModule,FormsModule,ButtonModule],
   templateUrl: './seat-map.component.html',
   styleUrl: './seat-map.component.scss'
 })

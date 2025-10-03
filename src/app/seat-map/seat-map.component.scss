@@ -124,29 +124,33 @@
     .summary-right {
       button {
         min-width: 140px;
+        font-weight: 600;
       }
     }
   }
-
   .available {
     background: #fff;
     border: 1px solid #aaa;
   }
+
   .selected {
-    background: #28a745;
-    color: white;
+    background: #28a745 !important;
+    color: white !important;
     border: 1px solid #28a745;
   }
+
   .booked {
     background: #999;
     color: white;
     cursor: not-allowed;
   }
-  .error-message {
-  color: #d32f2f; 
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  text-align: center;
-}
 
+  /* Error message in header */
+  .error-message {
+    color: #d32f2f;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-align: center;
+    margin: 0 auto;
+  }
 }

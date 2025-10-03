@@ -2,14 +2,18 @@
   [(visible)]="visible" 
   (onHide)="onDialogHide()" 
   [modal]="true" 
-  [style]="{width: '70vw'}"
-  [showHeader]="false"
+  [style]="{width: '70vw'}" 
+  [closable]="true"
+  header=""
 >
-  <div class="seatmap-container">
+<ng-template pTemplate="header">
+  <div class="header-bar">
+    <span *ngIf="errorMessage" class="error-message">{{ errorMessage }}</span>
+  </div>
+</ng-template>
 
-    <div *ngIf="errorMessage" class="error-message">
-      {{ errorMessage }}
-    </div>
+
+  <div class="seatmap-container">
 
     <div class="screen">
       <div class="screen-bar"></div>
