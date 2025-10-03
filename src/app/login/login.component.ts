@@ -4,19 +4,16 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { NgIcon, provideIcons } from '@ng-icons/core';
-import { matSearch } from "@ng-icons/material-icons/baseline";
+import { InputTextModule } from 'primeng/inputtext';
+import { PasswordModule } from 'primeng/password';
+import { ButtonModule } from 'primeng/button';
+import { FloatLabelModule } from 'primeng/floatlabel';
 
 @Component({
   selector: 'app-login',
-  imports: [AuthLayoutComponent, FormsModule,RouterLink,CommonModule,NgIcon],
+  imports: [AuthLayoutComponent, FormsModule, RouterLink, CommonModule, InputTextModule, PasswordModule, ButtonModule, FloatLabelModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss',
-  viewProviders: [
-    provideIcons(
-      {matSearch}
-    )
-  ]
+  styleUrl: './login.component.scss'
 })
 
 export class LoginComponent {
@@ -24,6 +21,7 @@ export class LoginComponent {
   password='';
   loading = false;
   loginError = false;
+  showPassword = false;
   private authService = inject(AuthService)
   private destroyRef = inject(DestroyRef)
   private router = inject(Router)
