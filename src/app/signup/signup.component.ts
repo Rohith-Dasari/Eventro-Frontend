@@ -10,7 +10,7 @@ import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-signup',
-  imports: [AuthLayoutComponent, FormsModule, RouterLink, CommonModule, InputTextModule, PasswordModule, ButtonModule],
+  imports: [AuthLayoutComponent,FormsModule, CommonModule, InputTextModule, PasswordModule, ButtonModule],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.scss'
 })
