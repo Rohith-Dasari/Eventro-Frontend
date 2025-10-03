@@ -32,10 +32,13 @@
 
 .search-container {
   flex: 1;
-  max-width: 400px;
+  max-width: 720px;
+  position: relative;
   
   .p-input-icon-left {
     width: 100%;
+    position: relative;
+    display: inline-block;
     
     .search-input {
       width: 100%;
@@ -44,6 +47,7 @@
       border: 2px solid #e0e0e0;
       font-size: 0.95rem;
       transition: all 0.2s ease;
+      box-sizing: border-box;
       
       &:focus {
         border-color: #4f46e5;
@@ -52,8 +56,12 @@
     }
     
     i {
+      position: absolute;
+      top: 50%;
       left: 1rem;
+      transform: translateY(-50%);
       color: #6b7280;
+      z-index: 2;
     }
   }
 }

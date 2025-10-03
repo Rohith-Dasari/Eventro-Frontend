@@ -6,6 +6,8 @@ import { EventsComponent } from './events/events.component';
 import { ProfileComponent } from './profile/profile.component';
 import { AuthGuard } from './guards/authGuard';
 import { EventDetailsComponent } from './event-details/event-details.component';
+import { ArtistsComponent } from './artists/artists.component';
+import { VenuesComponent } from './venues/venues.component';
 
 export const routes: Routes = [
   {
@@ -28,7 +30,9 @@ export const routes: Routes = [
     children: [
       { path: 'events', component: EventsComponent },
       { path: 'events/:id', component: EventDetailsComponent },
-      { path: 'profile', component: ProfileComponent },      
+      { path: 'profile', component: ProfileComponent },
+      { path: 'artists', component: ArtistsComponent },
+      { path: 'venues', component: VenuesComponent },          
       { path: '', redirectTo: 'events', pathMatch: 'full' } 
     ],
   },

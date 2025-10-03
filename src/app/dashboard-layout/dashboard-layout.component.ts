@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet, RouterModule } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -12,7 +12,7 @@ import { MenubarModule } from 'primeng/menubar';
   selector: 'app-dashboard-layout',
   templateUrl: './dashboard-layout.component.html',
   styleUrl: './dashboard-layout.component.scss',
-  imports: [RouterOutlet, CommonModule, FormsModule, ButtonModule, InputTextModule, DropdownModule, MenubarModule]
+  imports: [RouterOutlet, RouterModule, CommonModule, FormsModule, ButtonModule, InputTextModule, DropdownModule, MenubarModule]
 })
 export class DashboardLayoutComponent {
   username = '';
@@ -20,6 +20,7 @@ export class DashboardLayoutComponent {
   selectedLocation: any = null;
   
   locations = [
+    { label: 'Noida', value: 'noida' },
     { label: 'Hyderabad', value: 'hyderabad' },
     { label: 'Bangalore', value: 'bangalore' },
     { label: 'Mumbai', value: 'mumbai' }
@@ -27,7 +28,7 @@ export class DashboardLayoutComponent {
 
   constructor(private auth: AuthService, private router: Router) {
     this.username = (this.auth.userSignal()?.email as string);
-    this.selectedLocation = this.locations[0]; // Default to Hyderabad
+    this.selectedLocation = this.locations[0]; 
   }
 
   onLogout(){
@@ -37,8 +38,7 @@ export class DashboardLayoutComponent {
 
   onSearch() {
     if (this.searchQuery.trim()) {
-      console.log('Searching for:', this.searchQuery);
-      // Implement search functionality
+      console.log('searching for ', this.searchQuery);
     }
   }
 
