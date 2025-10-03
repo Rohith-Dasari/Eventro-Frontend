@@ -5,47 +5,75 @@
   justify-content: space-between;
   align-items: center;
   background: #fff;
-  padding: 0.75rem 1.5rem;
+  padding: 1rem 1.5rem;
   border-bottom: 1px solid #e0e0e0;
   z-index: 1000;
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
   font-family: "Segoe UI", Roboto, sans-serif;
-}
-
-.logo {
-  font-weight: 700;
-  font-size: 1.5rem;
-  color: #4f46e5; 
+  min-height: 80px;
 }
 
 .left-section {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.5rem;
+  flex: 1;
 }
 
-.search-bar {
-  padding: 0.5rem 1rem;
-  border: 1px solid #ccc;
-  border-radius: 25px;
-  outline: none;
-  font-size: 0.95rem;
-  width: 800px;
-  transition: all 0.2s ease;
+.logo {
+  font-weight: 700;
+  font-size: 1.8rem;
+  color: #4f46e5;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  min-width: 100px;
 }
 
-.search-bar:focus {
-  border-color: #4f46e5;
-  box-shadow: 0 0 5px rgba(79,70,229,0.2);
+.search-container {
+  flex: 1;
+  max-width: 400px;
+  
+  .p-input-icon-left {
+    width: 100%;
+    
+    .search-input {
+      width: 100%;
+      border-radius: 25px;
+      padding: 0.75rem 1rem 0.75rem 2.5rem;
+      border: 2px solid #e0e0e0;
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+      
+      &:focus {
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.2);
+      }
+    }
+    
+    i {
+      left: 1rem;
+      color: #6b7280;
+    }
+  }
 }
 
-.location-select {
-  padding: 0.5rem 1rem;
-  border-radius: 25px;
-  border: 1px solid #ccc;
-  outline: none;
-  font-size: 0.95rem;
-  cursor: pointer;
+.location-dropdown {
+  min-width: 140px;
+  
+  ::ng-deep .p-dropdown {
+    border-radius: 25px;
+    border: 2px solid #e0e0e0;
+    
+    &:not(.p-disabled):hover {
+      border-color: #4f46e5;
+    }
+    
+    &:not(.p-disabled).p-focus {
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.2);
+    }
+  }
 }
 
 .right-section {
@@ -56,22 +84,9 @@
 
 .username {
   font-weight: 500;
-  color: #333;
-}
-
-.logout-btn {
-  padding: 0.45rem 1rem;
-  border-radius: 20px;
-  border: none;
-  background: #f43f5e; 
-  color: white;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.logout-btn:hover {
-  background: #e11d48;
+  color: #374151;
+  font-size: 0.95rem;
+  line-height: 1;
 }
 
 .pill-navbar {

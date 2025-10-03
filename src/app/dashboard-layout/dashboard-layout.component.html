@@ -1,19 +1,38 @@
 <header class="header">
   <div class="left-section">
-    <span class="logo">Eventro</span>
+    <div class="logo">Eventro</div>
 
-    <input type="text" placeholder="Search events..." class="search-bar">
+    <div class="search-container">
+      <span class="p-input-icon-left">
+        <i class="pi pi-search"></i>
+        <input 
+          type="text" 
+          pInputText 
+          placeholder="Search events..." 
+          [(ngModel)]="searchQuery"
+          (keyup.enter)="onSearch()"
+          class="search-input">
+      </span>
+    </div>
 
-    <select class="location-select">
-      <option>Hyderabad</option>
-      <option>Bangalore</option>
-      <option>Mumbai</option>
-    </select>
+    <p-dropdown 
+      [options]="locations" 
+      [(ngModel)]="selectedLocation"
+      optionLabel="label"
+      placeholder="Select Location"
+      class="location-dropdown">
+    </p-dropdown>
   </div>
 
   <div class="right-section">
     <span class="username">{{ username }}</span>
-    <button class="logout-btn" (click)="onLogout()">Logout</button>
+    <p-button 
+      label="Logout" 
+      icon="pi pi-sign-out"
+      severity="danger"
+      size="small"
+      (onClick)="onLogout()">
+    </p-button>
   </div>
 </header>
 
