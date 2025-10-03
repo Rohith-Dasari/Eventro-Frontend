@@ -10,7 +10,7 @@ import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-signup',
-  imports: [AuthLayoutComponent,FormsModule, CommonModule, InputTextModule, PasswordModule, ButtonModule],
+  imports: [AuthLayoutComponent, FormsModule, RouterLink, CommonModule, InputTextModule, PasswordModule, ButtonModule],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.scss'
 })
@@ -28,7 +28,6 @@ export class SignupComponent {
   private router=inject(Router);
   private destroyRef=inject(DestroyRef);
 
-  // Validation methods
   isValidEmail(email: string): boolean {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
@@ -40,16 +39,14 @@ export class SignupComponent {
   }
 
   isValidPassword(password: string): boolean {
-    // At least 12 characters, alphanumeric with at least one special character
     const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$/;
     return passwordRegex.test(password);
   }
 
-  // Input formatting for phone number
   onPhoneInput(event: any): void {
-    let value = event.target.value.replace(/\D/g, ''); // Remove non-digits
+    let value = event.target.value.replace(/\D/g, '');
     if (value.length > 10) {
-      value = value.slice(0, 10); // Limit to 10 digits
+      value = value.slice(0, 10);
     }
     this.phoneNumber = value;
     event.target.value = value;

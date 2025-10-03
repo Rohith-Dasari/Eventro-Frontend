@@ -28,13 +28,6 @@
   max-width: 420px;
   text-align: center;
 
-  h2 {
-    margin-bottom: 2rem;
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #374151;
-  }
-
   form {
     display: flex;
     flex-direction: column;
@@ -178,19 +171,20 @@
 }
 
 
-.brand-name{
-  font-size: 3rem;
-  font-weight: 800;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+.brand {
+  text-align: center;
+  margin-bottom: 2rem;
 
-.caption{
-  font-size: 1rem;
-  font-weight: 600;
-}
+  .brand-name {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #4f46e5;
+    margin-bottom: 0.5rem;
+  }
 
-.brand{
-  margin-bottom: 30px;
+  .caption {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #6b7280;
+  }
 }

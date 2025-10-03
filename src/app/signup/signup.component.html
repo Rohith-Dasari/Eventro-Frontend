@@ -9,7 +9,6 @@
     <p class="caption">Your gateway to amazing events</p>
     </div>
     <div class="signup-form">
-      <h2>Create Account</h2>
       <form #signupForm="ngForm" (ngSubmit)="onSignup()" novalidate>
         
         <div class="form-field">
@@ -36,8 +35,9 @@
             required 
             #emailModel="ngModel"
             class="w-full" />
-          <div class="error" *ngIf="emailModel.invalid && emailModel.touched && email.length > 0">
-            <span *ngIf="!isValidEmail(email)">Invalid email address</span>
+          <div class="error" *ngIf="emailModel.invalid && emailModel.touched">
+            <span *ngIf="email.length === 0">Email cannot be blank</span>
+            <span *ngIf="email.length > 0 && !isValidEmail(email)">Invalid email address. Ex: abc@gmail.com</span>
           </div>
         </div>
 
@@ -56,9 +56,9 @@
               #phoneModel="ngModel"
               class="phone-input" />
           </div>
-          <div class="error" *ngIf="phoneModel.invalid && phoneModel.touched && phoneNumber.length > 0">
-            <span *ngIf="!isValidPhone(phoneNumber)">Phone number should be exactly 10 digits</span>
+          <div class="error" *ngIf="phoneModel.invalid && phoneModel.touched">
             <span *ngIf="phoneNumber.length === 0">Phone number cannot be blank</span>
+            <span *ngIf="phoneNumber.length > 0 && !isValidPhone(phoneNumber)">Phone number should be exactly 10 digits</span>
           </div>
         </div>
 
@@ -74,9 +74,9 @@
             inputStyleClass="w-full"
             styleClass="w-full">
           </p-password>
-          <div class="error" *ngIf="passwordModel.invalid && passwordModel.touched && password.length > 0">
-            <span *ngIf="!isValidPassword(password)">Password should be at least 12 alphanumeric characters with at least one special character. Ex: MyPassword123!</span>
+          <div class="error" *ngIf="passwordModel.invalid && passwordModel.touched">
             <span *ngIf="password.length === 0">Password cannot be blank</span>
+            <span *ngIf="password.length > 0 && !isValidPassword(password)">Password should be at least 12 alphanumeric characters with at least one special character. Ex: MyPassword123!</span>
           </div>
         </div>
 
