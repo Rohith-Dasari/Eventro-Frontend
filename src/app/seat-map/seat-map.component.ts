@@ -1,10 +1,12 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, inject } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
 import { Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Seat } from '../models/seats';
 import { ButtonModule } from 'primeng/button';
+import { Router } from '@angular/router';
+import { BookingSummaryData } from '../shared/booking-summary/booking-summary.component';
 
 @Component({
   selector: 'app-seat-map',
@@ -13,7 +15,9 @@ import { ButtonModule } from 'primeng/button';
   styleUrl: './seat-map.component.scss'
 })
 export class SeatMapComponent implements OnInit {
-@Input() visible = false;
+  private router = inject(Router);
+
+  @Input() visible = false;
   @Output() visibleChange = new EventEmitter<boolean>(); 
 
   @Input() show: any;      
@@ -98,8 +102,33 @@ toggleSeat(row: number, seat: number) {
     return 'available';
   }
 
-  onConfirmBooking(){
-    console.log('clicked booking confirmed');
+  onConfirmBooking() {
+    if (this.selectedSeats.length === 0) {
+      this.errorMessage = 'Please select at least one seat.';
+      return;
+    }
+
+    // Prepare booking data
+    const bookingData: BookingSummaryData = {
+      eventName: this.show?.Event?.Name || 'Unknown Event',
+      venueName: this.show?.Venue?.Name || 'Unknown Venue',
+      venueAddress: `${this.show?.Venue?.City || ''}, ${this.show?.Venue?.State || ''}`.trim().replace(/^,|,$/, '') || 'Address not available',
+      showDate: this.show?.ShowDate,
+      showTime: this.show?.ShowTime,
+      seats: this.selectedSeatCodes,
+      numTickets: this.selectedSeats.length,
+      totalAmount: this.totalPrice
+    };
+
+    console.log('Booking confirmed with data:', bookingData);
+
+    // Close the dialog
+    this.onDialogHide();
+
+    // Navigate to booking confirmation page
+    this.router.navigate(['/dashboard/booking-confirmation'], {
+      state: { bookingData }
+    });
   }
 
   onDialogHide() {

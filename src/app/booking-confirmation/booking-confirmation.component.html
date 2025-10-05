@@ -1,0 +1,49 @@
+<div class="booking-confirmation-container">
+  <!-- Timer Section -->
+  <div class="timer-section">
+    <h2 class="timer-title">Complete Your Payment</h2>
+    <div class="timer-display" [style.color]="timerColor">
+      <i class="pi pi-clock"></i>
+      <span class="timer-text">{{ formattedTime }}</span>
+    </div>
+    <p class="timer-description">Time remaining to complete your booking</p>
+  </div>
+
+  <!-- Booking Summary -->
+  <div class="summary-section">
+    <app-booking-summary 
+      [bookingData]="bookingData"
+      [showTitle]="true"
+      [compact]="false">
+    </app-booking-summary>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="action-buttons">
+    <button 
+      pButton 
+      type="button" 
+      label="Cancel Booking" 
+      icon="pi pi-times"
+      class="p-button-outlined p-button-secondary cancel-btn"
+      (click)="onCancel()"
+      [disabled]="isProcessingPayment">
+    </button>
+    
+    <button 
+      pButton 
+      type="button" 
+      [label]="isProcessingPayment ? 'Processing...' : 'Pay Now'"
+      [icon]="isProcessingPayment ? 'pi pi-spin pi-spinner' : 'pi pi-credit-card'"
+      class="p-button-primary pay-btn"
+      (click)="onPay()"
+      [disabled]="isProcessingPayment || timeRemaining <= 0">
+    </button>
+  </div>
+
+  <!-- Timeout Message -->
+  <div *ngIf="timeRemaining <= 0" class="timeout-message">
+    <i class="pi pi-exclamation-triangle"></i>
+    <p>Time expired! Redirecting to events...</p>
+  </div>
+</div>

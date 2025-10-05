@@ -8,6 +8,8 @@ import { AuthGuard } from './guards/authGuard';
 import { EventDetailsComponent } from './event-details/event-details.component';
 import { ArtistsComponent } from './artists/artists.component';
 import { VenuesComponent } from './venues/venues.component';
+import { BookingConfirmationComponent } from './booking-confirmation/booking-confirmation.component';
+import { PaymentSuccessComponent } from './payment-success/payment-success.component';
 
 export const routes: Routes = [
   {
@@ -30,6 +32,8 @@ export const routes: Routes = [
     children: [
       { path: 'events', component: EventsComponent },
       { path: 'events/:id', component: EventDetailsComponent },
+      { path: 'booking-confirmation', component: BookingConfirmationComponent },
+      { path: 'payment-success', component: PaymentSuccessComponent },
       { path: 'profile', component: ProfileComponent },
       { path: 'artists', component: ArtistsComponent },
       { path: 'venues', component: VenuesComponent },          

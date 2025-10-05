@@ -1,0 +1,142 @@
+.booking-confirmation-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+  .timer-section {
+    text-align: center;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 12px;
+    border-left: 4px solid #1976d2;
+
+    .timer-title {
+      color: #333;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .timer-display {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-size: 2rem;
+      font-weight: bold;
+      margin: 1rem 0;
+      
+      .pi-clock {
+        font-size: 1.8rem;
+      }
+      
+      .timer-text {
+        font-family: 'Courier New', monospace;
+        letter-spacing: 2px;
+      }
+    }
+
+    .timer-description {
+      color: #666;
+      margin: 0;
+      font-size: 0.9rem;
+    }
+  }
+
+  .summary-section {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    .cancel-btn,
+    .pay-btn {
+      min-width: 150px;
+      padding: 0.75rem 1.5rem;
+      font-weight: 600;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+    }
+
+    .cancel-btn {
+      &:hover {
+        background-color: #f5f5f5;
+        border-color: #999;
+      }
+    }
+
+    .pay-btn {
+      background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+      border: none;
+      
+      &:hover:not(:disabled) {
+        background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+      }
+      
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  .timeout-message {
+    text-align: center;
+    padding: 1rem;
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 6px;
+    color: #856404;
+
+    .pi-exclamation-triangle {
+      font-size: 1.2rem;
+      margin-right: 0.5rem;
+    }
+
+    p {
+      margin: 0;
+      font-weight: 500;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .booking-confirmation-container {
+    padding: 1rem;
+    gap: 1.5rem;
+
+    .timer-section {
+      padding: 1rem;
+
+      .timer-title {
+        font-size: 1.3rem;
+      }
+
+      .timer-display {
+        font-size: 1.8rem;
+      }
+    }
+
+    .action-buttons {
+      flex-direction: column;
+      align-items: stretch;
+
+      .cancel-btn,
+      .pay-btn {
+        width: 100%;
+      }
+    }
+  }
+}
