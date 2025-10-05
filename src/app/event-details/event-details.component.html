@@ -27,20 +27,26 @@
       </button>
     </div>
 
-    <div class="price-filter">
-      <p-slider [(ngModel)]="rangeValues"
-                [range]="true"
-                [min]="0"
-                [max]="3000"
-                [step]="10"
-                class="price-slider">
-      </p-slider>
-
-      <button pButton
-              icon="pi pi-refresh"
-              class="refresh-btn"
-              (click)="refreshShows()">
-      </button>
+    <div class="price-filter-section">
+      <div class="price-filter">
+        <span class="price-label min-price">₹0</span>
+        <div class="slider-container">
+          <p-slider [(ngModel)]="rangeValues"
+                    [range]="true"
+                    [min]="0"
+                    [max]="3000"
+                    [step]="10"
+                    class="price-slider">
+          </p-slider>
+        </div>
+        <span class="price-label max-price">₹3000</span>
+        <button pButton
+                icon="pi pi-refresh"
+                class="refresh-btn"
+                (click)="refreshShows()"
+                [attr.aria-label]="'Refresh shows'">
+        </button>
+      </div>
     </div>
   </div>
 
