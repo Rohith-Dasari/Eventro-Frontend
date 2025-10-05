@@ -35,6 +35,7 @@ export class EventsComponent implements OnInit{
     const bookingSub=this.bookingService.getBookings().subscribe({
       next:(data)=>{
         this.upcomingBookings=data;
+        console.log(this.upcomingBookings);
         this.loadingBookings = false;
         console.log("upcoming bookings: ", this.upcomingBookings);
       },

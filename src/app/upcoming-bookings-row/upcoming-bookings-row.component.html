@@ -1,14 +1,6 @@
 <div class="bookings-row">
   <h2>{{ title }}</h2>
 
-  <div *ngIf="bookings.length > 0" style="background: #f0f0f0; padding: 10px; margin: 10px 0; font-size: 12px;">
-    <strong>Debug Info:</strong><br>
-    Bookings count: {{ bookings.length }}<br>
-    First booking show_details: {{ bookings[0]?.show_details ? 'Available' : 'Missing' }}<br>
-    First booking event name: {{ bookings[0]?.show_details?.Event?.Name || 'Not found' }}<br>
-    Raw booking: {{ bookings[0] | json }}
-  </div>
-
   <div class="cards-container">
     <p-card 
       *ngFor="let booking of bookings; let i = index" 
@@ -31,9 +23,6 @@
           </div>
           <div class="venue-location">
             {{ booking.show_details?.Venue?.Name || 'Venue TBD' }}, {{ booking.show_details?.Venue?.City || 'City TBD' }}
-          </div>
-          <div class="booking-meta">
-            Tickets: {{ booking.num_tickets }} | Total: ₹{{ booking.total_booking_price }}
           </div>
         </div>
       </ng-template>
