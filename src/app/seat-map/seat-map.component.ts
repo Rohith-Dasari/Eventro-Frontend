@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, inject } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, inject, OnChanges, SimpleChanges } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
 import { Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -14,7 +14,7 @@ import { BookingSummaryData } from '../shared/booking-summary/booking-summary.co
   templateUrl: './seat-map.component.html',
   styleUrl: './seat-map.component.scss'
 })
-export class SeatMapComponent implements OnInit {
+export class SeatMapComponent implements OnInit, OnChanges {
   private router = inject(Router);
 
   @Input() visible = false;
@@ -25,24 +25,38 @@ export class SeatMapComponent implements OnInit {
 
   seats: Seat[] = [];
 
-  
-
   ngOnInit() {
     if (this.show) {
       this.initializeSeats();
     }
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['show'] && changes['show'].currentValue) {
+      this.initializeSeats();
+    }
+    
+    if (changes['visible'] && changes['visible'].currentValue) {
+      this.errorMessage = '';
+    }
+  }
+
   initializeSeats() {
-    const bookedSeats: string[] = this.show?.BookedSeats || this.show?.booked_seats || [];
+    const rawBookedSeats: string[] = this.show?.BookedSeats || this.show?.booked_seats || [];
+    
+    const bookedSeats: string[] = rawBookedSeats.map(seat => seat.toLowerCase());
+    
     console.log('Show object:', this.show);
-    console.log('Booked seats from show:', bookedSeats);
+    console.log('Raw booked seats from show:', rawBookedSeats);
+    console.log('Normalized booked seats (lowercase):', bookedSeats);
 
     this.seats = [];
     for (let row = 1; row <= 10; row++) {
       for (let seat = 1; seat <= 10; seat++) {
         const seatCode = `${this.getRowLetter(row)}${seat}`;
-        const isBooked = bookedSeats.includes(seatCode);
+        const seatCodeLower = seatCode.toLowerCase();
+        const isBooked = bookedSeats.includes(seatCodeLower);
+        
         this.seats.push({
           row,
           seat,
@@ -51,6 +65,9 @@ export class SeatMapComponent implements OnInit {
         });
       }
     }
+    
+    console.log('Total seats created:', this.seats.length);
+    console.log('Booked seats count:', this.seats.filter(s => s.isBooked).length);
   }
 
   getRowLetter(row: number): string {

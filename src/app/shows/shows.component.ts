@@ -52,7 +52,9 @@ export class ShowsComponent implements OnChanges {
 
   getAvailabilityColor(show: any): string {
     const totalSeats = 100; 
-    const availableSeats = totalSeats - (show.BookedSeats?.length || 0);
+    // Handle both possible property names for booked seats
+    const bookedSeatsCount = (show.BookedSeats?.length || show.booked_seats?.length || 0);
+    const availableSeats = totalSeats - bookedSeatsCount;
 
     if (availableSeats > 60) return 'green';
     if (availableSeats > 30) return 'orange';
