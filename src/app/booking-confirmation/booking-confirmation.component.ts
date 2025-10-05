@@ -23,14 +23,18 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     const navigation = this.router.getCurrentNavigation();
-    if (navigation?.extras.state && navigation.extras.state['bookingData']) {
+    console.log('Navigation object:', navigation);
+    console.log('Navigation state:', navigation?.extras?.state);
+    
+    if (navigation?.extras?.state && navigation.extras.state['bookingData']) {
       this.bookingData = navigation.extras.state['bookingData'];
+      console.log('Booking data received:', this.bookingData);
+      this.startTimer();
     } else {
+      console.warn('No booking data found, redirecting to events');
       this.router.navigate(['/dashboard/events']);
       return;
     }
-
-    this.startTimer();
   }
 
   ngOnDestroy() {

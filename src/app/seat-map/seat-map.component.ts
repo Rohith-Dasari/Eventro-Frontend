@@ -35,15 +35,14 @@ export class SeatMapComponent implements OnInit {
 
   initializeSeats() {
     const bookedSeats: string[] = this.show?.BookedSeats || this.show?.booked_seats || [];
-    
-    const testBookedSeats = ['A1', 'A2', 'B3', 'C5', 'D7'];
-    const allBookedSeats = [...bookedSeats, ...testBookedSeats];
+    console.log('Show object:', this.show);
+    console.log('Booked seats from show:', bookedSeats);
 
     this.seats = [];
     for (let row = 1; row <= 10; row++) {
       for (let seat = 1; seat <= 10; seat++) {
         const seatCode = `${this.getRowLetter(row)}${seat}`;
-        const isBooked = allBookedSeats.includes(seatCode);
+        const isBooked = bookedSeats.includes(seatCode);
         this.seats.push({
           row,
           seat,
@@ -136,10 +135,15 @@ toggleSeat(row: number, seat: number) {
       totalAmount: this.totalPrice
     };
 
+    console.log('Navigating to booking confirmation with data:', bookingData);
+
     this.onDialogHide();
-    this.router.navigate(['/dashboard/booking-confirmation'], {
-      state: { bookingData: bookingData }
-    });
+    
+    setTimeout(() => {
+      this.router.navigate(['/dashboard/booking-confirmation'], {
+        state: { bookingData: bookingData }
+      });
+    }, 100);
   }
 
   onDialogHide() {
