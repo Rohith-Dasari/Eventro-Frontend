@@ -22,27 +22,13 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
   isProcessingPayment = false;
 
   ngOnInit() {
-    // Get booking data from navigation state or route params
     const navigation = this.router.getCurrentNavigation();
-    if (navigation?.extras.state) {
+    if (navigation?.extras.state && navigation.extras.state['bookingData']) {
       this.bookingData = navigation.extras.state['bookingData'];
+    } else {
+      this.router.navigate(['/dashboard/events']);
+      return;
     }
-    
-    // If no data, try to get from query params (fallback)
-    this.route.queryParams.subscribe(params => {
-      if (!this.bookingData.eventName && params['eventName']) {
-        this.bookingData = {
-          eventName: params['eventName'],
-          venueName: params['venueName'],
-          venueAddress: params['venueAddress'],
-          showDate: params['showDate'],
-          showTime: params['showTime'],
-          seats: params['seats']?.split(',') || [],
-          numTickets: parseInt(params['numTickets']) || 0,
-          totalAmount: parseFloat(params['totalAmount']) || 0
-        };
-      }
-    });
 
     this.startTimer();
   }
@@ -66,7 +52,6 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
     if (this.timerSubscription) {
       this.timerSubscription.unsubscribe();
     }
-    // Redirect back to events or show timeout message
     this.router.navigate(['/dashboard/events']);
   }
 
@@ -92,16 +77,14 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
   onPay() {
     this.isProcessingPayment = true;
     
-    // Simulate payment processing
     setTimeout(() => {
       if (this.timerSubscription) {
         this.timerSubscription.unsubscribe();
       }
       
-      // Navigate to payment success with booking data
       this.router.navigate(['/dashboard/payment-success'], {
         state: { bookingData: this.bookingData }
       });
-    }, 2000); // 2 second delay to simulate processing
+    }, 2000);
   }
 }

@@ -1,5 +1,4 @@
 <div class="booking-confirmation-container">
-  <!-- Timer Section -->
   <div class="timer-section">
     <h2 class="timer-title">Complete Your Payment</h2>
     <div class="timer-display" [style.color]="timerColor">
@@ -9,7 +8,6 @@
     <p class="timer-description">Time remaining to complete your booking</p>
   </div>
 
-  <!-- Booking Summary -->
   <div class="summary-section">
     <app-booking-summary 
       [bookingData]="bookingData"
@@ -18,7 +16,6 @@
     </app-booking-summary>
   </div>
 
-  <!-- Action Buttons -->
   <div class="action-buttons">
     <button 
       pButton 
@@ -41,7 +38,6 @@
     </button>
   </div>
 
-  <!-- Timeout Message -->
   <div *ngIf="timeRemaining <= 0" class="timeout-message">
     <i class="pi pi-exclamation-triangle"></i>
     <p>Time expired! Redirecting to events...</p>

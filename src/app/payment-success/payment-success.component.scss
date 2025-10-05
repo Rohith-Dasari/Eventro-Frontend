@@ -8,67 +8,49 @@
   gap: 2rem;
 
   .success-animation {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.6s ease;
-
-    &.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
     .checkmark-container {
       margin-bottom: 1rem;
 
       .success-icon {
-        font-size: 4rem;
+        font-size: 3rem;
         color: #4caf50;
-        animation: successPulse 1.5s ease-in-out;
       }
     }
 
     .success-title {
       color: #2e7d32;
-      font-size: 2rem;
+      font-size: 1.8rem;
       font-weight: 600;
       margin-bottom: 0.5rem;
-      animation: slideInUp 0.8s ease 0.2s both;
     }
 
     .success-message {
-      font-size: 1.1rem;
+      font-size: 1rem;
       color: #555;
       margin: 0;
-      animation: slideInUp 0.8s ease 0.4s both;
     }
   }
 
   .compact-summary {
     background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     padding: 1.5rem;
-    border: 2px solid #e8f5e8;
-    animation: slideInUp 0.8s ease 0.6s both;
+    border: 1px solid #e0e0e0;
   }
 
   .action-section {
-    animation: slideInUp 0.8s ease 0.8s both;
-
     .home-btn {
-      min-width: 200px;
-      padding: 0.75rem 2rem;
-      font-size: 1.1rem;
-      font-weight: 600;
-      border-radius: 25px;
-      background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+      min-width: 180px;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 500;
+      border-radius: 6px;
+      background: #1976d2;
       border: none;
-      transition: all 0.3s ease;
 
       &:hover {
-        background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(25, 118, 210, 0.4);
+        background: #1565c0;
       }
 
       .pi-home {
@@ -78,7 +60,6 @@
   }
 
   .info-section {
-    animation: slideInUp 0.8s ease 1s both;
 
     .info-text {
       color: #666;
@@ -101,34 +82,10 @@
   }
 }
 
-// Animations
-@keyframes successPulse {
-  0% {
-    transform: scale(0);
-    opacity: 0;
-  }
-  50% {
-    transform: scale(1.2);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
+.home-btn {
+  transition: background-color 0.2s ease;
 }
 
-@keyframes slideInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-// Mobile Responsiveness
 @media (max-width: 768px) {
   .payment-success-container {
     padding: 1rem;
@@ -160,7 +117,6 @@
   }
 }
 
-// Dark theme support
 @media (prefers-color-scheme: dark) {
   .payment-success-container {
     .compact-summary {

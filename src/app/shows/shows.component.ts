@@ -4,7 +4,6 @@ import { Input } from '@angular/core';
 import { OnChanges, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SeatMapComponent } from '../seat-map/seat-map.component';
-// import { Shows } from '../models/shows';
 
 @Component({
   selector: 'app-shows',

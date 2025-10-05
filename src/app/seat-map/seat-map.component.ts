@@ -34,14 +34,16 @@ export class SeatMapComponent implements OnInit {
   }
 
   initializeSeats() {
-    const bookedSeats: string[] = this.show?.BookedSeats || [];
+    const bookedSeats: string[] = this.show?.BookedSeats || this.show?.booked_seats || [];
+    
+    const testBookedSeats = ['A1', 'A2', 'B3', 'C5', 'D7'];
+    const allBookedSeats = [...bookedSeats, ...testBookedSeats];
 
     this.seats = [];
     for (let row = 1; row <= 10; row++) {
       for (let seat = 1; seat <= 10; seat++) {
         const seatCode = `${this.getRowLetter(row)}${seat}`;
-        const isBooked = bookedSeats.includes(seatCode);
-
+        const isBooked = allBookedSeats.includes(seatCode);
         this.seats.push({
           row,
           seat,
@@ -97,6 +99,8 @@ toggleSeat(row: number, seat: number) {
   }
 
   getSeatClass(seat: Seat) {
+    if (!seat) return 'available';
+    
     if (seat.isBooked) return 'booked';
     if (seat.isSelected) return 'selected';
     return 'available';
@@ -108,26 +112,33 @@ toggleSeat(row: number, seat: number) {
       return;
     }
 
-    // Prepare booking data
+    const venueCity = this.show?.Venue?.City || '';
+    const venueState = this.show?.Venue?.State || '';
+    let venueAddress = '';
+    if (venueCity && venueState) {
+      venueAddress = `${venueCity}, ${venueState}`;
+    } else if (venueCity) {
+      venueAddress = venueCity;
+    } else if (venueState) {
+      venueAddress = venueState;
+    } else {
+      venueAddress = 'Address not available';
+    }
+
     const bookingData: BookingSummaryData = {
-      eventName: this.show?.Event?.Name || 'Unknown Event',
-      venueName: this.show?.Venue?.Name || 'Unknown Venue',
-      venueAddress: `${this.show?.Venue?.City || ''}, ${this.show?.Venue?.State || ''}`.trim().replace(/^,|,$/, '') || 'Address not available',
-      showDate: this.show?.ShowDate,
-      showTime: this.show?.ShowTime,
-      seats: this.selectedSeatCodes,
+      eventName: this.show?.Event?.Name || 'Event Name Not Available',
+      venueName: this.show?.Venue?.Name || 'Venue Name Not Available',
+      venueAddress: venueAddress,
+      showDate: this.show?.ShowDate || '',
+      showTime: this.show?.ShowTime || 'Time TBD',
+      seats: [...this.selectedSeatCodes],
       numTickets: this.selectedSeats.length,
       totalAmount: this.totalPrice
     };
 
-    console.log('Booking confirmed with data:', bookingData);
-
-    // Close the dialog
     this.onDialogHide();
-
-    // Navigate to booking confirmation page
     this.router.navigate(['/dashboard/booking-confirmation'], {
-      state: { bookingData }
+      state: { bookingData: bookingData }
     });
   }
 

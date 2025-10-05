@@ -1,6 +1,5 @@
 <div class="payment-success-container">
-  <!-- Success Animation -->
-  <div class="success-animation" [class.show]="showAnimation">
+  <div class="success-animation">
     <div class="checkmark-container">
       <i class="pi pi-check-circle success-icon"></i>
     </div>
@@ -8,7 +7,6 @@
     <p class="success-message">{{ successMessage }}</p>
   </div>
 
-  <!-- Minimal Booking Summary -->
   <div class="compact-summary">
     <app-booking-summary 
       [bookingData]="bookingData"
@@ -17,7 +15,6 @@
     </app-booking-summary>
   </div>
 
-  <!-- Action Button -->
   <div class="action-section">
     <button 
       pButton 
@@ -29,7 +26,6 @@
     </button>
   </div>
 
-  <!-- Additional Info -->
   <div class="info-section">
     <p class="info-text">
       <i class="pi pi-info-circle"></i>

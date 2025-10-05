@@ -17,26 +17,20 @@ export class PaymentSuccessComponent implements OnInit {
   private bookingService = inject(BookingService);
   
   bookingData: BookingSummaryData = {};
-  showAnimation = false;
   generatedBookingId = '';
 
   ngOnInit() {
-    // Get booking data from navigation state
     const navigation = this.router.getCurrentNavigation();
-    if (navigation?.extras.state) {
-      this.bookingData = navigation.extras.state['bookingData'];
+    if (navigation?.extras.state && navigation.extras.state['bookingData']) {
+      this.bookingData = { ...navigation.extras.state['bookingData'] };
+    } else {
+      this.router.navigate(['/dashboard/events']);
+      return;
     }
 
-    // Generate a mock booking ID (in real app, this would come from API)
     this.generatedBookingId = this.generateBookingId();
     this.bookingData.bookingId = this.generatedBookingId;
 
-    // Start success animation
-    setTimeout(() => {
-      this.showAnimation = true;
-    }, 100);
-
-    // Auto-refresh bookings in the background
     this.refreshBookings();
   }
 
@@ -47,14 +41,9 @@ export class PaymentSuccessComponent implements OnInit {
   }
 
   private refreshBookings() {
-    // Trigger a refresh of bookings data
     this.bookingService.getBookings().subscribe({
-      next: (bookings) => {
-        console.log('Bookings refreshed after payment:', bookings);
-      },
-      error: (error) => {
-        console.error('Error refreshing bookings:', error);
-      }
+      next: (bookings) => {},
+      error: (error) => {}
     });
   }
 
@@ -62,7 +51,6 @@ export class PaymentSuccessComponent implements OnInit {
     this.router.navigate(['/dashboard/events']);
   }
 
-  // Positive affirmations array
   get successMessage(): string {
     const messages = [
       "🎉 Booking Confirmed! Get ready for an amazing experience!",

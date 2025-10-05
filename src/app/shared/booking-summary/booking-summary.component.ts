@@ -27,17 +27,17 @@ export class BookingSummaryComponent {
 
   get summaryItems() {
     const items = [
-      { label: 'Event', value: this.bookingData.eventName || 'N/A' },
-      { label: 'Venue', value: this.bookingData.venueName || 'N/A' },
-      { label: 'Address', value: this.bookingData.venueAddress || 'N/A' },
-      { label: 'Date', value: this.formatDate(this.bookingData.showDate) },
-      { label: 'Time', value: this.bookingData.showTime || 'N/A' },
-      { label: 'Seats', value: this.bookingData.seats?.join(', ') || 'N/A' },
-      { label: 'Number of Tickets', value: this.bookingData.numTickets?.toString() || 'N/A' },
-      { label: 'Total Amount', value: this.bookingData.totalAmount ? `₹${this.bookingData.totalAmount}` : 'N/A' }
+      { label: 'Event', value: this.bookingData?.eventName || 'Event Not Available' },
+      { label: 'Venue', value: this.bookingData?.venueName || 'Venue Not Available' },
+      { label: 'Address', value: this.bookingData?.venueAddress || 'Address Not Available' },
+      { label: 'Date', value: this.formatDate(this.bookingData?.showDate) },
+      { label: 'Time', value: this.bookingData?.showTime || 'Time Not Available' },
+      { label: 'Seats', value: (this.bookingData?.seats && this.bookingData.seats.length > 0) ? this.bookingData.seats.join(', ') : 'No Seats Selected' },
+      { label: 'Number of Tickets', value: this.bookingData?.numTickets?.toString() || '0' },
+      { label: 'Total Amount', value: (this.bookingData?.totalAmount !== undefined && this.bookingData?.totalAmount !== null) ? `₹${this.bookingData.totalAmount}` : '₹0' }
     ];
 
-    if (this.bookingData.bookingId) {
+    if (this.bookingData?.bookingId) {
       items.unshift({ label: 'Booking ID', value: this.bookingData.bookingId });
     }
 
@@ -47,9 +47,10 @@ export class BookingSummaryComponent {
   }
 
   private formatDate(dateString: string | undefined): string {
-    if (!dateString) return 'N/A';
+    if (!dateString || dateString.trim() === '') return 'Date Not Available';
     try {
       const date = new Date(dateString);
+      if (isNaN(date.getTime())) return 'Invalid Date';
       return date.toLocaleDateString('en-US', {
         weekday: 'long',
         year: 'numeric',
@@ -57,7 +58,7 @@ export class BookingSummaryComponent {
         day: 'numeric'
       });
     } catch {
-      return 'N/A';
+      return 'Date Format Error';
     }
   }
 }
