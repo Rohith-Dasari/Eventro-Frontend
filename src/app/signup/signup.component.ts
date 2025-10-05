@@ -52,6 +52,35 @@ export class SignupComponent {
     event.target.value = value;
   }
 
+  get usernameError(): string | null {
+    if (!this.username.trim()) return 'Username cannot be blank';
+    return null;
+  }
+
+  get emailError(): string | null {
+    if (!this.email.trim()) return 'Email cannot be blank';
+    if (!this.isValidEmail(this.email)) return 'Invalid email address';
+    return null;
+  }
+
+  get phoneError(): string | null {
+    if (!this.phoneNumber.trim()) return 'Phone number cannot be blank';
+    if (!this.isValidPhone(this.phoneNumber)) return 'Phone number should be exactly 10 digits';
+    return null;
+  }
+
+  get passwordError(): string | null {
+    if (!this.password.trim()) return 'Password cannot be blank';
+    if (!this.isValidPassword(this.password)) return 'Password should be at least 12 alphanumeric characters with at least one special character. Ex: MyPassword123!';
+    return null;
+  }
+
+  get isFormValid(): boolean {
+    return this.username.trim() !== '' && 
+           this.isValidEmail(this.email) && 
+           this.isValidPhone(this.phoneNumber) && 
+           this.isValidPassword(this.password);
+  }
 
   onSignup(){
     this.loading=true;
