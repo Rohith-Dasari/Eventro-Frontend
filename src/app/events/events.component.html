@@ -1,24 +1,13 @@
-<div class="events-row">
-  <h2>Events Near You</h2>
+<app-upcoming-bookings-row 
+  title="Upcoming Bookings"
+  [bookings]="upcomingBookings"
+  [defaultImage]="defaultImage"
+  (bookingClick)="onBookingClick($event)">
+</app-upcoming-bookings-row>
 
-  <div class="cards-container">
-    <p-card 
-      *ngFor="let event of events" 
-      class="event-card"
-      (click)="goToEventDetails(event)">
-      
-      <ng-template pTemplate="header">
-        <img [src]="defaultImage" alt="{{ event.name }}" class="event-img" />
-      </ng-template>
-
-      <ng-template pTemplate="title">
-        {{ event.name }}
-      </ng-template>
-
-      <ng-template pTemplate="subtitle">
-        {{ event.artist_names.join(', ') || 'Unknown' }}
-      </ng-template>
-
-    </p-card>
-  </div>
-</div>
+<app-events-row 
+  title="Events Near You"
+  [events]="events"
+  [defaultImage]="defaultImage"
+  (eventClick)="goToEventDetails($event)">
+</app-events-row>

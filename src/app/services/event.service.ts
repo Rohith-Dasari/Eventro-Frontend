@@ -8,13 +8,6 @@ import { Observable } from "rxjs";
 
 export class EventService{
   private httpClient=inject(HttpClient);
-  
-  getBookings(): Observable<any>{
-      let params=new HttpParams();
-      const userID=localStorage.getItem('user_id');
-      params.set('userId',(userID as string));
-      return this.httpClient.get('bookings',{params:params});
-  }
 
   getEvents(): Observable<any>{
     return this.httpClient.get('events?location=noida')

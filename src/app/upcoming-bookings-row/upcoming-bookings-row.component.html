@@ -1,0 +1,32 @@
+<div class="bookings-row">
+  <h2>{{ title }}</h2>
+
+  <div class="cards-container">
+    <p-card 
+      *ngFor="let booking of bookings" 
+      class="booking-card"
+      (click)="onBookingClick(booking)">
+      
+      <ng-template pTemplate="header">
+        <img [src]="defaultImage" alt="{{ booking.show_details?.Event?.Name }}" class="booking-img" />
+      </ng-template>
+
+      <ng-template pTemplate="title">
+        {{ booking.show_details?.Event?.Name || 'Event' }}
+      </ng-template>
+
+      <ng-template pTemplate="subtitle">
+        <div class="booking-info">
+          <div class="show-details">
+            <span class="show-date">{{ formatDate(booking.show_details?.ShowDate) }}</span>
+            <span class="show-time">{{ booking.show_details?.ShowTime }}</span>
+          </div>
+          <div class="venue-location">
+            {{ booking.show_details?.Venue?.Name }}, {{ booking.show_details?.Venue?.City }}
+          </div>
+        </div>
+      </ng-template>
+
+    </p-card>
+  </div>
+</div>
