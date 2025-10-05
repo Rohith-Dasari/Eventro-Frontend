@@ -16,6 +16,7 @@ export class EventsRowComponent {
   @Output() eventClick = new EventEmitter<Event>();
 
   onEventClick(event: Event) {
+    console.log('Event card clicked:', event);
     this.eventClick.emit(event);
   }
 }

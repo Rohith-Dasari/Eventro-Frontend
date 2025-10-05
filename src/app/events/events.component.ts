@@ -7,39 +7,42 @@ import { EventsRowComponent } from '../events-row/events-row.component';
 import { UpcomingBookingsRowComponent } from '../upcoming-bookings-row/upcoming-bookings-row.component';
 import { BookingService } from '../services/bookings.service';
 import { EnrichedBooking } from '../models/bookings';
+import { UpcomingBookingDetailsComponent } from '../upcoming-booking-details/upcoming-booking-details.component';
 
 @Component({
   selector: 'app-events',
-  imports: [CommonModule, EventsRowComponent, UpcomingBookingsRowComponent],
+  imports: [UpcomingBookingDetailsComponent,CommonModule, EventsRowComponent, UpcomingBookingsRowComponent],
   templateUrl: './events.component.html',
   styleUrl: './events.component.scss'
 })
 
-export class EventsComponent implements OnInit{
-  private router=inject(Router)
-  private route=inject(ActivatedRoute)
-  private eventService=inject(EventService);
-  private bookingService=inject(BookingService)
+export class EventsComponent implements OnInit {
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private eventService = inject(EventService);
+  private bookingService = inject(BookingService);
+  
   upcomingBookings: EnrichedBooking[] = [];
   events: Event[] = [];
   defaultImage = './images/hp3.jpg';
   loadingBookings = false;
   loadingEvents = false;
+  bookingDialogVisible = false;
+  selectedBooking: EnrichedBooking | null = null;
 
   ngOnInit(): void {
     this.loadData();
   }
 
-  loadData(){
+  loadData() {
     this.loadingBookings = true;
-    const bookingSub=this.bookingService.getBookings().subscribe({
-      next:(data)=>{
-        this.upcomingBookings=data;
-        console.log(this.upcomingBookings);
+    this.bookingService.getBookings().subscribe({
+      next: (data) => {
+        this.upcomingBookings = data;
         this.loadingBookings = false;
-        console.log("upcoming bookings: ", this.upcomingBookings);
+        console.log('upcoming bookings:', this.upcomingBookings);
       },
-      error:(err)=>{
+      error: (err) => {
         console.error('Error loading bookings:', err);
         this.loadingBookings = false;
       }
@@ -47,27 +50,29 @@ export class EventsComponent implements OnInit{
 
     this.loadingEvents = true;
     this.eventService.getEvents().subscribe({
-     next:(data)=>{
-        this.events=data as Event[];
+      next: (data) => {
+        this.events = data as Event[];
         this.loadingEvents = false;
         console.log('events loaded:', data);
-     },
-     error:(err)=>{
+      },
+      error: (err) => {
         console.error('Error loading events:', err);
         this.loadingEvents = false;
-     }
+      }
     });
   }
 
-  goToEventDetails(event: Event){
+  goToEventDetails(event: Event) {
+    console.log('Navigating to event details:', event);
     this.router.navigate(['/dashboard/events', event.id], {
-    state: { selectedEvent: event }
+      state: { selectedEvent: event }
     });
   }
 
   onBookingClick(booking: EnrichedBooking) {
-    console.log('Booking clicked:', booking);
-    // this.router.navigate(['/dashboard/bookings', booking.booking_id]);
+    console.log('Opening booking dialog for:', booking);
+    this.selectedBooking = booking;
+    this.bookingDialogVisible = true;
   }
 }
     

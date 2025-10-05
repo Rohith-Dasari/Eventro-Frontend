@@ -5,6 +5,11 @@
   (bookingClick)="onBookingClick($event)">
 </app-upcoming-bookings-row>
 
+<app-upcoming-booking-details
+  [(visible)]="bookingDialogVisible"
+  [booking]="selectedBooking">
+</app-upcoming-booking-details>
+
 <app-events-row 
   title="Events Near You"
   [events]="events"

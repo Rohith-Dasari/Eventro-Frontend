@@ -1,0 +1,28 @@
+<p-dialog 
+  header="Booking Details"
+  [(visible)]="visible" 
+  [modal]="true" 
+  [style]="{width: '60vw', 'max-width': '700px'}" 
+  [closable]="true" 
+  (onHide)="closeDialog()"
+>
+  <div *ngIf="booking" class="booking-details-dialog">
+    <div class="dialog-section">
+      <div class="detail-row"><strong>Event:</strong> {{ booking.show_details?.Event?.Name }}</div>
+      <div class="detail-row"><strong>Booking ID:</strong> {{ booking.booking_id }}</div>
+      <div class="detail-row"><strong>Venue:</strong> {{ booking.show_details?.Venue?.Name }}</div>
+      <div class="detail-row"><strong>Address:</strong> {{ booking.show_details?.Venue?.City }}, {{ booking.show_details?.Venue?.State }}</div>
+      <div class="detail-row">
+        <strong>Date & Time:</strong> {{ formatDate(booking.show_details?.ShowDate) }}, {{ booking.show_details?.ShowTime }}
+      </div>
+      <div class="detail-row"><strong>Seat Numbers:</strong> {{ booking.seats.join(', ') }}</div>
+      <div class="detail-row"><strong>Total Amount:</strong> ₹{{ booking.total_booking_price }}</div>
+      <div class="detail-row"><strong>Number of Tickets:</strong> {{ booking.num_tickets }}</div>
+    </div>
+
+    <div class="dialog-actions">
+      <button pButton label="Back to Home" class="p-button-secondary"></button>
+      <button pButton label="Download Ticket" icon="pi pi-download" class="p-button-outlined"></button>
+    </div>
+  </div>
+</p-dialog>
