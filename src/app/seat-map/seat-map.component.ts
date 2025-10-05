@@ -80,9 +80,7 @@ toggleSeat(row: number, seat: number) {
 
   get selectedSeats() {
     return this.seats.filter(s => s.isSelected);
-  }
-
-  
+  }  
 
   get selectedSeatCodes(): string[] {
     return this.selectedSeats.map(

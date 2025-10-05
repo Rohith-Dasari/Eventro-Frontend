@@ -37,7 +37,7 @@
             class="w-full" />
           <div class="error" *ngIf="emailModel.invalid && emailModel.touched">
             <span *ngIf="email.length === 0">Email cannot be blank</span>
-            <span *ngIf="email.length > 0 && !isValidEmail(email)">Invalid email address. Ex: abc@gmail.com</span>
+            <span *ngIf="email.length > 0 && !isValidEmail(email)">Invalid email address</span>
           </div>
         </div>
 

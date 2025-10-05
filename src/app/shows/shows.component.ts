@@ -18,7 +18,7 @@ export class ShowsComponent implements OnChanges {
   @Input() priceRange!: number[];
 
   venues: { name: string; shows: any[] }[] = [];
-  selectedShow: any = null;
+  selectedShow!: any;
   seatMapVisible: boolean = false;
 
   ngOnChanges(changes: SimpleChanges): void {
