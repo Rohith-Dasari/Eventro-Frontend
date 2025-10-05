@@ -22,4 +22,9 @@ export class EventService{
     let params = new HttpParams().set('venueId', venueId);
     return this.httpClient.get('venues', { params });
   }
+
+  getShowById(showId: string): Observable<any> {
+    let params = new HttpParams().set('showId', showId);
+    return this.httpClient.get('shows', { params });
+  }
 }
