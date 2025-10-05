@@ -21,8 +21,14 @@
     </div>
 
     <div class="dialog-actions">
-      <button pButton label="Back to Home" class="p-button-secondary"></button>
-      <button pButton label="Download Ticket" icon="pi pi-download" class="p-button-outlined"></button>
+      <button 
+        pButton 
+        label="Download Ticket" 
+        icon="pi pi-download" 
+        class="p-button-primary download-btn"
+        (click)="downloadTicketPDF()"
+        [loading]="isGeneratingPDF">
+      </button>
     </div>
   </div>
 </p-dialog>
