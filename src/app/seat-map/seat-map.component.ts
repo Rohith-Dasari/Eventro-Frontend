@@ -154,13 +154,13 @@ toggleSeat(row: number, seat: number) {
 
     console.log('Navigating to booking confirmation with data:', bookingData);
 
+    // Store booking data in sessionStorage to persist across navigation
+    sessionStorage.setItem('bookingData', JSON.stringify(bookingData));
+
     this.onDialogHide();
     
-    setTimeout(() => {
-      this.router.navigate(['/dashboard/booking-confirmation'], {
-        state: { bookingData: bookingData }
-      });
-    }, 100);
+    // Navigate immediately without timeout
+    this.router.navigate(['/dashboard/booking-confirmation']);
   }
 
   onDialogHide() {

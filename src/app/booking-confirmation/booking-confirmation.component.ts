@@ -22,13 +22,32 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
   isProcessingPayment = false;
 
   ngOnInit() {
+    // First try to get from navigation state (for immediate navigation)
     const navigation = this.router.getCurrentNavigation();
     console.log('Navigation object:', navigation);
     console.log('Navigation state:', navigation?.extras?.state);
     
+    let bookingDataFound = false;
+    
     if (navigation?.extras?.state && navigation.extras.state['bookingData']) {
       this.bookingData = navigation.extras.state['bookingData'];
-      console.log('Booking data received:', this.bookingData);
+      console.log('Booking data received from navigation state:', this.bookingData);
+      bookingDataFound = true;
+    } else {
+      // Try to get from sessionStorage (for page refresh or delayed navigation)
+      const storedData = sessionStorage.getItem('bookingData');
+      if (storedData) {
+        try {
+          this.bookingData = JSON.parse(storedData);
+          console.log('Booking data received from sessionStorage:', this.bookingData);
+          bookingDataFound = true;
+        } catch (error) {
+          console.error('Error parsing booking data from sessionStorage:', error);
+        }
+      }
+    }
+    
+    if (bookingDataFound) {
       this.startTimer();
     } else {
       console.warn('No booking data found, redirecting to events');
@@ -56,6 +75,8 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
     if (this.timerSubscription) {
       this.timerSubscription.unsubscribe();
     }
+    // Clear booking data when timer expires
+    sessionStorage.removeItem('bookingData');
     this.router.navigate(['/dashboard/events']);
   }
 
@@ -75,6 +96,8 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
     if (this.timerSubscription) {
       this.timerSubscription.unsubscribe();
     }
+    // Clear booking data when cancelled
+    sessionStorage.removeItem('bookingData');
     this.router.navigate(['/dashboard/events']);
   }
 
@@ -86,9 +109,12 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
         this.timerSubscription.unsubscribe();
       }
       
-      this.router.navigate(['/dashboard/payment-success'], {
-        state: { bookingData: this.bookingData }
-      });
+      // Store booking data for payment success page
+      sessionStorage.setItem('paymentData', JSON.stringify(this.bookingData));
+      // Clear booking data as it's no longer needed
+      sessionStorage.removeItem('bookingData');
+      
+      this.router.navigate(['/dashboard/payment-success']);
     }, 2000);
   }
 }

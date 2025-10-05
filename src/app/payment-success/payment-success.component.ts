@@ -20,16 +20,36 @@ export class PaymentSuccessComponent implements OnInit {
   generatedBookingId = '';
 
   ngOnInit() {
+    // First try to get from navigation state (for immediate navigation)
     const navigation = this.router.getCurrentNavigation();
+    let paymentDataFound = false;
+    
     if (navigation?.extras.state && navigation.extras.state['bookingData']) {
       this.bookingData = { ...navigation.extras.state['bookingData'] };
+      paymentDataFound = true;
     } else {
+      // Try to get from sessionStorage (for page refresh or delayed navigation)
+      const storedData = sessionStorage.getItem('paymentData');
+      if (storedData) {
+        try {
+          this.bookingData = JSON.parse(storedData);
+          paymentDataFound = true;
+        } catch (error) {
+          console.error('Error parsing payment data from sessionStorage:', error);
+        }
+      }
+    }
+    
+    if (!paymentDataFound) {
       this.router.navigate(['/dashboard/events']);
       return;
     }
 
     this.generatedBookingId = this.generateBookingId();
     this.bookingData.bookingId = this.generatedBookingId;
+
+    // Clear payment data from sessionStorage
+    sessionStorage.removeItem('paymentData');
 
     this.refreshBookings();
   }
