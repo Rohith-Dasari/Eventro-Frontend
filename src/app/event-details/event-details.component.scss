@@ -43,8 +43,9 @@
 
 .date-filter-container {
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 2rem;
+  flex-wrap: wrap;
 
   .date-pills {
     display: flex;
@@ -53,15 +54,27 @@
 
     .date-pill {
       border-radius: 20px;
+      padding: 0.5rem 1rem;
+      border: 1px solid #ddd;
+      background: white;
+      color: #333;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        background: #f8f9fa;
+        border-color: #1976d2;
+      }
+      
       &.selected {
         background-color: #1976d2;
         color: white;
+        border-color: #1976d2;
       }
     }
   }
 
   .price-filter-section {
-    margin-top: 1rem;
     
     .price-filter {
       display: flex;
@@ -120,10 +133,21 @@
 
 @media (max-width: 768px) {
   .date-filter-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    
+    .date-pills {
+      width: 100%;
+    }
+    
     .price-filter-section {
+      width: 100%;
+      
       .price-filter {
         flex-wrap: wrap;
         gap: 0.5rem;
+        justify-content: flex-start;
         
         .price-label {
           min-width: 40px;

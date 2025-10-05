@@ -29,7 +29,7 @@
 
     <div class="price-filter-section">
       <div class="price-filter">
-        <span class="price-label min-price">₹0</span>
+        <span class="price-label min-price">₹{{ rangeValues[0] }}</span>
         <div class="slider-container">
           <p-slider [(ngModel)]="rangeValues"
                     [range]="true"
@@ -39,7 +39,7 @@
                     class="price-slider">
           </p-slider>
         </div>
-        <span class="price-label max-price">₹3000</span>
+        <span class="price-label max-price">₹{{ rangeValues[1] }}</span>
         <button pButton
                 icon="pi pi-refresh"
                 class="refresh-btn"
