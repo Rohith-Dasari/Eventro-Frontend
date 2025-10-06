@@ -20,7 +20,6 @@ export class PaymentSuccessComponent implements OnInit {
   generatedBookingId = '';
 
   ngOnInit() {
-    // First try to get from navigation state (for immediate navigation)
     const navigation = this.router.getCurrentNavigation();
     let paymentDataFound = false;
     
@@ -28,7 +27,6 @@ export class PaymentSuccessComponent implements OnInit {
       this.bookingData = { ...navigation.extras.state['bookingData'] };
       paymentDataFound = true;
     } else {
-      // Try to get from sessionStorage (for page refresh or delayed navigation)
       const storedData = sessionStorage.getItem('paymentData');
       if (storedData) {
         try {
@@ -48,7 +46,6 @@ export class PaymentSuccessComponent implements OnInit {
     this.generatedBookingId = this.generateBookingId();
     this.bookingData.bookingId = this.generatedBookingId;
 
-    // Clear payment data from sessionStorage
     sessionStorage.removeItem('paymentData');
 
     this.refreshBookings();
@@ -72,13 +69,6 @@ export class PaymentSuccessComponent implements OnInit {
   }
 
   get successMessage(): string {
-    const messages = [
-      "🎉 Booking Confirmed! Get ready for an amazing experience!",
-      "✨ Success! Your tickets are secured. Can't wait to see you there!",
-      "🎊 Fantastic! Your booking is complete. The event awaits you!",
-      "🌟 Wonderful! Your seats are reserved. Enjoy the show!",
-      "🎭 Perfect! Your tickets are confirmed. Prepare for an unforgettable time!"
-    ];
-    return messages[Math.floor(Math.random() * messages.length)];
+    return "Get ready for an amazing experience!";
   }
 }

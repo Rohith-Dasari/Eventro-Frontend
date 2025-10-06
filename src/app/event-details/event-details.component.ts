@@ -50,7 +50,7 @@ export class EventDetailsComponent implements OnInit {
         const d = new Date(s.ShowDate);
         return d < earliest ? d : earliest;
       }, new Date(this.shows[0].ShowDate));
-      this.availableDates = Array.from({ length: 5 }, (_, i) => {
+      this.availableDates = Array.from({ length: 7 }, (_, i) => {
         const d = new Date(firstDate);
         d.setDate(d.getDate() + i);
         return d;

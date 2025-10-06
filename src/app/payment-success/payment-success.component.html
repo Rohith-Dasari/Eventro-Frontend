@@ -3,17 +3,10 @@
     <div class="checkmark-container">
       <i class="pi pi-check-circle success-icon"></i>
     </div>
-    <h2 class="success-title">Payment Successful!</h2>
+    <h2 class="success-title">Payment Successful</h2>
     <p class="success-message">{{ successMessage }}</p>
   </div>
 
-  <div class="compact-summary">
-    <app-booking-summary 
-      [bookingData]="bookingData"
-      [showTitle]="false"
-      [compact]="true">
-    </app-booking-summary>
-  </div>
 
   <div class="action-section">
     <button 
@@ -24,12 +17,5 @@
       class="p-button-primary home-btn"
       (click)="goToHome()">
     </button>
-  </div>
-
-  <div class="info-section">
-    <p class="info-text">
-      <i class="pi pi-info-circle"></i>
-      Your booking confirmation has been saved. You can view it anytime in your booking history.
-    </p>
   </div>
 </div>
