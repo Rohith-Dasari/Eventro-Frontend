@@ -17,7 +17,7 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   
   bookingData: BookingSummaryData = {};
-  timeRemaining = 120; // 2 minutes in seconds
+  timeRemaining = 120; 
   timerSubscription?: Subscription;
   isProcessingPayment = false;
 
@@ -75,7 +75,7 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
     if (this.timerSubscription) {
       this.timerSubscription.unsubscribe();
     }
-    // Clear booking data when timer expires
+ 
     sessionStorage.removeItem('bookingData');
     this.router.navigate(['/dashboard/events']);
   }
@@ -87,8 +87,8 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
   }
 
   get timerColor(): string {
-    if (this.timeRemaining <= 30) return '#f44336'; // Red
-    if (this.timeRemaining <= 60) return '#ff9800'; // Orange
+    if (this.timeRemaining <= 30) return '#f44336'; 
+    if (this.timeRemaining <= 60) return '#ff9800'; 
     return '#4caf50'; // Green
   }
 
