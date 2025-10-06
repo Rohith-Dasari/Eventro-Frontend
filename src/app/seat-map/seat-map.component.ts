@@ -153,14 +153,17 @@ toggleSeat(row: number, seat: number) {
     };
 
     console.log('Navigating to booking confirmation with data:', bookingData);
-
-    // Store booking data in sessionStorage to persist across navigation
-    sessionStorage.setItem('bookingData', JSON.stringify(bookingData));
+    console.log('Show ID:', this.show?.ID);
 
     this.onDialogHide();
     
-    // Navigate immediately without timeout
-    this.router.navigate(['/dashboard/booking-confirmation']);
+    this.router.navigate(['/dashboard/booking-confirmation'], {
+      state: {
+        bookingData: bookingData,
+        showId: this.show?.ID || '',
+        showData: this.show
+      }
+    });
   }
 
   onDialogHide() {

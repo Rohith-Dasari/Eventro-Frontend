@@ -11,7 +11,14 @@ export class BookingService {
   private httpClient = inject(HttpClient);
   private eventService = inject(EventService);
 
-  // addBooking(): Observable<>
+  addBooking(showId: string, seats: string[], userId: string): Observable<BookingResponse> {
+    const bookingRequest = {
+      show_id: showId,
+      seats: seats,
+      user_id: userId
+    };
+    return this.httpClient.post<BookingResponse>('bookings', bookingRequest);
+  }
 
   getBookings(): Observable<EnrichedBooking[]> {
     const userID = localStorage.getItem('user_id');
