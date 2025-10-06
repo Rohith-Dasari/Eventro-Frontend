@@ -6,6 +6,8 @@ import { CardModule } from 'primeng/card';
 import { interval, Subscription } from 'rxjs';
 import { BookingSummaryComponent, BookingSummaryData } from '../shared/booking-summary/booking-summary.component';
 import { BookingService } from '../services/bookings.service';
+import { AuthService } from '../services/auth.service';
+import { User } from '../models/user';
 
 @Component({
   selector: 'app-booking-confirmation',
@@ -17,7 +19,7 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private bookingService = inject(BookingService);
-  
+  private authService= inject(AuthService);
   bookingData: BookingSummaryData = {};
   timeRemaining = 120; 
   timerSubscription?: Subscription;
@@ -123,8 +125,8 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
   onPay() {
     console.log('onPay stage: payment initiated');
     this.isProcessingPayment = true;
-    
-    const userId = localStorage.getItem('user_id');
+   
+    const userId = (this.authService.userSignal() as User).user_id;
     const seats = this.bookingData.seats || [];
     console.log('payment validation stage: userId:', userId);
     console.log('payment validation stage: showId:', this.showId);
