@@ -141,22 +141,30 @@ toggleSeat(row: number, seat: number) {
       venueAddress = 'Address not available';
     }
 
+    console.log('seat selection stage: show data:', this.show);
+    console.log('seat selection stage: selected seats:', this.selectedSeatCodes);
+    console.log('seat selection stage: total price:', this.totalPrice);
+    
+    const showDateFormatted = this.show?.ShowDate ? 
+      (this.show.ShowDate instanceof Date ? this.show.ShowDate.toISOString() : this.show.ShowDate) : '';
+    
     const bookingData: BookingSummaryData = {
       eventName: this.show?.Event?.Name || 'Event Name Not Available',
       venueName: this.show?.Venue?.Name || 'Venue Name Not Available',
       venueAddress: venueAddress,
-      showDate: this.show?.ShowDate || '',
+      showDate: showDateFormatted,
       showTime: this.show?.ShowTime || 'Time TBD',
       seats: [...this.selectedSeatCodes],
       numTickets: this.selectedSeats.length,
       totalAmount: this.totalPrice
     };
 
-    console.log('Navigating to booking confirmation with data:', bookingData);
-    console.log('Show ID:', this.show?.ID);
+    console.log('booking data creation stage: bookingData:', bookingData);
+    console.log('booking data creation stage: showId:', this.show?.ID);
 
     sessionStorage.setItem('bookingData', JSON.stringify(bookingData));
     sessionStorage.setItem('selectedShowId', this.show?.ID || '');
+    console.log('seat-map storage stage: data stored in sessionStorage');
 
     this.onDialogHide();
     
@@ -167,6 +175,7 @@ toggleSeat(row: number, seat: number) {
         showData: this.show
       }
     });
+    console.log('seat-map navigation stage: navigating to booking confirmation');
   }
 
   onDialogHide() {

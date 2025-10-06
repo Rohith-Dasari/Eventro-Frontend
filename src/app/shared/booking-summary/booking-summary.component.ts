@@ -6,7 +6,7 @@ export interface BookingSummaryData {
   eventName?: string;
   venueName?: string;
   venueAddress?: string;
-  showDate?: string;
+  showDate?: string | Date;
   showTime?: string;
   seats?: string[];
   numTickets?: number;
@@ -26,6 +26,7 @@ export class BookingSummaryComponent {
   @Input() compact: boolean = false;
 
   get summaryItems() {
+    console.log('booking summary stage: bookingData received:', this.bookingData);
     const items = [
       { label: 'Event', value: this.bookingData?.eventName || 'Event Not Available' },
       { label: 'Venue', value: this.bookingData?.venueName || 'Venue Not Available' },
@@ -46,11 +47,23 @@ export class BookingSummaryComponent {
     ) : items;
   }
 
-  private formatDate(dateString: string | undefined): string {
-    if (!dateString || dateString.trim() === '') return 'Date Not Available';
+  private formatDate(dateInput: string | Date | undefined): string {
+    if (!dateInput) return 'Date Not Available';
+    
     try {
-      const date = new Date(dateString);
+      let date: Date;
+      
+      if (dateInput instanceof Date) {
+        date = dateInput;
+      } else if (typeof dateInput === 'string') {
+        if (dateInput.trim() === '') return 'Date Not Available';
+        date = new Date(dateInput);
+      } else {
+        return 'Invalid Date Format';
+      }
+      
       if (isNaN(date.getTime())) return 'Invalid Date';
+      
       return date.toLocaleDateString('en-US', {
         weekday: 'long',
         year: 'numeric',
