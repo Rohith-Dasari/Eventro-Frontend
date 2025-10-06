@@ -25,51 +25,46 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
   showId: string = '';
 
   ngOnInit() {
-    // First try to get from navigation state (for direct navigation)
-    const navigation = this.router.getCurrentNavigation();
-    console.log('Navigation object:', navigation);
-    console.log('Navigation state:', navigation?.extras?.state);
-    
+    console.log('ngOnInit stage: history.state:', history.state);
     let bookingDataFound = false;
     
-    if (navigation?.extras?.state) {
-      const state = navigation.extras.state;
-      if (state['bookingData'] && state['showId']) {
-        this.bookingData = state['bookingData'];
-        this.showId = state['showId'];
-        console.log('Booking data received from navigation state:', this.bookingData);
-        console.log('Show ID received from navigation state:', this.showId);
-        
-        // Store in sessionStorage as backup for page refresh
-        sessionStorage.setItem('bookingData', JSON.stringify(this.bookingData));
-        sessionStorage.setItem('selectedShowId', this.showId);
-        
-        bookingDataFound = true;
-      }
-    } 
+    if (history.state?.bookingData && history.state?.showId) {
+      this.bookingData = history.state.bookingData;
+      this.showId = history.state.showId;
+      console.log('history.state stage: bookingData:', this.bookingData);
+      console.log('history.state stage: showId:', this.showId);
+      
+      sessionStorage.setItem('bookingData', JSON.stringify(this.bookingData));
+      sessionStorage.setItem('selectedShowId', this.showId);
+      console.log('sessionStorage store stage: data stored');
+      
+      bookingDataFound = true;
+    }
     
-    // Fallback to sessionStorage (for page refresh)
     if (!bookingDataFound) {
       const storedData = sessionStorage.getItem('bookingData');
       const storedShowId = sessionStorage.getItem('selectedShowId');
+      console.log('sessionStorage fallback stage: storedData:', storedData);
+      console.log('sessionStorage fallback stage: storedShowId:', storedShowId);
       
       if (storedData && storedShowId) {
         try {
           this.bookingData = JSON.parse(storedData);
           this.showId = storedShowId;
-          console.log('Booking data received from sessionStorage (fallback):', this.bookingData);
-          console.log('Show ID received from sessionStorage (fallback):', this.showId);
+          console.log('sessionStorage parse stage: bookingData:', this.bookingData);
+          console.log('sessionStorage parse stage: showId:', this.showId);
           bookingDataFound = true;
         } catch (error) {
-          console.error('Error parsing booking data from sessionStorage:', error);
+          console.error('sessionStorage parse error stage:', error);
         }
       }
     }
     
     if (bookingDataFound) {
+      console.log('timer start stage: starting timer');
       this.startTimer();
     } else {
-      console.warn('No booking data or show ID found, redirecting to events');
+      console.log('redirect stage: no data found, redirecting');
       this.router.navigate(['/dashboard/events']);
       return;
     }
@@ -91,12 +86,14 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
   }
 
   timeExpired() {
+    console.log('timeExpired stage: timer expired');
     if (this.timerSubscription) {
       this.timerSubscription.unsubscribe();
     }
  
     sessionStorage.removeItem('bookingData');
     sessionStorage.removeItem('selectedShowId');
+    console.log('cleanup stage: sessionStorage cleared');
     this.router.navigate(['/dashboard/events']);
   }
 
@@ -113,52 +110,57 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
   }
 
   onCancel() {
+    console.log('onCancel stage: user cancelled booking');
     if (this.timerSubscription) {
       this.timerSubscription.unsubscribe();
     }
-    // Clear booking data when cancelled
     sessionStorage.removeItem('bookingData');
     sessionStorage.removeItem('selectedShowId');
+    console.log('cancel cleanup stage: sessionStorage cleared');
     this.router.navigate(['/dashboard/events']);
   }
 
   onPay() {
+    console.log('onPay stage: payment initiated');
     this.isProcessingPayment = true;
     
     const userId = localStorage.getItem('user_id');
     const seats = this.bookingData.seats || [];
+    console.log('payment validation stage: userId:', userId);
+    console.log('payment validation stage: showId:', this.showId);
+    console.log('payment validation stage: seats:', seats);
     
     if (!userId || !this.showId || seats.length === 0) {
-      console.error('Missing required data for booking');
+      console.log('payment validation failed stage: missing data');
       this.isProcessingPayment = false;
       return;
     }
     
+    console.log('API call stage: calling addBooking');
     this.bookingService.addBooking(this.showId, seats, userId).subscribe({
       next: (response) => {
-        console.log('Booking created successfully:', response);
+        console.log('API success stage: response:', response);
         
         if (this.timerSubscription) {
           this.timerSubscription.unsubscribe();
         }
         
-        // Store booking data with booking ID for payment success page
         const paymentData = {
           ...this.bookingData,
           bookingId: response.booking_id
         };
+        console.log('payment data stage: paymentData:', paymentData);
         sessionStorage.setItem('paymentData', JSON.stringify(paymentData));
         
-        // Clear booking data as it's no longer needed
         sessionStorage.removeItem('bookingData');
         sessionStorage.removeItem('selectedShowId');
+        console.log('payment cleanup stage: old data cleared');
         
         this.router.navigate(['/dashboard/payment-success']);
       },
       error: (error) => {
-        console.error('Error creating booking:', error);
+        console.log('API error stage: error:', error);
         this.isProcessingPayment = false;
-        // Handle error - you might want to show an error message to user
       }
     });
   }

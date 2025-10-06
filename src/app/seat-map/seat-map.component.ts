@@ -155,6 +155,9 @@ toggleSeat(row: number, seat: number) {
     console.log('Navigating to booking confirmation with data:', bookingData);
     console.log('Show ID:', this.show?.ID);
 
+    sessionStorage.setItem('bookingData', JSON.stringify(bookingData));
+    sessionStorage.setItem('selectedShowId', this.show?.ID || '');
+
     this.onDialogHide();
     
     this.router.navigate(['/dashboard/booking-confirmation'], {
