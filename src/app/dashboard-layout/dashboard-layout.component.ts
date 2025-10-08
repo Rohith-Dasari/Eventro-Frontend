@@ -50,7 +50,7 @@ export class DashboardLayoutComponent {
     switch (this.role) {
       case 'Customer':
         this.navItems = [
-          { label: 'Events', path: '/dashboard/events' },
+          { label: 'Events', path: '/dashboard/events' },       
           { label: 'Profile', path: '/dashboard/profile' },
         ];
         break;
@@ -68,7 +68,6 @@ export class DashboardLayoutComponent {
           { label: 'Events', path: '/dashboard/events' },
           { label: 'Venues', path: '/dashboard/venues' },
           { label: 'Artists', path: '/dashboard/artists' },
-          { label: 'Shows', path: '/dashboard/shows' },
           { label: 'Profile', path: '/dashboard/profile' },
         ];
         break;
@@ -91,6 +90,7 @@ export class DashboardLayoutComponent {
     }
   }
 }
+
 interface NavItem {
   label: string;
   path: string;
