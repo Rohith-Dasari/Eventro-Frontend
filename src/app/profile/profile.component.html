@@ -7,16 +7,14 @@
   </div>
 
   <div class="profile-sections">
-    <!-- My Details Card -->
-    <div class="profile-card" (click)="navigateTo('details')">
+    <div class="profile-card" (click)="showDetailsDialog = true">
       <div class="card-header">
         <i class="pi pi-user-edit"></i>
         <h3>My Details</h3>
       </div>
-      <p>Manage your personal information and preferences</p>
+      <p>Manage your personal information</p>
     </div>
 
-    <!-- My Bookings Card -->
     <div class="profile-card" (click)="navigateTo('bookings')">
       <div class="card-header">
         <i class="pi pi-calendar"></i>

@@ -38,8 +38,6 @@ export class ProfileComponent implements OnInit {
   navigateTo(section: string) {
     if (section === 'bookings') {
       this.router.navigate(['/dashboard/bookings']);
-    } else if (section === 'details') {
-      this.showDetailsDialog = true; 
     }
   }
 }
