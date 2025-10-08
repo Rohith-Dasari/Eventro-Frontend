@@ -13,34 +13,36 @@
     />
   </span>
 
-  <div class="category-chips" *ngIf="isFocused || searchQuery.trim()">
-    <span
-      *ngFor="let c of categories"
-      class="chip"
-      [class.active]="selectedCategory === c.value"
-      (click)="selectCategory(c.value)"
-    >
-      {{ c.label }}
-    </span>
-  </div>
+  <div class="search-dropdown" *ngIf="isFocused || showResults">
+    <div class="category-chips" *ngIf="isFocused || searchQuery.trim()">
+      <span
+        *ngFor="let c of categories"
+        class="chip"
+        [class.active]="selectedCategory === c.value"
+        (click)="selectCategory(c.value)"
+      >
+        {{ c.label }}
+      </span>
+    </div>
 
-  <div class="search-results" *ngIf="showResults">
-    <div
-      *ngFor="let event of searchResults"
-      class="result-item"
-      (click)="selectEvent(event)"
-    >
-      <span>{{ event.name }}</span>
-      <i
-        class="pi"
-        [ngClass]="{
-          'pi-video': event.category === 'movie',
-          'pi-flag': event.category === 'sports',
-          'pi-microphone': event.category === 'concert',
-          'pi-briefcase': event.category === 'workshop',
-          'pi-glass': event.category === 'party'
-        }"
-      ></i>
+    <div class="search-results" *ngIf="showResults">
+      <div
+        *ngFor="let event of searchResults"
+        class="result-item"
+        (click)="selectEvent(event)"
+      >
+        <span>{{ event.name }}</span>
+        <i
+          class="pi"
+          [ngClass]="{
+            'pi-video': event.category === 'movie',
+            'pi-flag': event.category === 'sports',
+            'pi-microphone': event.category === 'concert',
+            'pi-briefcase': event.category === 'workshop',
+            'pi-glass': event.category === 'party'
+          }"
+        ></i>
+      </div>
     </div>
   </div>
 </div>

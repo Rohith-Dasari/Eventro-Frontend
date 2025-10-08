@@ -30,11 +30,32 @@
     }
   }
 
+  /* 🔥 unified dropdown (chips + results) */
+  .search-dropdown {
+    position: absolute;
+    top: 110%; /* sits just below input */
+    left: 0;
+    width: 100%;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    z-index: 999;
+    overflow: hidden;
+    animation: fadeIn 0.2s ease;
+  }
+
+  /* category chips appear inside dropdown */
   .category-chips {
     display: flex;
+    flex-wrap: wrap;
     gap: 8px;
-    margin-top: 8px;
-    overflow-x: auto;
+    padding: 10px 14px;
+    border-bottom: 1px solid #eee;
+    background: #fafafa;
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.2s ease, transform 0.2s ease;
 
     .chip {
       padding: 6px 12px;
@@ -49,21 +70,17 @@
         background: #4f46e5;
         color: #fff;
       }
+
+      &:hover {
+        background: #e0e7ff;
+      }
     }
   }
 
+  /* search results under chips */
   .search-results {
-    position: absolute;
-    top: 110%;
-    left: 0;
-    width: 100%;
-    background: #fff;
-    border: 1px solid #e0e0e0;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     max-height: 400px;
     overflow-y: auto;
-    z-index: 999;
 
     .result-item {
       display: flex;
@@ -72,6 +89,7 @@
       padding: 10px 14px;
       cursor: pointer;
       border-bottom: 1px solid #f2f2f2;
+      transition: background 0.15s ease;
 
       &:hover {
         background: #f8f8ff;
@@ -85,20 +103,13 @@
   }
 }
 
-.category-chips {
-  display: flex;
-  gap: 8px;
-  margin-top: 8px;
-  overflow-x: auto;
-  opacity: 0;
-  transform: translateY(-4px);
-  transition: opacity 0.2s ease, transform 0.2s ease;
-
-  &.ng-trigger {
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
     opacity: 1;
     transform: translateY(0);
   }
-}
-.search-results {
-  animation: fadeIn 0.2s ease;
 }
