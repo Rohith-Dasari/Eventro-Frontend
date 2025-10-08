@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { Event } from '../models/events';
 
+
 @Component({
   selector: 'app-events-row',
   imports: [CommonModule, CardModule],

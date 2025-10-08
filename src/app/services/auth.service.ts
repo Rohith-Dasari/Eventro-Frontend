@@ -77,13 +77,15 @@ export class AuthService {
       }
     }))
  }
- getRole(): string | null {
+  getRole(): string | null {
     return this.userSignal()?.role ?? localStorage.getItem('role');
   }
+  
   getID(): string | null {
     return this.userSignal()?.user_id ?? localStorage.getItem('user_id');
   }
+  
   getUserByMailID(email: string) {
-    return this.httpClient.get<User>('users/email/${email}');
+    return this.httpClient.get<User>(`users/email/${email}`);
   }
 }

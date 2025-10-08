@@ -15,13 +15,15 @@
       <p>Manage your personal information</p>
     </div>
 
-    <div class="profile-card" (click)="navigateTo('bookings')">
-      <div class="card-header">
-        <i class="pi pi-calendar"></i>
-        <h3>My Bookings</h3>
+    @if (role === "Customer") {
+      <div class="profile-card" (click)="navigateTo('bookings')">
+        <div class="card-header">
+          <i class="pi pi-calendar"></i>
+          <h3>My Bookings</h3>
+        </div>
+        <p>View and manage your event bookings ({{ upcomingCount }} upcoming)</p>
       </div>
-      <p>View and manage your event bookings ({{ upcomingCount }} upcoming)</p>
-    </div>
+    }
   </div>
 </div>
 

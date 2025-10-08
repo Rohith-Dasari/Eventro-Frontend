@@ -1,0 +1,72 @@
+<p-dialog 
+  header="Add New Event"
+  [(visible)]="visible"
+  [modal]="true"
+  [style]="{ width: '40vw' }"
+  (onHide)="close()"
+>
+  <form (ngSubmit)="submit()" #addEventForm="ngForm" class="add-event-form">
+    <div class="form-field">
+      <label>Name</label>
+      <input 
+        type="text" 
+        pInputText 
+        [(ngModel)]="newEvent.name" 
+        name="name" 
+        required
+      />
+    </div>
+
+    <div class="form-field">
+      <label>Description</label>
+      <textarea 
+        pInputTextarea 
+        [(ngModel)]="newEvent.description" 
+        name="description" 
+        rows="3" 
+        required>
+      </textarea>
+    </div>
+
+    <div class="form-field">
+      <label>Duration (in mins)</label>
+      <input 
+        type="number" 
+        pInputText 
+        [(ngModel)]="newEvent.duration" 
+        name="duration" 
+        required
+      />
+    </div>
+
+    <div class="form-field">
+      <label>Category</label>
+      <p-dropdown 
+        [options]="categories"
+        [(ngModel)]="newEvent.category"
+        name="category"
+        optionLabel="label"
+        placeholder="Select category"
+        required>
+      </p-dropdown>
+    </div>
+
+    <div class="dialog-actions">
+      <button 
+        pButton 
+        label="Cancel" 
+        class="p-button-text"
+        type="button"
+        (click)="close()"
+      ></button>
+
+      <button 
+        pButton 
+        label="Submit"
+        class="p-button-success"
+        type="submit"
+        [disabled]="addEventForm.invalid"
+      ></button>
+    </div>
+  </form>
+</p-dialog>

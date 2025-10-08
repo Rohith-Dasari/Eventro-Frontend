@@ -9,10 +9,10 @@ import { BookingService } from '../services/bookings.service';
 import { EnrichedBooking } from '../models/bookings';
 import { UpcomingBookingDetailsComponent } from '../upcoming-booking-details/upcoming-booking-details.component';
 import { AuthService } from '../services/auth.service';
-
+import { AddEventDialogComponent } from '../dashboard/add-event-dialog/add-event-dialog.component';
 @Component({
   selector: 'app-events',
-  imports: [UpcomingBookingDetailsComponent,CommonModule, EventsRowComponent, UpcomingBookingsRowComponent],
+  imports: [UpcomingBookingDetailsComponent,CommonModule, EventsRowComponent, UpcomingBookingsRowComponent, AddEventDialogComponent],
   templateUrl: './events.component.html',
   styleUrl: './events.component.scss'
 })
@@ -36,6 +36,12 @@ export class EventsComponent implements OnInit {
   ngOnInit(): void {
     this.loadData();
   }
+
+refreshEvents() {
+  this.eventService.getEvents().subscribe(events => {
+    this.events = events;
+  });
+}
 
   loadData() {
     if (this.role === 'Customer') {
@@ -78,6 +84,10 @@ export class EventsComponent implements OnInit {
     console.log('Opening booking dialog for:', booking);
     this.selectedBooking = booking;
     this.bookingDialogVisible = true;
+  }
+
+  openAddEventDialog() {
+    console.log('Opening add event dialog');
   }
 }
     

@@ -19,6 +19,7 @@ export class ProfileComponent implements OnInit {
 
   user = this.authService.userSignal() as User;
   userProfile!: UserProfile;
+  role = this.user?.role || this.authService.getRole();
 
   showDetailsDialog = false;
   upcomingCount = 2;
