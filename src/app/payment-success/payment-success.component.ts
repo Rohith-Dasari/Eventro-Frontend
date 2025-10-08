@@ -8,7 +8,7 @@ import { BookingService } from '../services/bookings.service';
 
 @Component({
   selector: 'app-payment-success',
-  imports: [CommonModule, ButtonModule, CardModule, BookingSummaryComponent],
+  imports: [CommonModule, ButtonModule, CardModule],
   templateUrl: './payment-success.component.html',
   styleUrl: './payment-success.component.scss'
 })

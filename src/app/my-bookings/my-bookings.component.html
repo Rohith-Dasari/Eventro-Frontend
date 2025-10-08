@@ -1,0 +1,9 @@
+<div class="bookings-card" *ngIf="!loading" (click)="openBookingsList()">
+  <div class="card-header">
+    <i class="pi pi-calendar"></i>
+    <h3>My Bookings</h3>
+  </div>
+  <p>View and manage your event bookings ({{ upcomingCount }} upcoming)</p>
+</div>
+
+<p *ngIf="loading" class="loading-text">Loading your bookings...</p>

@@ -1,1 +1,28 @@
-<p>profile works!</p>
+<div class="profile-container">
+  <div class="profile-header">
+    <div class="avatar">
+      <i class="pi pi-user"></i>
+    </div>
+    <p>{{ user.email }}</p>
+  </div>
+
+  <div class="profile-sections">
+    <!-- My Details Card -->
+    <div class="profile-card" (click)="navigateTo('details')">
+      <div class="card-header">
+        <i class="pi pi-user-edit"></i>
+        <h3>My Details</h3>
+      </div>
+      <p>Manage your personal information and preferences</p>
+    </div>
+
+    <!-- My Bookings Card -->
+    <div class="profile-card" (click)="navigateTo('bookings')">
+      <div class="card-header">
+        <i class="pi pi-calendar"></i>
+        <h3>My Bookings</h3>
+      </div>
+      <p>View and manage your event bookings ({{ upcomingCount }} upcoming)</p>
+    </div>
+  </div>
+</div>

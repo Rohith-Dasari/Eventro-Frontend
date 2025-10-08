@@ -10,6 +10,7 @@ import { ArtistsComponent } from './artists/artists.component';
 import { VenuesComponent } from './venues/venues.component';
 import { BookingConfirmationComponent } from './booking-confirmation/booking-confirmation.component';
 import { PaymentSuccessComponent } from './payment-success/payment-success.component';
+import { BookingsListComponent } from './bookings-list/bookings-list.component';
 
 export const routes: Routes = [
   {
@@ -36,7 +37,8 @@ export const routes: Routes = [
       { path: 'payment-success', component: PaymentSuccessComponent },
       { path: 'profile', component: ProfileComponent },
       { path: 'artists', component: ArtistsComponent },
-      { path: 'venues', component: VenuesComponent },          
+      { path: 'venues', component: VenuesComponent },
+      { path: 'bookings', component: BookingsListComponent },          
       { path: '', redirectTo: 'events', pathMatch: 'full' } 
     ],
   },

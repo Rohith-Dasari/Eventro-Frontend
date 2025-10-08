@@ -1,0 +1,151 @@
+.bookings-list-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+
+    h2 {
+      margin: 0;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+  }
+
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 3rem;
+
+    .loading-text {
+      color: #666;
+      font-size: 1rem;
+    }
+  }
+
+  .bookings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+
+    .booking-card {
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .booking-img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+      }
+
+      .booking-info {
+        .show-details {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 0.5rem;
+          
+          .show-date, .show-time {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.9rem;
+            color: #666;
+            
+            i {
+              color: #3498db;
+            }
+          }
+        }
+
+        .venue-location {
+          display: flex;
+          align-items: center;
+          gap: 0.3rem;
+          margin-bottom: 0.8rem;
+          font-size: 0.9rem;
+          color: #666;
+          
+          i {
+            color: #e74c3c;
+          }
+        }
+
+        .booking-details {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-top: 1rem;
+          padding-top: 0.8rem;
+          border-top: 1px solid #eee;
+
+          .seats, .price {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-weight: 500;
+            
+            i {
+              color: #27ae60;
+            }
+          }
+
+          .price {
+            color: #2c3e50;
+            font-size: 1.1rem;
+            font-weight: 600;
+          }
+        }
+      }
+    }
+  }
+
+  .no-bookings {
+    text-align: center;
+    margin-top: 4rem;
+    color: #666;
+
+    i {
+      font-size: 4rem;
+      color: #bdc3c7;
+      margin-bottom: 1rem;
+    }
+
+    h3 {
+      margin: 1rem 0 0.5rem;
+      color: #2c3e50;
+    }
+
+    p {
+      margin: 0;
+      font-size: 1rem;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .bookings-list-container {
+    padding: 0 0.5rem;
+
+    .bookings-grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+
+      .booking-card .booking-info .show-details {
+        flex-direction: column;
+        gap: 0.3rem;
+        align-items: flex-start;
+      }
+    }
+  }
+}

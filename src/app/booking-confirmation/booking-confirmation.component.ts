@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -18,6 +18,7 @@ import { User } from '../models/user';
 export class BookingConfirmationComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private location = inject(Location);
   private bookingService = inject(BookingService);
   private authService= inject(AuthService);
   bookingData: BookingSummaryData = {};
@@ -96,7 +97,7 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
     sessionStorage.removeItem('bookingData');
     sessionStorage.removeItem('selectedShowId');
     console.log('cleanup stage: sessionStorage cleared');
-    this.router.navigate(['/dashboard/events']);
+    this.location.back();
   }
 
   get formattedTime(): string {
@@ -119,7 +120,7 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
     sessionStorage.removeItem('bookingData');
     sessionStorage.removeItem('selectedShowId');
     console.log('cancel cleanup stage: sessionStorage cleared');
-    this.router.navigate(['/dashboard/events']);
+    this.location.back();
   }
 
   onPay() {

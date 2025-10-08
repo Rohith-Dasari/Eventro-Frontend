@@ -5,6 +5,9 @@
   text-align: center;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
   gap: 2rem;
 
   .success-animation {

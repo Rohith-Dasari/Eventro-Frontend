@@ -21,25 +21,35 @@ export class BookingService {
   }
 
   getBookings(): Observable<EnrichedBooking[]> {
+    console.log('booking-service stage: getBookings method called');
     const userID = localStorage.getItem('user_id');
+    console.log('booking-service stage: retrieved user_id from localStorage:', userID);
     let params = new HttpParams().set('userId', userID as string);
+    console.log('booking-service stage: making API call to /bookings with params:', params.toString());
     
     return this.httpClient.get<BookingResponse[]>('bookings', { params }).pipe(
       switchMap(bookings => {
-        console.log('Raw bookings response:', bookings);
+        console.log('booking-service stage: raw API response received:', bookings);
+        console.log('booking-service stage: response type:', typeof bookings);
+        console.log('booking-service stage: response length:', bookings?.length || 0);
         
         if (!bookings || bookings.length === 0) {
+          console.log('booking-service stage: no bookings found, returning empty array');
           return of([]);
         }
         
-        const enrichedBookings$ = bookings.map(booking => 
-          this.enrichBookingWithDetails(booking)
-        );
+        console.log('booking-service stage: processing bookings for enrichment');
+        const enrichedBookings$ = bookings.map(booking => {
+          console.log('booking-service stage: enriching booking:', booking.booking_id);
+          return this.enrichBookingWithDetails(booking);
+        });
         
+        console.log('booking-service stage: waiting for all enriched bookings to complete');
         return forkJoin(enrichedBookings$);
       }),
       catchError(error => {
-        console.error('Error in getBookings:', error);
+        console.error('booking-service stage: API error occurred:', error);
+        console.log('booking-service stage: returning empty array due to error');
         return of([]); 
       })
     );

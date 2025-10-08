@@ -1,0 +1,40 @@
+.bookings-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  cursor: pointer;
+  background-color: #fff;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 0.5rem;
+
+    i {
+      font-size: 1.3rem;
+      color: #333;
+    }
+
+    h3 {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+  }
+
+  p {
+    color: #777;
+    margin: 0;
+  }
+}
+
+.loading-text {
+  color: #666;
+  font-style: italic;
+}

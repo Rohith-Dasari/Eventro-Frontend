@@ -1,0 +1,70 @@
+<div class="bookings-list-container">
+  <div class="header">
+    <button pButton type="button" icon="pi pi-arrow-left" class="p-button-text" (click)="goBack()"></button>
+    <h2>My Bookings</h2>
+  </div>
+
+  <div *ngIf="loading" class="loading-container">
+    <p-progressSpinner></p-progressSpinner>
+    <p class="loading-text">Loading your bookings...</p>
+  </div>
+
+  <div *ngIf="!loading && bookings.length > 0" class="bookings-grid">
+    <p-card 
+      *ngFor="let booking of bookings" 
+      class="booking-card"
+      (click)="onBookingClick(booking)">
+      
+      <ng-template pTemplate="header">
+        <img [src]="defaultImage" [alt]="booking.show_details?.Event?.Name" class="booking-img" />
+      </ng-template>
+
+      <ng-template pTemplate="title">
+        {{ booking.show_details?.Event?.Name || 'Event Name Not Available' }}
+      </ng-template>
+
+      <ng-template pTemplate="subtitle">
+        <div class="booking-info">
+          <div class="show-details">
+            <span class="show-date">
+              <i class="pi pi-calendar"></i>
+              {{ formatDate(booking.show_details?.ShowDate) }}
+            </span>
+            <span class="show-time">
+              <i class="pi pi-clock"></i>
+              {{ booking.show_details?.ShowTime || 'Time TBD' }}
+            </span>
+          </div>
+          <div class="venue-location">
+            <i class="pi pi-map-marker"></i>
+            {{ booking.show_details?.Venue?.Name || 'Venue TBD' }}
+            <span *ngIf="booking.show_details?.Venue?.City">, {{ booking.show_details?.Venue?.City }}</span>
+          </div>
+          <div class="booking-details">
+            <span class="seats">
+              <i class="pi pi-ticket"></i>
+              {{ booking.seats.join(', ') }}
+            </span>
+            <span class="price">
+              <i class="pi pi-money-bill"></i>
+              ₹{{ booking.total_booking_price }}
+            </span>
+          </div>
+        </div>
+      </ng-template>
+
+    </p-card>
+  </div>
+
+  <div *ngIf="!loading && bookings.length === 0" class="no-bookings">
+    <i class="pi pi-calendar-times"></i>
+    <h3>No Bookings Found</h3>
+    <p>You haven't made any bookings yet. Browse events and book your tickets!</p>
+  </div>
+</div>
+
+<app-upcoming-booking-details
+  [(visible)]="dialogVisible"
+  [booking]="selectedBooking"
+  (visibleChange)="onDialogHide()">
+</app-upcoming-booking-details>
