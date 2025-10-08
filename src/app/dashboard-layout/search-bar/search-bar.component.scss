@@ -9,9 +9,9 @@
     .search-input {
       width: 100%;
       border-radius: 25px;
-      padding: 0.75rem 1rem 0.75rem 2.5rem;
+      padding: 0.875rem 1.5rem 0.875rem 2.75rem;  
       border: 2px solid #e0e0e0;
-      font-size: 0.95rem;
+      font-size: 1rem;  
       transition: all 0.2s ease;
 
       &:focus {
@@ -104,5 +104,222 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+.search-container {
+  .p-input-icon-left {
+    .search-input {
+      padding: 0.6rem 0.6rem 0.6rem 1.8rem;
+      font-size: 0.8rem;
+      border-radius: 18px;
+    }
+
+    i {
+      left: 0.5rem;
+      font-size: 0.8rem;
+    }
+  }
+
+  .search-dropdown {
+    left: -0.75rem;
+    width: calc(100% + 1.5rem);
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+  }
+
+  .category-chips {
+    padding: 5px 8px;
+    gap: 3px;
+    justify-content: center;
+
+    .chip {
+      padding: 2px 5px;
+      font-size: 0.65rem;
+      border-radius: 10px;
+    }
+  }
+
+  .search-results {
+    max-height: 250px;
+
+    .result-item {
+      padding: 6px;
+      font-size: 0.8rem;
+
+      span {
+        max-width: calc(100% - 30px);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      i {
+        font-size: 0.8rem;
+        flex-shrink: 0;
+      }
+    }
+  }
+}
+
+@media (min-width: 481px) {
+  .search-container {
+    .p-input-icon-left {
+      .search-input {
+        padding: 0.65rem 0.75rem 0.65rem 2rem;
+        font-size: 0.85rem;
+      }
+
+      i {
+        left: 0.65rem;
+        font-size: 0.85rem;
+      }
+    }
+
+    .category-chips {
+      .chip {
+        padding: 3px 6px;
+        font-size: 0.7rem;
+      }
+    }
+
+    .search-results {
+      .result-item {
+        padding: 8px;
+        font-size: 0.85rem;
+
+        i {
+          font-size: 0.85rem;
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 769px) {
+  .search-container {
+    .p-input-icon-left {
+      .search-input {
+        padding: 0.7rem 1rem 0.7rem 2.25rem;
+        font-size: 0.9rem;
+        border-radius: 20px;
+      }
+
+      i {
+        left: 0.75rem;
+        font-size: 0.9rem;
+      }
+    }
+
+    .search-dropdown {
+      left: -0.5rem;
+      width: calc(100% + 1rem);
+    }
+
+    .category-chips {
+      padding: 6px 10px;
+      gap: 4px;
+
+      .chip {
+        padding: 4px 8px;
+        font-size: 0.75rem;
+        border-radius: 12px;
+      }
+    }
+
+    .search-results {
+      max-height: 300px;
+
+      .result-item {
+        padding: 10px;
+        font-size: 0.9rem;
+
+        i {
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 1025px) {
+  .search-container {
+    .p-input-icon-left {
+      .search-input {
+        padding: 0.75rem 1.25rem 0.75rem 2.5rem;
+        font-size: 0.95rem;
+        border-radius: 25px;
+      }
+
+      i {
+        left: 0.875rem;
+        font-size: 1rem;
+      }
+    }
+
+    .search-dropdown {
+      left: 0;
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .category-chips {
+      padding: 8px 12px;
+      gap: 6px;
+      justify-content: flex-start;
+
+      .chip {
+        padding: 5px 10px;
+        font-size: 0.8rem;
+        border-radius: 16px;
+      }
+    }
+
+    .search-results {
+      max-height: 350px;
+
+      .result-item {
+        padding: 8px 12px;
+        font-size: 1rem;
+
+        span {
+          max-width: none;
+        }
+
+        i {
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 1200px) {
+  .search-container {
+    .p-input-icon-left {
+      .search-input {
+        padding: 0.875rem 1.5rem 0.875rem 2.75rem;
+        font-size: 1rem;
+      }
+    }
+
+    .category-chips {
+      padding: 10px 14px;
+      gap: 8px;
+
+      .chip {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+      }
+    }
+
+    .search-results {
+      max-height: 400px;
+
+      .result-item {
+        padding: 10px 14px;
+      }
+    }
   }
 }
