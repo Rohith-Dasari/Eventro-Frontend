@@ -2,10 +2,7 @@
   <div class="left-section">
     <div class="logo">Eventro</div>
 
-    <app-search-bar 
-      [selectedLocation]="selectedLocation"
-      (searchTriggered)="onSearchTriggered($event)">
-    </app-search-bar>
+    <app-search-bar></app-search-bar>
 
     <p-dropdown
       *ngIf="role === 'Customer'"

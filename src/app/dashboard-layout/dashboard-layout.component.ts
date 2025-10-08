@@ -68,8 +68,8 @@ export class DashboardLayoutComponent {
 
       case 'Host':
         this.navItems = [
-          { label: 'Shows', path: '/dashboard/shows' },
           { label: 'Venues', path: '/dashboard/venues' },
+          { label: 'Shows', path: '/dashboard/shows' },
           { label: 'Profile', path: '/dashboard/profile' },
         ];
         break;
@@ -78,7 +78,6 @@ export class DashboardLayoutComponent {
         this.navItems = [
           { label: 'Events', path: '/dashboard/events' },
           { label: 'Venues', path: '/dashboard/venues' },
-          { label: 'Artists', path: '/dashboard/artists' },
           { label: 'Profile', path: '/dashboard/profile' },
         ];
         break;
@@ -93,28 +92,6 @@ export class DashboardLayoutComponent {
     this.router.navigate(['/login']);
   }
 
-  onSearch() {
-    if (this.searchQuery.trim()) {
-      this.router.navigate(['/dashboard/events'], {
-        queryParams: { q: this.searchQuery, location: this.selectedLocation?.value },
-      });
-    }
-  }
-
-  onSearchTriggered(searchData: {query: string, category: string | null}) {
-    const queryParams: any = { 
-      q: searchData.query, 
-      location: this.selectedLocation?.value 
-    };
-    
-    if (searchData.category) {
-      queryParams.category = searchData.category;
-    }
-
-    this.router.navigate(['/dashboard/events'], {
-      queryParams: queryParams
-    });
-  }
 
   isProfileSectionActive(): boolean {
     return this.currentRoute.includes('/dashboard/profile') || 

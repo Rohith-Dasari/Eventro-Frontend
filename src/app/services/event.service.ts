@@ -14,8 +14,11 @@ export class EventService{
     return this.httpClient.get<Event[]>('events?location=noida')
   }
 
-  searchEventsByName(name: string): Observable<Event[]> {
+  searchEventsByName(name: string, category:string|null): Observable<Event[]> {
     let params = new HttpParams().set('eventname', name);
+    if (category) {
+      params = params.set('category', category);
+    }
     return this.httpClient.get<Event[]>('events', { params });
   }
 

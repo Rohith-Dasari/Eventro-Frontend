@@ -13,15 +13,15 @@ import { Event } from '../../models/events';
   styleUrl: './search-bar.component.scss',
   imports: [CommonModule, FormsModule, InputTextModule]
 })
+
 export class SearchBarComponent {
   searchQuery = '';
   searchResults: Event[] = [];
   showResults = false;
   selectedCategory: string | null = null;
-  searchTerm = new Subject<string>();
+  private searchTerm = new Subject<string>();
 
-  @Input() selectedLocation: any = null;
-  @Output() searchTriggered = new EventEmitter<{query: string, category: string | null}>();
+  @Output() searchTriggered = new EventEmitter<string>();
 
   categories = [
     { label: 'Movie', value: 'movie' },
@@ -36,14 +36,10 @@ export class SearchBarComponent {
       .pipe(
         debounceTime(300),
         distinctUntilChanged(),
-        switchMap(term => this.eventService.searchEventsByName(term))
+        switchMap(term => this.eventService.searchEventsByName(term,this.selectedCategory))
       )
       .subscribe(results => {
-        if (this.selectedCategory) {
-          results = results.filter(
-            (e: Event) => e.category?.toLowerCase() === this.selectedCategory
-          );
-        }
+        console.log('Search results:', results);
         this.searchResults = results;
         this.showResults = results.length > 0;
       });
@@ -57,19 +53,15 @@ export class SearchBarComponent {
       return;
     }
     this.searchTerm.next(value);
-    this.searchTriggered.emit({query: value, category: this.selectedCategory});
   }
 
   selectCategory(category: string) {
     this.selectedCategory =
       this.selectedCategory === category ? null : category;
-    if (this.searchQuery.trim()) {
-      this.searchTerm.next(this.searchQuery);
-      this.searchTriggered.emit({query: this.searchQuery, category: this.selectedCategory});
-    }
+    if (this.searchQuery.trim()) this.searchTerm.next(this.searchQuery);
   }
 
-  selectEvent(event: Event) {
+  selectEvent(event: any) {
     this.router.navigate([`/dashboard/events/${event.id}`], {
       state: { selectedEvent: event },
     });
