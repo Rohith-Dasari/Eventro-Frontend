@@ -8,12 +8,13 @@ import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { MenubarModule } from 'primeng/menubar';
 import { filter } from 'rxjs/operators';
+import { SearchBarComponent } from './search-bar/search-bar.component';
 
 @Component({
   selector: 'app-dashboard-layout',
   templateUrl: './dashboard-layout.component.html',
   styleUrl: './dashboard-layout.component.scss',
-  imports: [RouterOutlet, RouterModule, CommonModule, FormsModule, ButtonModule, InputTextModule, DropdownModule, MenubarModule]
+  imports: [RouterOutlet, RouterModule, CommonModule, FormsModule, ButtonModule, InputTextModule, DropdownModule, MenubarModule,SearchBarComponent]
 })
 
 export class DashboardLayoutComponent {
@@ -33,7 +34,6 @@ export class DashboardLayoutComponent {
   navItems: NavItem[] = [];
 
   constructor(private auth: AuthService, private router: Router) {
-    // Subscribe to router events to track current route
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: NavigationEnd) => {
@@ -54,7 +54,6 @@ export class DashboardLayoutComponent {
     this.selectedLocation = this.locations[0];
     this.setNavItems();
     
-    // Set initial current route
     this.currentRoute = this.router.url;
   }
 
@@ -100,6 +99,21 @@ export class DashboardLayoutComponent {
         queryParams: { q: this.searchQuery, location: this.selectedLocation?.value },
       });
     }
+  }
+
+  onSearchTriggered(searchData: {query: string, category: string | null}) {
+    const queryParams: any = { 
+      q: searchData.query, 
+      location: this.selectedLocation?.value 
+    };
+    
+    if (searchData.category) {
+      queryParams.category = searchData.category;
+    }
+
+    this.router.navigate(['/dashboard/events'], {
+      queryParams: queryParams
+    });
   }
 
   isProfileSectionActive(): boolean {

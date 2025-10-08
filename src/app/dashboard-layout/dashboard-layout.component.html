@@ -2,19 +2,10 @@
   <div class="left-section">
     <div class="logo">Eventro</div>
 
-    <div class="search-container">
-      <span class="p-input-icon-left">
-        <i class="pi pi-search"></i>
-        <input
-          type="text"
-          pInputText
-          placeholder="Search events..."
-          [(ngModel)]="searchQuery"
-          (keyup.enter)="onSearch()"
-          class="search-input"
-        />
-      </span>
-    </div>
+    <app-search-bar 
+      [selectedLocation]="selectedLocation"
+      (searchTriggered)="onSearchTriggered($event)">
+    </app-search-bar>
 
     <p-dropdown
       *ngIf="role === 'Customer'"

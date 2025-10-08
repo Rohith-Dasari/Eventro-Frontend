@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
+import { Event } from "../models/events";
 
 @Injectable({
   providedIn: 'root'
@@ -9,8 +10,13 @@ import { Observable } from "rxjs";
 export class EventService{
   private httpClient=inject(HttpClient);
 
-  getEvents(): Observable<any>{
-    return this.httpClient.get('events?location=noida')
+  getEvents(): Observable<Event[]>{
+    return this.httpClient.get<Event[]>('events?location=noida')
+  }
+
+  searchEventsByName(name: string): Observable<Event[]> {
+    let params = new HttpParams().set('eventname', name);
+    return this.httpClient.get<Event[]>('events', { params });
   }
 
   getShows(eventId: string): Observable<any> {
