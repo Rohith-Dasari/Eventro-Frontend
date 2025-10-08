@@ -1,31 +1,45 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { User } from '../models/user';
 import { Router } from '@angular/router';
+import { UserService } from '../services/user.service';
+import { UserProfile } from '../models/user';
+import { ProfileDetailsComponent } from '../profile-details/profile-details.component';
 
 @Component({
   selector: 'app-profile',
-  imports: [],
   templateUrl: './profile.component.html',
+  imports: [ProfileDetailsComponent],
   styleUrl: './profile.component.scss'
 })
-export class ProfileComponent {
-  private authService=inject(AuthService);
-  user_id=(this.authService.userSignal() as User).user_id;
+export class ProfileComponent implements OnInit {
+  private authService = inject(AuthService);
+  private userService = inject(UserService);
   private router = inject(Router);
 
   user = this.authService.userSignal() as User;
-  upcomingCount = 2; 
+  userProfile!: UserProfile;
 
-  navigateTo(section: string) {
-    console.log('profile stage: navigation requested for section:', section);
-    if (section === 'bookings') {
-      console.log('profile stage: navigating to bookings list at /dashboard/bookings');
-      this.router.navigate(['/dashboard/bookings']);
-    } else {
-      console.log('profile stage: navigating to other section:', `/profile/${section}`);
-      this.router.navigate([`/profile/${section}`]);
-    }
+  showDetailsDialog = false;
+  upcomingCount = 2;
+
+  ngOnInit() {
+    this.loadProfile();
   }
 
+  loadProfile() {
+    const userId = this.user.user_id;
+    this.userService.getProfile(userId).subscribe({
+      next: (profile) => (this.userProfile = profile as UserProfile),
+      error: (err) => console.error('Error loading profile:', err)
+    });
+  }
+
+  navigateTo(section: string) {
+    if (section === 'bookings') {
+      this.router.navigate(['/dashboard/bookings']);
+    } else if (section === 'details') {
+      this.showDetailsDialog = true; 
+    }
+  }
 }

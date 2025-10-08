@@ -1,0 +1,23 @@
+.details-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem 0;
+
+  .detail-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 1rem;
+    color: #333;
+
+    i {
+      font-size: 1.2rem;
+      color: #555;
+    }
+
+    strong {
+      color: #111;
+    }
+  }
+}
