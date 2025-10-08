@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router, RouterOutlet, RouterModule } from '@angular/router';
+import { Router, RouterOutlet, RouterModule, NavigationEnd } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -7,6 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { MenubarModule } from 'primeng/menubar';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-dashboard-layout',
@@ -20,6 +21,7 @@ export class DashboardLayoutComponent {
   role = '';
   searchQuery = '';
   selectedLocation: any = null;
+  currentRoute = '';
 
   locations = [
     { label: 'Noida', value: 'noida' },
@@ -30,7 +32,14 @@ export class DashboardLayoutComponent {
 
   navItems: NavItem[] = [];
 
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(private auth: AuthService, private router: Router) {
+    // Subscribe to router events to track current route
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: NavigationEnd) => {
+      this.currentRoute = event.url;
+    });
+  }
 
   ngOnInit() {
     const user = this.auth.userSignal();
@@ -44,6 +53,9 @@ export class DashboardLayoutComponent {
 
     this.selectedLocation = this.locations[0];
     this.setNavItems();
+    
+    // Set initial current route
+    this.currentRoute = this.router.url;
   }
 
   setNavItems() {
@@ -88,6 +100,18 @@ export class DashboardLayoutComponent {
         queryParams: { q: this.searchQuery, location: this.selectedLocation?.value },
       });
     }
+  }
+
+  isProfileSectionActive(): boolean {
+    return this.currentRoute.includes('/dashboard/profile') || 
+           this.currentRoute.includes('/dashboard/bookings');
+  }
+
+  isRouteActive(path: string): boolean {
+    if (path === '/dashboard/profile') {
+      return this.isProfileSectionActive();
+    }
+    return this.currentRoute === path;
   }
 }
 

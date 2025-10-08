@@ -43,7 +43,7 @@
   <a
     *ngFor="let item of navItems"
     [routerLink]="item.path"
-    routerLinkActive="active"
+    [class.active]="isRouteActive(item.path)"
     >{{ item.label }}</a
   >
 </nav>

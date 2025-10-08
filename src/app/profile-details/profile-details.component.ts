@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { CardModule } from 'primeng/card';
@@ -14,8 +14,14 @@ import { UserProfile } from '../models/user';
 export class ProfileDetailsComponent {
   @Input() userProfile!: UserProfile;
   @Input() visible = false; 
+  @Output() visibleChange = new EventEmitter<boolean>();
+
+  onVisibleChange(visible: boolean) {
+    this.visible = visible;
+    this.visibleChange.emit(visible);
+  }
 
   closeDialog() {
-    this.visible = false;
+    this.onVisibleChange(false);
   }
 }

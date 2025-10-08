@@ -27,5 +27,6 @@
 
 <app-profile-details 
   [userProfile]="userProfile" 
-  [visible]="showDetailsDialog">
+  [visible]="showDetailsDialog"
+  (visibleChange)="showDetailsDialog = $event">
 </app-profile-details>

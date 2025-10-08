@@ -1,6 +1,7 @@
 <p-dialog 
   header="My Details"
-  [(visible)]="visible"
+  [visible]="visible"
+  (visibleChange)="onVisibleChange($event)"
   [modal]="true"
   [closable]="true"
   [style]="{ width: '420px' }"
