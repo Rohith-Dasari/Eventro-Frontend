@@ -15,6 +15,7 @@ import { Event } from '../../models/events';
 })
 
 export class SearchBarComponent {
+  isFocused = false;
   searchQuery = '';
   searchResults: Event[] = [];
   showResults = false;
@@ -34,7 +35,7 @@ export class SearchBarComponent {
   constructor(private eventService: EventService, private router: Router) {
     this.searchTerm
       .pipe(
-        debounceTime(300),
+        debounceTime(1000),
         distinctUntilChanged(),
         switchMap(term => this.eventService.searchEventsByName(term,this.selectedCategory))
       )
@@ -68,4 +69,12 @@ export class SearchBarComponent {
     this.showResults = false;
     this.searchQuery = '';
   }
+  onBlur() {
+  setTimeout(() => {
+    if (!this.searchQuery.trim() && !this.showResults) {
+      this.isFocused = false;
+    }
+  }, 150);
+}
+
 }

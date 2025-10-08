@@ -7,12 +7,13 @@
       placeholder="Search events..."
       [(ngModel)]="searchQuery"
       (ngModelChange)="onSearchChange($event)"
+      (focus)="isFocused = true"
+      (blur)="onBlur()"
       class="search-input"
     />
   </span>
 
-  <!-- Category Chips -->
-  <div class="category-chips">
+  <div class="category-chips" *ngIf="isFocused || searchQuery.trim()">
     <span
       *ngFor="let c of categories"
       class="chip"
@@ -23,7 +24,6 @@
     </span>
   </div>
 
-  <!-- Search Results Dropdown -->
   <div class="search-results" *ngIf="showResults">
     <div
       *ngFor="let event of searchResults"

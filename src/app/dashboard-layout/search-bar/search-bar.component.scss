@@ -84,3 +84,21 @@
     }
   }
 }
+
+.category-chips {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  overflow-x: auto;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+
+  &.ng-trigger {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.search-results {
+  animation: fadeIn 0.2s ease;
+}

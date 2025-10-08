@@ -40,5 +40,4 @@ export class EventService{
   let params = new HttpParams().set('hostId', hostId);
   return this.httpClient.get('shows', { params });
 }
-
 }
