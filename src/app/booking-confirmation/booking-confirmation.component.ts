@@ -21,7 +21,7 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
   private location = inject(Location);
   private bookingService = inject(BookingService);
   private authService= inject(AuthService);
-  bookingData: BookingSummaryData = {};
+  bookingData: any = {};
   timeRemaining = 120; 
   timerSubscription?: Subscription;
   isProcessingPayment = false;
@@ -109,7 +109,7 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
   get timerColor(): string {
     if (this.timeRemaining <= 30) return '#f44336'; 
     if (this.timeRemaining <= 60) return '#ff9800'; 
-    return '#4caf50'; // Green
+    return '#4caf50'; 
   }
 
   onCancel() {
@@ -129,7 +129,7 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
    
     const userId = (this.authService.userSignal() as User).user_id;
     const seats = this.bookingData.seats || [];
-    console.log('payment validation stage: userId:', userId);
+    console.log('payment validation stage: userId:', this.bookingData.userID);
     console.log('payment validation stage: showId:', this.showId);
     console.log('payment validation stage: seats:', seats);
     

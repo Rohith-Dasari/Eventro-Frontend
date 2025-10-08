@@ -2,7 +2,8 @@
   title="Upcoming Bookings"
   [bookings]="upcomingBookings"
   [defaultImage]="defaultImage"
-  (bookingClick)="onBookingClick($event)">
+  (bookingClick)="onBookingClick($event)" 
+      *ngIf="role === 'Customer'">
 </app-upcoming-bookings-row>
 
 <app-upcoming-booking-details

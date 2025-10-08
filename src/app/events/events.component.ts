@@ -8,6 +8,7 @@ import { UpcomingBookingsRowComponent } from '../upcoming-bookings-row/upcoming-
 import { BookingService } from '../services/bookings.service';
 import { EnrichedBooking } from '../models/bookings';
 import { UpcomingBookingDetailsComponent } from '../upcoming-booking-details/upcoming-booking-details.component';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-events',
@@ -17,6 +18,8 @@ import { UpcomingBookingDetailsComponent } from '../upcoming-booking-details/upc
 })
 
 export class EventsComponent implements OnInit {
+  private auth = inject(AuthService);
+  role=this.auth.getRole();
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private eventService = inject(EventService);
@@ -35,6 +38,7 @@ export class EventsComponent implements OnInit {
   }
 
   loadData() {
+    if (this.role === 'Customer') {
     this.loadingBookings = true;
     this.bookingService.getBookings().subscribe({
       next: (data) => {
@@ -47,6 +51,7 @@ export class EventsComponent implements OnInit {
         this.loadingBookings = false;
       }
     });
+  }
 
     this.loadingEvents = true;
     this.eventService.getEvents().subscribe({

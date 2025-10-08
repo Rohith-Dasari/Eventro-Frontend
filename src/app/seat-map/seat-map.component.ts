@@ -7,6 +7,7 @@ import { Seat } from '../models/seats';
 import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
 import { BookingSummaryData } from '../shared/booking-summary/booking-summary.component';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-seat-map',
@@ -16,6 +17,12 @@ import { BookingSummaryData } from '../shared/booking-summary/booking-summary.co
 })
 export class SeatMapComponent implements OnInit, OnChanges {
   private router = inject(Router);
+  private auth = inject(AuthService);
+  role=this.auth.getRole();
+  adminUserEmail = '';
+  userNotFound = false;
+
+
 
   @Input() visible = false;
   @Output() visibleChange = new EventEmitter<boolean>(); 
@@ -98,8 +105,6 @@ toggleSeat(row: number, seat: number) {
       : s
   );
 }
-
-
   get selectedSeats() {
     return this.seats.filter(s => s.isSelected);
   }  
@@ -121,8 +126,44 @@ toggleSeat(row: number, seat: number) {
     if (seat.isSelected) return 'selected';
     return 'available';
   }
+  private bookingData:any;
 
-  onConfirmBooking() {
+onClickConfirm() {
+  this.bookingData = this.makeBookingData();
+  if (!this.bookingData) return;
+
+  const role = this.auth.getRole();
+
+  if (role === 'Customer') {
+    this.bookingData.userID = this.auth.getID();
+    this.onConfirmBooking(this.bookingData);
+  } 
+  else if (role === 'Admin') {
+    const mailID = this.adminUserEmail.trim();
+    if (!mailID) {
+      this.errorMessage = 'Please enter a user email before confirming.';
+      return;
+    }
+
+    this.auth.getUserByMailID(mailID).subscribe({
+      next: (user) => {
+        if (!user) {
+          this.userNotFound = true;
+          return;
+        }
+        this.userNotFound = false;
+        this.bookingData.userID = user.user_id;
+        this.onConfirmBooking(this.bookingData);
+      },
+      error: () => {
+        this.userNotFound = true;
+      }
+    });
+  }
+}
+
+
+  makeBookingData(){
     if (this.selectedSeats.length === 0) {
       this.errorMessage = 'Please select at least one seat.';
       return;
@@ -167,6 +208,10 @@ toggleSeat(row: number, seat: number) {
     console.log('seat-map storage stage: data stored in sessionStorage');
 
     this.onDialogHide();
+    return bookingData;
+  }
+
+  onConfirmBooking(bookingData: any) {    
     
     this.router.navigate(['/dashboard/booking-confirmation'], {
       state: {

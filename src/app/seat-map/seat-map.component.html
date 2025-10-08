@@ -6,12 +6,11 @@
   [closable]="true"
   header=""
 >
-<ng-template pTemplate="header">
-  <div class="header-bar">
-    <span *ngIf="errorMessage" class="error-message">{{ errorMessage }}</span>
-  </div>
-</ng-template>
-
+  <ng-template pTemplate="header">
+    <div class="header-bar">
+      <span *ngIf="errorMessage" class="error-message">{{ errorMessage }}</span>
+    </div>
+  </ng-template>
 
   <div class="seatmap-container">
 
@@ -44,6 +43,7 @@
     </div>
 
     <div class="summary" *ngIf="selectedSeats.length">
+
       <div class="summary-left">
         <div class="seats-list">
           Seats: {{ selectedSeatCodes.join(', ') }}
@@ -53,14 +53,30 @@
         </div>
       </div>
 
+      <div *ngIf="role === 'Admin'" class="admin-input-box">
+        <label for="adminEmail" class="admin-label">Book for user:</label>
+        <input
+          id="adminEmail"
+          type="email"
+          pInputText
+          [(ngModel)]="adminUserEmail"
+          placeholder="Enter user's email ID"
+          class="admin-input"
+        />
+        <small *ngIf="userNotFound" class="error-text">
+          No user found with this email.
+        </small>
+      </div>
+
       <div class="summary-right">
         <button 
           pButton 
           label="Confirm Booking" 
           class="p-button-success"
-          (click)="onConfirmBooking()"
+          (click)="onClickConfirm()"
         ></button>
       </div>
+
     </div>
   </div>
 </p-dialog>
