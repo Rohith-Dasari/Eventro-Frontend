@@ -13,37 +13,73 @@ import { PaymentSuccessComponent } from './payment-success/payment-success.compo
 import { BookingsListComponent } from './bookings-list/bookings-list.component';
 
 export const routes: Routes = [
-  {
-    path: '',
-    component: LoginComponent 
-    
-  },
-  {
-    path: 'login',
-    component: LoginComponent
-  },
-  {
-    path: 'signup',
-    component: SignupComponent
-  },
+  { path: '', component: LoginComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'signup', component: SignupComponent },
+
   {
     path: 'dashboard',
     component: DashboardLayoutComponent,
     canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
     children: [
-      { path: 'events', component: EventsComponent },
-      { path: 'events/:id', component: EventDetailsComponent },
-      { path: 'booking-confirmation', component: BookingConfirmationComponent },
-      { path: 'payment-success', component: PaymentSuccessComponent },
-      { path: 'profile', component: ProfileComponent },
-      { path: 'artists', component: ArtistsComponent },
-      { path: 'venues', component: VenuesComponent },
-      { path: 'bookings', component: BookingsListComponent },          
-      { path: '', redirectTo: 'events', pathMatch: 'full' } 
+      {
+        path: 'events',
+        component: EventsComponent,
+        canActivate: [AuthGuard],
+        data: { roles: ['Customer', 'Admin'] },
+      },
+      {
+        path: 'events/:id',
+        component: EventDetailsComponent,
+        canActivate: [AuthGuard],
+        data: { roles: ['Customer', 'Admin'] },
+      },
+      {
+        path: 'booking-confirmation',
+        component: BookingConfirmationComponent,
+        canActivate: [AuthGuard],
+        data: { roles: ['Customer'] },
+      },
+      {
+        path: 'payment-success',
+        component: PaymentSuccessComponent,
+        canActivate: [AuthGuard],
+        data: { roles: ['Customer'] },
+      },
+      {
+        path: 'profile',
+        component: ProfileComponent,
+        canActivate: [AuthGuard],
+        data: { roles: ['Customer', 'Host', 'Admin'] },
+      },
+      {
+        path: 'artists',
+        component: ArtistsComponent,
+        canActivate: [AuthGuard],
+        data: { roles: ['Admin'] },
+      },
+      {
+        path: 'venues',
+        component: VenuesComponent,
+        canActivate: [AuthGuard],
+        data: { roles: ['Host', 'Admin'] },
+      },
+      {
+        path: 'bookings',
+        component: BookingsListComponent,
+        canActivate: [AuthGuard],
+        data: { roles: ['Customer'] },
+      },
+      // {
+      //   path: 'shows',
+      //   component: ShowsComponent,
+      //   canActivate: [AuthGuard],
+      //   data: { roles: ['Host', 'Admin'] },
+      // },
+      { path: '', redirectTo: 'events', pathMatch: 'full' },
     ],
   },
-  {
-    path: '**',
-    redirectTo: 'login'
-  }
+
+  { path: '**', redirectTo: 'login' },
 ];

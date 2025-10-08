@@ -5,42 +5,47 @@
     <div class="search-container">
       <span class="p-input-icon-left">
         <i class="pi pi-search"></i>
-        <input 
-          type="text" 
-          pInputText 
-          placeholder="Search events..." 
+        <input
+          type="text"
+          pInputText
+          placeholder="Search events..."
           [(ngModel)]="searchQuery"
           (keyup.enter)="onSearch()"
-          class="search-input">
+          class="search-input"
+        />
       </span>
     </div>
 
-    <p-dropdown 
-      [options]="locations" 
+    <p-dropdown
+      *ngIf="role === 'Customer'"
+      [options]="locations"
       [(ngModel)]="selectedLocation"
       optionLabel="label"
       placeholder="Select Location"
-      class="location-dropdown">
-    </p-dropdown>
+      class="location-dropdown"
+    ></p-dropdown>
   </div>
 
   <div class="right-section">
     <span class="username">{{ username }}</span>
-    <p-button 
-      label="Logout" 
+    <p-button
+      label="Logout"
       icon="pi pi-sign-out"
       severity="danger"
       size="small"
-      (onClick)="onLogout()">
+      (onClick)="onLogout()"
+    >
     </p-button>
   </div>
 </header>
 
 <nav class="pill-navbar">
-  <a routerLink="/dashboard/events" routerLinkActive="active">Events</a>
-  <a routerLink="/dashboard/venues" routerLinkActive="active">Venues</a>
-  <a routerLink="/dashboard/artists" routerLinkActive="active">Artists</a>
-  <a routerLink="/dashboard/profile" routerLinkActive="active">Profile</a>
+  <a
+    *ngFor="let item of navItems"
+    [routerLink]="item.path"
+    routerLinkActive="active"
+    >{{ item.label }}</a
+  >
 </nav>
 
 <main class="main-content">

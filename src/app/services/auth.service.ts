@@ -12,7 +12,6 @@ import { jwtDecode } from 'jwt-decode';
 export class AuthService {
   userSignal = signal<User | null>(null);
   private httpClient=inject(HttpClient);
-  // private router=inject(Router)
 
   constructor() {
     const localUser = localStorage.getItem('user');
@@ -33,7 +32,6 @@ export class AuthService {
         this.userSignal.set(user);
         localStorage.setItem('user', JSON.stringify(user));
         localStorage.setItem('token',val.token);
-        // console.log('hit3')
       } catch (e) {
         console.log(e);
       }
@@ -74,10 +72,12 @@ export class AuthService {
         this.userSignal.set(user);
         localStorage.setItem('user', JSON.stringify(user));
         localStorage.setItem('token',val.token);
-        // console.log('hit3')
       } catch (e) {
         console.log(e);
       }
     }))
  }
+ getRole(): string | null {
+    return this.userSignal()?.role ?? localStorage.getItem('role');
+  }
 }

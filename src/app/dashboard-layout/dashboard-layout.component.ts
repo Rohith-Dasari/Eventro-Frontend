@@ -14,32 +14,84 @@ import { MenubarModule } from 'primeng/menubar';
   styleUrl: './dashboard-layout.component.scss',
   imports: [RouterOutlet, RouterModule, CommonModule, FormsModule, ButtonModule, InputTextModule, DropdownModule, MenubarModule]
 })
+
 export class DashboardLayoutComponent {
-  username = '';
+ username = '';
+  role = '';
   searchQuery = '';
   selectedLocation: any = null;
-  
+
   locations = [
     { label: 'Noida', value: 'noida' },
     { label: 'Hyderabad', value: 'hyderabad' },
     { label: 'Bangalore', value: 'bangalore' },
-    { label: 'Mumbai', value: 'mumbai' }
+    { label: 'Mumbai', value: 'mumbai' },
   ];
 
-  constructor(private auth: AuthService, private router: Router) {
-    this.username = (this.auth.userSignal()?.email as string);
-    this.selectedLocation = this.locations[0]; 
+  navItems: NavItem[] = [];
+
+  constructor(private auth: AuthService, private router: Router) {}
+
+  ngOnInit() {
+    const user = this.auth.userSignal();
+
+    if (user) {
+      this.username = user.email;
+      this.role = user.role;
+    } else {
+      this.role = 'Customer'; 
+    }
+
+    this.selectedLocation = this.locations[0];
+    this.setNavItems();
   }
 
-  onLogout(){
+  setNavItems() {
+    switch (this.role) {
+      case 'Customer':
+        this.navItems = [
+          { label: 'Events', path: '/dashboard/events' },
+          { label: 'Profile', path: '/dashboard/profile' },
+        ];
+        break;
+
+      case 'Host':
+        this.navItems = [
+          { label: 'Shows', path: '/dashboard/shows' },
+          { label: 'Venues', path: '/dashboard/venues' },
+          { label: 'Profile', path: '/dashboard/profile' },
+        ];
+        break;
+
+      case 'Admin':
+        this.navItems = [
+          { label: 'Events', path: '/dashboard/events' },
+          { label: 'Venues', path: '/dashboard/venues' },
+          { label: 'Artists', path: '/dashboard/artists' },
+          { label: 'Shows', path: '/dashboard/shows' },
+          { label: 'Profile', path: '/dashboard/profile' },
+        ];
+        break;
+
+      default:
+        this.navItems = [{ label: 'Profile', path: '/dashboard/profile' }];
+    }
+  }
+
+  onLogout() {
     this.auth.logout();
-    this.router.navigate(['/login'])
+    this.router.navigate(['/login']);
   }
 
   onSearch() {
     if (this.searchQuery.trim()) {
-      console.log('searching for ', this.searchQuery);
+      this.router.navigate(['/dashboard/events'], {
+        queryParams: { q: this.searchQuery, location: this.selectedLocation?.value },
+      });
     }
   }
-
+}
+interface NavItem {
+  label: string;
+  path: string;
 }

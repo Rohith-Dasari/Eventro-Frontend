@@ -27,4 +27,9 @@ export class EventService{
     let params = new HttpParams().set('showId', showId);
     return this.httpClient.get('shows', { params });
   }
+  getShowsByHostId(hostId: string): Observable<any> {
+  let params = new HttpParams().set('hostId', hostId);
+  return this.httpClient.get('shows', { params });
+}
+
 }
