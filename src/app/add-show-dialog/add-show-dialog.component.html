@@ -21,19 +21,6 @@
     </div>
 
     <div class="form-field">
-      <label>Show Date & Time</label>
-      <p-datepicker
-        [(ngModel)]="selectedDate"
-        name="showDate"
-        [showTime]="true"
-        hourFormat="24"
-        [minDate]="minDate"
-        placeholder="Select date & time"
-        required
-      ></p-datepicker>
-    </div>
-
-    <div class="form-field">
       <label>Ticket Price</label>
       <p-inputNumber
         [(ngModel)]="newShow.price"
@@ -44,6 +31,20 @@
         [min]="0"
         required
       ></p-inputNumber>
+    </div>
+
+    <div class="form-field">
+      <label>Show Date & Time</label>
+      <p-datepicker
+        [(ngModel)]="selectedDate"
+        name="showDate"
+        [showTime]="true"
+        hourFormat="24"
+        [minDate]="minDate"
+        placeholder="Select date & time"
+        required
+        appendTo="body"
+      ></p-datepicker>
     </div>
 
     <div class="dialog-actions">
