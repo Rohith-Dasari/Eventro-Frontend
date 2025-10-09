@@ -22,6 +22,8 @@ export class SeatMapComponent implements OnInit, OnChanges {
   adminUserEmail = '';
   userNotFound = false;
 
+  bookingSummary=`Total Number of Tickets Booked:   Total Sale:`;
+
 
 
   @Input() visible = false;
@@ -36,6 +38,7 @@ export class SeatMapComponent implements OnInit, OnChanges {
     if (this.show) {
       this.initializeSeats();
     }
+    this.bookingSummary=`Total Number of Tickets Booked:${this.show?.BookedSeats.length}   Total Sale:₹${this.show?.BookedSeats.length*this.price}`;
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -88,6 +91,9 @@ export class SeatMapComponent implements OnInit, OnChanges {
 errorMessage: string = '';
 
 toggleSeat(row: number, seat: number) {
+  if(this.role=="Host"){
+    return;
+  }
   const seatObj = this.seats.find(s => s.row === row && s.seat === seat);
 
   if (!seatObj || seatObj.isBooked) return;

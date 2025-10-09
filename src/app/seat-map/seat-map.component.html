@@ -1,10 +1,10 @@
-<p-dialog 
-  [(visible)]="visible" 
-  (onHide)="onDialogHide()" 
-  [modal]="true" 
-  [style]="{width: '70vw'}" 
+<p-dialog
+  [(visible)]="visible"
+  (onHide)="onDialogHide()"
+  [modal]="true"
+  [style]="{ width: '70vw' }"
   [closable]="true"
-  header=""
+  header="{{bookingSummary}}"
 >
   <ng-template pTemplate="header">
     <div class="header-bar">
@@ -13,23 +13,22 @@
   </ng-template>
 
   <div class="seatmap-container">
-
     <div class="screen">
       <div class="screen-bar"></div>
       <p>SCREEN</p>
     </div>
 
     <div class="seat-grid">
-      <div *ngFor="let row of [1,2,3,4,5,6,7,8,9,10]" class="row">
+      <div *ngFor="let row of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]" class="row">
         <div class="row-label">{{ getRowLetter(row) }}</div>
 
-        <button 
-          *ngFor="let col of [1,2,3,4,5,6,7,8,9,10]"
-          (click)="toggleSeat(row,col)"
-          [disabled]="getSeat(row,col)?.isBooked"
-          [class]="getSeatClass(getSeat(row,col)!)"
+        <button
+          *ngFor="let col of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+          (click)="toggleSeat(row, col)"
+          [disabled]="getSeat(row, col)?.isBooked"
+          [class]="getSeatClass(getSeat(row, col)!)"
           [attr.data-seat]="getRowLetter(row) + col"
-          [attr.data-booked]="getSeat(row,col)?.isBooked"
+          [attr.data-booked]="getSeat(row, col)?.isBooked"
         >
           {{ col }}
         </button>
@@ -42,15 +41,12 @@
       <div><span class="booked"></span> Booked</div>
     </div>
 
-    <div class="summary" *ngIf="selectedSeats.length">
+    @if(role!="Host"&&selectedSeats.length){
 
+    <div class="summary" *ngIf="selectedSeats.length">
       <div class="summary-left">
-        <div class="seats-list">
-          Seats: {{ selectedSeatCodes.join(', ') }}
-        </div>
-        <div class="total">
-          Total: ₹{{ totalPrice }}
-        </div>
+        <div class="seats-list">Seats: {{ selectedSeatCodes.join(", ") }}</div>
+        <div class="total">Total: ₹{{ totalPrice }}</div>
       </div>
 
       <div *ngIf="role === 'Admin'" class="admin-input-box">
@@ -68,14 +64,14 @@
       </div>
 
       <div class="summary-right">
-        <button 
-          pButton 
-          label="Confirm Booking" 
+        <button
+          pButton
+          label="Confirm Booking"
           class="p-button-success"
           (click)="onClickConfirm()"
         ></button>
       </div>
-
     </div>
+  }
   </div>
 </p-dialog>
