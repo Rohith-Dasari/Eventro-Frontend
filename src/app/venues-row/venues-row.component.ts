@@ -26,12 +26,11 @@ export class VenuesRowComponent {
     this.venueService.moderateVenue(venue.ID, newStatus).subscribe({
       next: (value) => {
         console.log('Venue moderated successfully:', value);
-        venue.IsBlocked = newStatus;
+        // Don't modify local state - let parent refresh handle it
         this.moderateVenue.emit();
       },
       error: (err) => {
         console.error('Error moderating venue:', err);
-        venue.IsBlocked = !newStatus;
       }
     });
   }
