@@ -1,3 +1,11 @@
+<p-dialog
+  header="Add New Venue"
+  [(visible)]="visible"
+  [modal]="true"
+  [style]="{ width: '40vw' }"
+  (onHide)="close()"
+  [closable]="false"
+>
 <form (ngSubmit)="submit()" #addVenueForm="ngForm" class="add-venue-form">
 
   <div class="form-field">
@@ -51,3 +59,4 @@
     </button>
   </div>
 </form>
+</p-dialog>
