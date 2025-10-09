@@ -29,6 +29,15 @@
   (eventClick)="goToEventDetails($event)">
 </app-events-row>
 
+@if (role=="Admin" && blockedEvents.length>0){
+<h2 class="events-title">Blocked Events</h2>
+
+<app-events-row 
+  [events]="blockedEvents"
+  [defaultImage]="defaultImage"
+  (eventClick)="goToEventDetails($event)">
+</app-events-row>
+}
 <app-add-event-dialog
   #addEventDialog
   (eventAdded)="refreshEvents()">

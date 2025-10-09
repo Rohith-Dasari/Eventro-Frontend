@@ -25,7 +25,7 @@ export class EventDetailsComponent implements OnInit {
   rangeValues: number[] = [0, 3000];
   refreshing = false;
   checked!:boolean;
-  // status!:string;
+  status!:string;
   
 
   private eventService = inject(EventService);
@@ -36,8 +36,25 @@ export class EventDetailsComponent implements OnInit {
       console.error('No event info available.');
       return;
     }
-    this.checked=!this.event.is_blocked;
-    // this.status=this.checked?"Active":"Blocked";
+    this.eventService.getEventByID(this.event.id).subscribe(
+      {
+        next:
+        (val)=>{
+          this.event.is_blocked=val.is_blocked;
+        },
+        error:
+        err=>{
+          console.log(err);
+        }
+      }
+    )
+    this.checked=this.event.is_blocked;
+
+    if (this.checked){
+      this.status="The event has been blocked";
+    }else{
+      this.status="The event has been unblocked";
+    }
 
     this.loadEvent(this.event.id);
   }
@@ -81,5 +98,27 @@ export class EventDetailsComponent implements OnInit {
 
       this.refreshing = false;
     });
+  }
+
+  onToggle(newValue: boolean){
+    console.log('Toggle switch changed to:', newValue);
+    
+    this.eventService.moderateEvent(this.event.id,this.checked).subscribe({
+      next:
+      val=>{
+        console.log("succesful moderation")
+        if (this.checked){
+      this.status="The event has been blocked";
+    }else{
+      this.status="The event has been unblocked";
+    }
+    this.event.is_blocked!=this.event.is_blocked;
+      },
+      error:
+      err=>{
+        console.log(err)
+      }
+    }
+    );
   }
 }

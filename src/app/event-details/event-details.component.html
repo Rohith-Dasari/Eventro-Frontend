@@ -14,16 +14,15 @@
       <p class="event-description">
         {{ event.description || 'No description available.' }}
       </p>
-      <p-toggleswitch [(ngModel)]="checked">
-        
-      <ng-template #handle let-checked="checked">
-          <i [ngClass]="['!text-xs', 'pi', checked ? 'pi-check' : 'pi-times']"></i>
-          </ng-template>
-      </p-toggleswitch>
-      
+      <div class="moderation-controls">
+        <p>{{status}}</p> 
+      <p-toggleswitch [(ngModel)]="checked" (ngModelChange)="onToggle($event)"/> 
+       
+      </div>    
     </div>
   </div>
 
+  @if(!checked){
   <div class="date-filter-container">
     <div class="date-pills">
       <button
@@ -70,4 +69,5 @@
   <div *ngIf="refreshing" class="loading">
     <p>Refreshing shows...</p>
   </div>
+  }
 </div>

@@ -42,6 +42,12 @@
     .event-duration{
       margin-bottom:0.2rem;
     }
+    .moderation-controls{
+      display: flex;
+      align-items: left;
+      gap:1rem;
+      flex-direction: column;
+    }
   }
 
 }

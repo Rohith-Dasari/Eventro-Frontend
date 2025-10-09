@@ -1,8 +1,8 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { EventService } from '../services/event.service';
 import { CommonModule } from '@angular/common';
-import { Event } from '../models/events';
 import { Router, ActivatedRoute } from '@angular/router';
+import { EventService } from '../services/event.service';
+import { Event } from '../models/events';
 import { EventsRowComponent } from '../events-row/events-row.component';
 import { UpcomingBookingsRowComponent } from '../upcoming-bookings-row/upcoming-bookings-row.component';
 import { BookingService } from '../services/bookings.service';
@@ -10,8 +10,8 @@ import { EnrichedBooking } from '../models/bookings';
 import { UpcomingBookingDetailsComponent } from '../upcoming-booking-details/upcoming-booking-details.component';
 import { AuthService } from '../services/auth.service';
 import { AddEventDialogComponent } from '../dashboard/add-event-dialog/add-event-dialog.component';
-import { PrimeIcons, MenuItem } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
+
 @Component({
   selector: 'app-events',
   imports: [UpcomingBookingDetailsComponent,CommonModule, EventsRowComponent, UpcomingBookingsRowComponent, AddEventDialogComponent,ButtonModule],
@@ -23,27 +23,31 @@ export class EventsComponent implements OnInit {
   private auth = inject(AuthService);
   role=this.auth.getRole();
   private router = inject(Router);
-  private route = inject(ActivatedRoute);
   private eventService = inject(EventService);
   private bookingService = inject(BookingService);
   
   upcomingBookings: EnrichedBooking[] = [];
   events: Event[] = [];
+  blockedEvents:Event[]=[];
   defaultImage = './images/hp3.jpg';
   loadingBookings = false;
   loadingEvents = false;
+  loadingBlockedEvents=false;
   bookingDialogVisible = false;
   selectedBooking: EnrichedBooking | null = null;
+  blockedEventCount=0;
+  
+  
 
   ngOnInit(): void {
     this.loadData();
   }
 
-refreshEvents() {
-  this.eventService.getEvents().subscribe(events => {
-    this.events = events;
-  });
-}
+  refreshEvents() {
+    this.eventService.getEvents().subscribe(events => {
+      this.events = events;
+    });
+  }
 
   loadData() {
     if (this.role === 'Customer') {
@@ -64,7 +68,7 @@ refreshEvents() {
     this.loadingEvents = true;
     this.eventService.getEvents().subscribe({
       next: (data) => {
-        this.events = data as Event[];
+        this.events = (data as Event[]).filter((eve)=>!eve.is_blocked);
         this.loadingEvents = false;
         console.log('events loaded:', data);
       },
@@ -73,6 +77,24 @@ refreshEvents() {
         this.loadingEvents = false;
       }
     });
+    
+    if(this.role=="Admin"){
+      this.loadingBlockedEvents=true;
+      this.eventService.getBlockedEvents().subscribe({
+        next: (data) => {
+          if (data){
+          this.blockedEvents = data as Event[];
+          }
+          this.loadingBlockedEvents = false;
+          console.log('blocked events loaded:', data);
+          this.blockedEventCount=this.blockedEvents.length;
+        },
+        error: (err) => {
+          console.error('Error loading events:', err);
+          this.loadingEvents = false;
+        }
+      })
+    }
   }
 
   goToEventDetails(event: Event) {

@@ -13,6 +13,10 @@ export class EventService{
   getEvents(): Observable<Event[]>{
     return this.httpClient.get<Event[]>('events?location=noida')
   }
+  getEventByID(id: string):Observable<Event>{
+    let params=new HttpParams().set('eventID',id);
+    return this.httpClient.get<Event>('events',{params});
+  }
 
   searchEventsByName(name: string, category:string|null): Observable<Event[]> {
     let params = new HttpParams().set('eventname', name);
@@ -20,6 +24,18 @@ export class EventService{
       params = params.set('category', category);
     }
     return this.httpClient.get<Event[]>('events', { params });
+  }
+
+  getBlockedEvents():Observable<Event[]>{
+    return this.httpClient.get<Event[]>('events?isBlocked=true');
+  }
+  
+  moderateEvent(eventID:string,isBlocked:boolean):Observable<any>{
+    console.log("sent request");
+    const requestBody={
+      'isBlocked':isBlocked
+    }
+    return this.httpClient.patch(`events/${eventID}`, requestBody);
   }
 
   getShows(eventId: string): Observable<any> {
