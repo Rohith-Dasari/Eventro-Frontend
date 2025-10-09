@@ -23,7 +23,6 @@ export class BookingService {
   getBookings(): Observable<EnrichedBooking[]> {
     console.log('booking-service stage: getBookings method called');
     const userID = localStorage.getItem('user_id');
-    console.log('booking-service stage: retrieved user_id from localStorage:', userID);
     let params = new HttpParams().set('userId', userID as string);
     console.log('booking-service stage: making API call to /bookings with params:', params.toString());
     
@@ -90,11 +89,5 @@ export class BookingService {
         });
       })
     );
-  }
-
-  getBookingsRaw(): Observable<BookingResponse[]> {
-    const userID = localStorage.getItem('user_id');
-    let params = new HttpParams().set('userId', userID as string);
-    return this.httpClient.get<BookingResponse[]>('bookings', { params });
   }
 }

@@ -2,7 +2,7 @@ export interface BookingResponse {
   booking_id: string;
   user_id: string;
   show_id: string;
-  time_booked: string; // ISO date string
+  time_booked: string; 
   num_tickets: number;
   total_booking_price: number;
   seats: string[];

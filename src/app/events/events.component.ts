@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { EventService } from '../services/event.service';
 import { Event } from '../models/events';
 import { EventsRowComponent } from '../events-row/events-row.component';
@@ -35,10 +35,7 @@ export class EventsComponent implements OnInit {
   loadingBlockedEvents=false;
   bookingDialogVisible = false;
   selectedBooking: EnrichedBooking | null = null;
-  blockedEventCount=0;
   
-  
-
   ngOnInit(): void {
     this.loadData();
   }
@@ -87,7 +84,6 @@ export class EventsComponent implements OnInit {
           }
           this.loadingBlockedEvents = false;
           console.log('blocked events loaded:', data);
-          this.blockedEventCount=this.blockedEvents.length;
         },
         error: (err) => {
           console.error('Error loading events:', err);

@@ -13,6 +13,7 @@ import { UpcomingBookingDetailsComponent } from '../upcoming-booking-details/upc
   templateUrl: './bookings-list.component.html',
   styleUrl: './bookings-list.component.scss'
 })
+
 export class BookingsListComponent implements OnInit {
   private bookingService = inject(BookingService);
   private location = inject(Location);
@@ -25,14 +26,11 @@ export class BookingsListComponent implements OnInit {
 
   ngOnInit() {
     console.log('bookings-list stage: component initialized');
-    console.log('bookings-list stage: checking user authentication');
     this.loadBookings();
   }
 
   loadBookings() {
     console.log('bookings-list stage: starting to load bookings');
-    console.log('bookings-list stage: calling bookingService.getBookings()');
-    
     this.bookingService.getBookings().subscribe({
       next: (data) => {
         console.log('bookings-list stage: raw bookings data received:', data);

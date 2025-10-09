@@ -1,3 +1,4 @@
+@if(upcomingBookings.length>0){
 <app-upcoming-bookings-row 
   title="Upcoming Bookings"
   [bookings]="upcomingBookings"
@@ -5,6 +6,7 @@
   (bookingClick)="onBookingClick($event)" 
   *ngIf="role === 'Customer'">
 </app-upcoming-bookings-row>
+}
 
 <app-upcoming-booking-details
   [(visible)]="bookingDialogVisible"
@@ -38,6 +40,7 @@
   (eventClick)="goToEventDetails($event)">
 </app-events-row>
 }
+
 <app-add-event-dialog
   #addEventDialog
   (eventAdded)="refreshEvents()">

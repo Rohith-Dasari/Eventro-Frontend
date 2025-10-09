@@ -10,8 +10,8 @@ import { Event } from '../models/events';
   templateUrl: './events-row.component.html',
   styleUrl: './events-row.component.scss'
 })
+
 export class EventsRowComponent {
-  @Input() title: string = 'Events';
   @Input() events: Event[] = [];
   @Input() defaultImage: string = './images/hp3.jpg';
   @Output() eventClick = new EventEmitter<Event>();

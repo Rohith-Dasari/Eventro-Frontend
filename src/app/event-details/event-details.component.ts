@@ -1,6 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { EventService } from '../services/event.service';
-import { Shows } from '../models/shows';
 import { Event } from '../models/events';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -65,6 +64,7 @@ export class EventDetailsComponent implements OnInit {
       this.shows = shows;
 
       if (!shows.length) return;
+
       this.shows.forEach(s => {
         s.ShowDate = new Date(s.ShowDate);
       });
@@ -73,6 +73,8 @@ export class EventDetailsComponent implements OnInit {
         const d = new Date(s.ShowDate);
         return d < earliest ? d : earliest;
       }, new Date(this.shows[0].ShowDate));
+
+      
       this.availableDates = Array.from({ length: 7 }, (_, i) => {
         const d = new Date(firstDate);
         d.setDate(d.getDate() + i);
