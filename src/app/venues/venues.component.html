@@ -1,1 +1,27 @@
-<p>venues works!</p>
+<div class="venues-header">
+  <h2 class="venues-title">Your Venues</h2>
+
+  <button
+    pButton
+    icon="pi pi-plus"
+    class="p-button-rounded p-button-success add-btn"
+    (click)="addVenueDialog.open()">
+  </button>
+</div>
+
+<app-venues-row 
+  [venues]="venues"
+  (moderateVenue)="refreshVenues()">
+</app-venues-row>
+
+<h2 class="venues-title">Blocked Venues</h2>
+
+<app-venues-row 
+  [venues]="blockedVenues"
+  (moderateVenue)="refreshVenues()">
+</app-venues-row>
+
+<app-add-venue-dialog
+  #addVenueDialog
+  (venueAdded)="refreshVenues()">
+</app-add-venue-dialog>

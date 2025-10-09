@@ -1,0 +1,25 @@
+<div class="venues-row">
+  <div class="cards-container">
+    <p-card *ngFor="let venue of venues" class="venue-card">
+      <ng-template pTemplate="title">
+        {{ venue.Name }}
+      </ng-template>
+
+      <ng-template pTemplate="subtitle">
+        {{ venue.City }}, {{ venue.State }}
+      </ng-template>
+
+      <ng-template pTemplate="content">
+        <p-togglebutton
+          [(ngModel)]="venue.IsBlocked"
+          onLabel="Blocked"
+          offLabel="Active"
+          offIcon="pi pi-lock-open"
+          styleClass="w-36"
+          ariaLabel="Toggle venue status"
+          (onChange)="onToggle(venue)">
+        </p-togglebutton>
+      </ng-template>
+    </p-card>
+  </div>
+</div>

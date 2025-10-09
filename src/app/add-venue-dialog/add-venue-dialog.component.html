@@ -1,0 +1,53 @@
+<form (ngSubmit)="submit()" #addVenueForm="ngForm" class="add-venue-form">
+
+  <div class="form-field">
+    <label>Name</label>
+    <input 
+      type="text"
+      pInputText
+      [(ngModel)]="newVenue.name"
+      name="name"
+      required
+    />
+  </div>
+
+  <div class="form-field">
+    <label>City</label>
+    <input 
+      type="text"
+      pInputText
+      [(ngModel)]="newVenue.city"
+      name="city"
+      required
+    />
+  </div>
+
+  <div class="form-field">
+    <label>State</label>
+    <input 
+      type="text"
+      pInputText
+      [(ngModel)]="newVenue.state"
+      name="state"
+      required
+    />
+  </div>
+
+  <div class="dialog-actions">
+    <button 
+      pButton 
+      label="Cancel"
+      class="p-button-text"
+      type="button"
+      (click)="close()">
+    </button>
+
+    <button 
+      pButton 
+      label="Submit"
+      class="p-button-success"
+      type="submit"
+      [disabled]="addVenueForm.invalid">
+    </button>
+  </div>
+</form>

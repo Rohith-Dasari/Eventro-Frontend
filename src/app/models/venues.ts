@@ -8,3 +8,12 @@ export interface Venues{
         "IsSeatLayoutRequired": boolean,
         "IsBlocked": boolean
 }
+
+export interface createVenue{
+        
+  name: string;
+  city: string;
+  state: string;
+  isSeatLayoutRequired: boolean;
+
+}

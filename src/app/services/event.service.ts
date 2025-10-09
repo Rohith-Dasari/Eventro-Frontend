@@ -14,7 +14,7 @@ export class EventService{
     return this.httpClient.get<Event[]>('events?location=noida')
   }
   getEventByID(id: string):Observable<Event>{
-    let params=new HttpParams().set('eventID',id);
+    const params=new HttpParams().set('eventID',id);
     return this.httpClient.get<Event>('events',{params});
   }
 
