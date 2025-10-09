@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { FormsModule } from '@angular/forms';
+import { DialogModule } from 'primeng/dialog';
 
 @Component({
   selector: 'app-venues-row',

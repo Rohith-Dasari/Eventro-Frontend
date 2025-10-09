@@ -13,14 +13,14 @@ export class VenueService {
 
   getVenues(hostId:string):Observable<Venues[]>{
     let params=new HttpParams().set('hostId',hostId);
-    params.set('isBlocked',false);
-    return this.httpClient.get<Venues[]>('venues',{params});
+    params.set('isBlocked',"false");
+    return this.httpClient.get<Venues[]>(`venues?isBlocked=false&hostId=${hostId}`);
   }
 
   getBlockedVenues(hostId:string):Observable<Venues[]>{
     let params=new HttpParams().set('hostId',hostId);
-    params.set('isBlocked',true);
-    return this.httpClient.get<Venues[]>('venues',{params});
+    params.set('isBlocked',"true");
+    return this.httpClient.get<Venues[]>(`venues?isBlocked=true&hostId=${hostId}`);
   }
 
   moderateVenue(venueID:string, status:boolean):Observable<any>{
