@@ -11,13 +11,13 @@
 
       <ng-template pTemplate="content">
         <p-togglebutton
-          [(ngModel)]="venue.IsBlocked"
+          [ngModel]="venue.IsBlocked"
           onLabel="Blocked"
           offLabel="Active"
-          offIcon="pi pi-lock-open"
-          
-          styleClass="w-36"
-          ariaLabel="Toggle venue status"
+          [offIcon]="'pi pi-lock-open'"
+          [onIcon]="'pi pi-lock'"
+          [styleClass]="'w-36'"
+          [ariaLabel]="'Toggle venue status'"
           (onChange)="onToggle(venue)">
         </p-togglebutton>
       </ng-template>

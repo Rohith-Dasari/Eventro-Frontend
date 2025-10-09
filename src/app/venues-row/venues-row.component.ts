@@ -21,12 +21,18 @@ export class VenuesRowComponent {
   private venueService=inject(VenueService);
 
   onToggle(venue: Venues) {
-    this.venueService.moderateVenue(venue.ID, venue.IsBlocked).subscribe({
+    const newStatus = !venue.IsBlocked;
+    
+    this.venueService.moderateVenue(venue.ID, newStatus).subscribe({
       next: (value) => {
         console.log('Venue moderated successfully:', value);
+        venue.IsBlocked = newStatus;
         this.moderateVenue.emit();
       },
-      error: (err) => console.error('Error moderating venue:', err)
+      error: (err) => {
+        console.error('Error moderating venue:', err);
+        venue.IsBlocked = !newStatus;
+      }
     });
   }
 }
