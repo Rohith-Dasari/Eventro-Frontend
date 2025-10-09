@@ -67,28 +67,41 @@ export class EventDetailsComponent implements OnInit {
   }
 
   loadEvent(eventId: string) {
-    this.eventService.getShows(eventId).subscribe((shows: any[]) => {
-      console.log(shows);
-      this.shows = shows;
+    let shows$;
 
-      if (!shows.length) return;
+    if (this.role === 'Host') {
+      const hostID = this.authService.getID();
+      shows$ = this.eventService.getShowsByHostAndEvent(eventId, hostID as string);
+    } else {
+      shows$ = this.eventService.getShows(eventId);
+    }
 
-      this.shows.forEach((s) => {
-        s.ShowDate = new Date(s.ShowDate);
-      });
+    shows$.subscribe({
+      next: (shows: any[]) => {
+        console.log('Shows loaded:', shows);
+        this.shows = shows;
 
-      const firstDate = this.shows.reduce((earliest: Date, s: any) => {
-        const d = new Date(s.ShowDate);
-        return d < earliest ? d : earliest;
-      }, new Date(this.shows[0].ShowDate));
+        if (!shows.length) return;
 
-      this.availableDates = Array.from({ length: 7 }, (_, i) => {
-        const d = new Date(firstDate);
-        d.setDate(d.getDate() + i);
-        return d;
-      });
+        this.shows.forEach((s) => {
+          s.ShowDate = new Date(s.ShowDate);
+        });
 
-      this.selectedDate = this.availableDates[0];
+        const uniqueDates = Array.from(
+          new Set(
+            this.shows.map(
+              (s: any) => new Date(s.ShowDate).toDateString() 
+            )
+          )
+        )
+          .map((d) => new Date(d))
+          .sort((a, b) => a.getTime() - b.getTime());
+
+        this.availableDates = uniqueDates.slice(0, 7);
+
+        this.selectedDate = this.availableDates[0];
+      },
+      error: (err) => console.error('Error loading shows:', err),
     });
   }
 
