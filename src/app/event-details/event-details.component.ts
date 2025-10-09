@@ -7,6 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { SliderModule } from 'primeng/slider';
 import { ShowsComponent } from '../shows/shows.component';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-event-details',
@@ -25,11 +26,14 @@ export class EventDetailsComponent implements OnInit {
   refreshing = false;
   checked!:boolean;
   status!:string;
+  role!:string;
   
 
   private eventService = inject(EventService);
+  private authService=inject(AuthService);
 
   ngOnInit(): void {
+    this.role=this.authService.getRole() as string;
     this.event = history.state?.selectedEvent;
     if (!this.event) {
       console.error('No event info available.');

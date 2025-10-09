@@ -14,11 +14,12 @@
       <p class="event-description">
         {{ event.description || 'No description available.' }}
       </p>
+      @if(role=="Admin"){
       <div class="moderation-controls">
         <p>{{status}}</p> 
       <p-toggleswitch [(ngModel)]="checked" (ngModelChange)="onToggle($event)"/> 
-       
-      </div>    
+      </div>  
+    }  
     </div>
   </div>
 
