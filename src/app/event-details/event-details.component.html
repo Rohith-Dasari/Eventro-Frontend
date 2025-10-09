@@ -1,25 +1,43 @@
 <div *ngIf="event" class="event-details-container">
   <div class="event-header">
     <div class="event-image">
-      <img src="./images/hp3.jpg" alt="{{ event.name }}">
+      <img src="./images/hp3.jpg" alt="{{ event.name }}" />
     </div>
     <div class="event-info">
       <h2 class="event-name">{{ event.name }}</h2>
       <p class="event-artists">
-        Artists: {{ event.artist_names.join(', ') || 'Unknown' }}
+        Artists: {{ event.artist_names.join(", ") || "Unknown" }}
       </p>
       <p class="event-duration">
-        Duration: {{event.duration||'Event duration not available'}}
+        Duration: {{ event.duration || "Event duration not available" }}
       </p>
       <p class="event-description">
-        {{ event.description || 'No description available.' }}
+        {{ event.description || "No description available." }}
       </p>
       @if(role=="Admin"){
       <div class="moderation-controls">
-        <p>{{status}}</p> 
-      <p-toggleswitch [(ngModel)]="checked" (ngModelChange)="onToggle($event)"/> 
-      </div>  
-    }  
+        <p>{{ status }}</p>
+        <p-toggleswitch
+          [(ngModel)]="checked"
+          (ngModelChange)="onToggle($event)"
+          onLabel="Blocked"
+          offLabel="Active"
+          [disabled]="role !== 'Admin'"
+        />
+      </div>
+      } @if(role=="Host"){
+      <p-button
+        label="Add Show"
+        severity="success"
+        (onClick)="openDialogBox()"
+      />
+      <app-add-show-dialog
+        #addShowDialog
+        [eventID]="event.id"
+        (showAdded)="refreshShows()"
+      >
+      </app-add-show-dialog>
+      }
     </div>
   </div>
 
@@ -32,8 +50,9 @@
         type="button"
         class="date-pill"
         [class.selected]="date === selectedDate"
-        (click)="selectDate(date)">
-        {{ date | date:'EEE, MMM d' }}
+        (click)="selectDate(date)"
+      >
+        {{ date | date : "EEE, MMM d" }}
       </button>
     </div>
 
@@ -41,21 +60,24 @@
       <div class="price-filter">
         <span class="price-label min-price">₹{{ rangeValues[0] }}</span>
         <div class="slider-container">
-          <p-slider [(ngModel)]="rangeValues"
-                    [range]="true"
-                    [min]="0"
-                    [max]="3000"
-                    [step]="100"
-                    class="price-slider">
+          <p-slider
+            [(ngModel)]="rangeValues"
+            [range]="true"
+            [min]="0"
+            [max]="3000"
+            [step]="100"
+            class="price-slider"
+          >
           </p-slider>
         </div>
         <span class="price-label max-price">₹{{ rangeValues[1] }}</span>
-        <button pButton
-                icon="pi pi-refresh"
-                class="refresh-btn"
-                (click)="refreshShows()"
-                [attr.aria-label]="'Refresh shows'">
-        </button>
+        <button
+          pButton
+          icon="pi pi-refresh"
+          class="refresh-btn"
+          (click)="refreshShows()"
+          [attr.aria-label]="'Refresh shows'"
+        ></button>
       </div>
     </div>
   </div>
@@ -64,7 +86,8 @@
     *ngIf="!refreshing"
     [shows]="shows"
     [selectedDate]="selectedDate"
-    [priceRange]="rangeValues">
+    [priceRange]="rangeValues"
+  >
   </app-shows>
 
   <div *ngIf="refreshing" class="loading">

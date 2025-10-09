@@ -1,0 +1,66 @@
+<p-dialog
+  header="Host a show at your venue"
+  [(visible)]="visible"
+  [modal]="true"
+  [style]="{ width: '40vw' }"
+  (onHide)="close()"
+  [closable]="false"
+>
+  <form (ngSubmit)="submit()" #addShowForm="ngForm" class="add-show-form">
+    <div class="form-field">
+      <label>Venue</label>
+      <p-dropdown
+        [options]="venues"
+        optionLabel="name"
+        optionValue="id"
+        [(ngModel)]="newShow.venue_id"
+        name="venue"
+        placeholder="Select venue"
+        required
+      ></p-dropdown>
+    </div>
+
+    <div class="form-field">
+      <label>Show Date & Time</label>
+      <p-datepicker
+        [(ngModel)]="selectedDate"
+        name="showDate"
+        [showTime]="true"
+        hourFormat="24"
+        [minDate]="minDate"
+        placeholder="Select date & time"
+        required
+      ></p-datepicker>
+    </div>
+
+    <div class="form-field">
+      <label>Ticket Price</label>
+      <p-inputNumber
+        [(ngModel)]="newShow.price"
+        name="price"
+        mode="currency"
+        currency="INR"
+        locale="en-IN"
+        [min]="0"
+        required
+      ></p-inputNumber>
+    </div>
+
+    <div class="dialog-actions">
+      <button
+        pButton
+        label="Cancel"
+        class="p-button-text"
+        type="button"
+        (click)="close()"
+      ></button>
+      <button
+        pButton
+        label="Submit"
+        class="p-button-success"
+        type="submit"
+        [disabled]="addShowForm.invalid"
+      ></button>
+    </div>
+  </form>
+</p-dialog>

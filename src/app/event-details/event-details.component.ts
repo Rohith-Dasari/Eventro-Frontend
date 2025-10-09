@@ -8,15 +8,23 @@ import { SliderModule } from 'primeng/slider';
 import { ShowsComponent } from '../shows/shows.component';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { AuthService } from '../services/auth.service';
+import { AddShowDialogComponent } from '../add-show-dialog/add-show-dialog.component';
 
 @Component({
   selector: 'app-event-details',
-  imports: [CommonModule, ButtonModule, DatePipe, SliderModule, FormsModule, ShowsComponent,ToggleSwitchModule],
+  imports: [
+    CommonModule,
+    ButtonModule,
+    DatePipe,
+    SliderModule,
+    FormsModule,
+    ShowsComponent,
+    ToggleSwitchModule,
+    AddShowDialogComponent,
+  ],
   templateUrl: './event-details.component.html',
-  styleUrl: './event-details.component.scss'
+  styleUrl: './event-details.component.scss',
 })
-
-
 export class EventDetailsComponent implements OnInit {
   event!: Event;
   shows: any[] = [];
@@ -24,39 +32,35 @@ export class EventDetailsComponent implements OnInit {
   selectedDate!: Date;
   rangeValues: number[] = [0, 3000];
   refreshing = false;
-  checked!:boolean;
-  status!:string;
-  role!:string;
-  
+  checked!: boolean;
+  status!: string;
+  role!: string;
 
   private eventService = inject(EventService);
-  private authService=inject(AuthService);
+  private authService = inject(AuthService);
+  visible = false;
 
   ngOnInit(): void {
-    this.role=this.authService.getRole() as string;
+    this.role = this.authService.getRole() as string;
     this.event = history.state?.selectedEvent;
     if (!this.event) {
       console.error('No event info available.');
       return;
     }
-    this.eventService.getEventByID(this.event.id).subscribe(
-      {
-        next:
-        (val)=>{
-          this.event.is_blocked=val.is_blocked;
-        },
-        error:
-        err=>{
-          console.log(err);
-        }
-      }
-    )
-    this.checked=this.event.is_blocked;
+    this.eventService.getEventByID(this.event.id).subscribe({
+      next: (val) => {
+        this.event.is_blocked = val.is_blocked;
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+    this.checked = this.event.is_blocked;
 
-    if (this.checked){
-      this.status="The event has been blocked";
-    }else{
-      this.status="The event has been unblocked";
+    if (this.checked) {
+      this.status = 'The event has been blocked';
+    } else {
+      this.status = 'The event has been unblocked';
     }
 
     this.loadEvent(this.event.id);
@@ -69,16 +73,15 @@ export class EventDetailsComponent implements OnInit {
 
       if (!shows.length) return;
 
-      this.shows.forEach(s => {
+      this.shows.forEach((s) => {
         s.ShowDate = new Date(s.ShowDate);
       });
-      
+
       const firstDate = this.shows.reduce((earliest: Date, s: any) => {
         const d = new Date(s.ShowDate);
         return d < earliest ? d : earliest;
       }, new Date(this.shows[0].ShowDate));
 
-      
       this.availableDates = Array.from({ length: 7 }, (_, i) => {
         const d = new Date(firstDate);
         d.setDate(d.getDate() + i);
@@ -87,6 +90,10 @@ export class EventDetailsComponent implements OnInit {
 
       this.selectedDate = this.availableDates[0];
     });
+  }
+
+  openDialogBox() {
+    this.visible = true;
   }
 
   selectDate(date: Date) {
@@ -98,7 +105,7 @@ export class EventDetailsComponent implements OnInit {
     this.eventService.getShows(this.event.id).subscribe((shows: any[]) => {
       this.shows = shows;
 
-      this.shows.forEach(s => {
+      this.shows.forEach((s) => {
         s.ShowDate = new Date(s.ShowDate);
       });
 
@@ -106,25 +113,22 @@ export class EventDetailsComponent implements OnInit {
     });
   }
 
-  onToggle(newValue: boolean){
+  onToggle(newValue: boolean) {
     console.log('Toggle switch changed to:', newValue);
-    
-    this.eventService.moderateEvent(this.event.id,this.checked).subscribe({
-      next:
-      val=>{
-        console.log("succesful moderation")
-        if (this.checked){
-      this.status="The event has been blocked";
-    }else{
-      this.status="The event has been unblocked";
-    }
-    this.event.is_blocked!=this.event.is_blocked;
+
+    this.eventService.moderateEvent(this.event.id, this.checked).subscribe({
+      next: (val) => {
+        console.log('succesful moderation');
+        if (this.checked) {
+          this.status = 'The event has been blocked';
+        } else {
+          this.status = 'The event has been unblocked';
+        }
+        this.event.is_blocked = !this.event.is_blocked;
       },
-      error:
-      err=>{
-        console.log(err)
-      }
-    }
-    );
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
 }
