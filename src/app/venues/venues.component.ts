@@ -60,8 +60,8 @@ export class VenuesComponent {
       blocked: this.venueService.getBlockedVenues(this.userID)
     }).subscribe({
       next: ({ venues, blocked }) => {
-        this.venues = venues;
-        this.blockedVenues = blocked;
+        this.venues = venues.filter(v => !v.IsBlocked);
+        this.blockedVenues = blocked.filter(v => v.IsBlocked);
       },
       error: (err) => console.error(err)
     });
