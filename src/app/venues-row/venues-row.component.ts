@@ -21,8 +21,7 @@ export class VenuesRowComponent {
   private venueService=inject(VenueService);
 
   onToggle(venue: Venues) {
-    const newStatus = !venue.IsBlocked;
-    this.venueService.moderateVenue(venue.ID, newStatus).subscribe({
+    this.venueService.moderateVenue(venue.ID, venue.IsBlocked).subscribe({
       next: (value) => {
         console.log('Venue moderated successfully:', value);
         this.moderateVenue.emit();
