@@ -3,7 +3,7 @@ import { Injectable,inject,signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthResponse} from '../models/login-response';
 import { tap } from 'rxjs';
-import { User } from '../models/user';
+import { User, UserProfile } from '../models/user';
 import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
@@ -86,6 +86,6 @@ export class AuthService {
   }
   
   getUserByMailID(email: string) {
-    return this.httpClient.get<User>(`users/email/${email}`);
+    return this.httpClient.get<UserProfile>(`users/email/${email}`);
   }
 }

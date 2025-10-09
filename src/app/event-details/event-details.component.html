@@ -8,9 +8,19 @@
       <p class="event-artists">
         Artists: {{ event.artist_names.join(', ') || 'Unknown' }}
       </p>
+      <p class="event-duration">
+        Duration: {{event.duration||'Event duration not available'}}
+      </p>
       <p class="event-description">
         {{ event.description || 'No description available.' }}
       </p>
+      <p-toggleswitch [(ngModel)]="checked">
+        
+      <ng-template #handle let-checked="checked">
+          <i [ngClass]="['!text-xs', 'pi', checked ? 'pi-check' : 'pi-times']"></i>
+          </ng-template>
+      </p-toggleswitch>
+      
     </div>
   </div>
 

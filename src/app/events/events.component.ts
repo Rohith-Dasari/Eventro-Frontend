@@ -10,9 +10,11 @@ import { EnrichedBooking } from '../models/bookings';
 import { UpcomingBookingDetailsComponent } from '../upcoming-booking-details/upcoming-booking-details.component';
 import { AuthService } from '../services/auth.service';
 import { AddEventDialogComponent } from '../dashboard/add-event-dialog/add-event-dialog.component';
+import { PrimeIcons, MenuItem } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
 @Component({
   selector: 'app-events',
-  imports: [UpcomingBookingDetailsComponent,CommonModule, EventsRowComponent, UpcomingBookingsRowComponent, AddEventDialogComponent],
+  imports: [UpcomingBookingDetailsComponent,CommonModule, EventsRowComponent, UpcomingBookingsRowComponent, AddEventDialogComponent,ButtonModule],
   templateUrl: './events.component.html',
   styleUrl: './events.component.scss'
 })

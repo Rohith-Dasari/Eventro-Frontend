@@ -152,7 +152,8 @@ onClickConfirm() {
           return;
         }
         this.userNotFound = false;
-        this.bookingData.userID = user.user_id;
+        this.bookingData.userID = user.UserID;
+        console.log(user.UserID);
         this.onConfirmBooking(this.bookingData);
       },
       error: () => {
@@ -220,6 +221,7 @@ onClickConfirm() {
         showData: this.show
       }
     });
+    console.log(bookingData);
     console.log('seat-map navigation stage: navigating to booking confirmation');
   }
 

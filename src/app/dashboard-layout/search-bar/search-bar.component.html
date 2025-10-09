@@ -8,13 +8,12 @@
       [(ngModel)]="searchQuery"
       (ngModelChange)="onSearchChange($event)"
       (focus)="isFocused = true"
-      (blur)="onBlur()"
       class="search-input"
     />
   </span>
 
   <div class="search-dropdown" *ngIf="isFocused || showResults">
-    <div class="category-chips" *ngIf="isFocused || searchQuery.trim()">
+    <!-- <div class="category-chips" *ngIf="isFocused || searchQuery.trim()">
       <span
         *ngFor="let c of categories"
         class="chip"
@@ -23,7 +22,7 @@
       >
         {{ c.label }}
       </span>
-    </div>
+    </div> -->
 
     <div class="search-results" *ngIf="showResults">
       <div

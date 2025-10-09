@@ -7,10 +7,11 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { SliderModule } from 'primeng/slider';
 import { ShowsComponent } from '../shows/shows.component';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
 
 @Component({
   selector: 'app-event-details',
-  imports: [CommonModule, ButtonModule, DatePipe, SliderModule, FormsModule, ShowsComponent],
+  imports: [CommonModule, ButtonModule, DatePipe, SliderModule, FormsModule, ShowsComponent,ToggleSwitchModule],
   templateUrl: './event-details.component.html',
   styleUrl: './event-details.component.scss'
 })
@@ -23,6 +24,9 @@ export class EventDetailsComponent implements OnInit {
   selectedDate!: Date;
   rangeValues: number[] = [0, 3000];
   refreshing = false;
+  checked!:boolean;
+  // status!:string;
+  
 
   private eventService = inject(EventService);
 
@@ -32,6 +36,8 @@ export class EventDetailsComponent implements OnInit {
       console.error('No event info available.');
       return;
     }
+    this.checked=!this.event.is_blocked;
+    // this.status=this.checked?"Active":"Blocked";
 
     this.loadEvent(this.event.id);
   }

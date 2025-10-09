@@ -32,13 +32,18 @@
 
     .event-artists {
       font-weight: 500;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.2rem;
     }
 
     .event-description {
       color: #555;
+      margin-bottom: 0.2rem;
+    }
+    .event-duration{
+      margin-bottom:0.2rem;
     }
   }
+
 }
 
 .date-filter-container {
@@ -75,7 +80,6 @@
   }
 
   .price-filter-section {
-    
     .price-filter {
       display: flex;
       align-items: center;

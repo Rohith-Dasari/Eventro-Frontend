@@ -11,11 +11,9 @@
   [booking]="selectedBooking">
 </app-upcoming-booking-details>
 
-<!-- 🔥 Section header with Admin-only add button -->
 <div class="events-header">
   <h2 class="events-title">Events Near You</h2>
 
-  <!-- Show this button only for Admin -->
   <button
     *ngIf="role === 'Admin'"
     pButton
@@ -25,14 +23,12 @@
   </button>
 </div>
 
-<!-- Events row component (list display) -->
 <app-events-row 
   [events]="events"
   [defaultImage]="defaultImage"
   (eventClick)="goToEventDetails($event)">
 </app-events-row>
 
-<!-- 🔥 Add Event Dialog Component -->
 <app-add-event-dialog
   #addEventDialog
   (eventAdded)="refreshEvents()">

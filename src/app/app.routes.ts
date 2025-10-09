@@ -34,14 +34,14 @@ export const routes: Routes = [
         loadComponent:()=>
           import('./booking-confirmation/booking-confirmation.component').then(m=>m.BookingConfirmationComponent),
         canActivate: [AuthGuard],
-        data: { roles: ['Customer'] },
+        data: { roles: ['Customer','Admin'] },
       },
       {
         path: 'payment-success',
         loadComponent:()=>
           import('./payment-success/payment-success.component').then(m=>m.PaymentSuccessComponent),
         canActivate: [AuthGuard],
-        data: { roles: ['Customer'] },
+        data: { roles: ['Customer','Admin'] },
       },
       {
         path: 'profile',

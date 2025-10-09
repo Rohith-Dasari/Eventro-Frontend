@@ -4,6 +4,7 @@
   [modal]="true"
   [style]="{ width: '40vw' }"
   (onHide)="close()"
+  [closable]="false"
 >
   <form (ngSubmit)="submit()" #addEventForm="ngForm" class="add-event-form">
     <div class="form-field">
@@ -16,6 +17,17 @@
         required
       />
     </div>
+    <div class="form-field">
+      <label>Category</label>
+      <p-dropdown 
+        [options]="categories"
+        [(ngModel)]="categoryObject"
+        name="category"
+        optionLabel="label"
+        placeholder="Select category"
+        required>
+      </p-dropdown>
+    </div>
 
     <div class="form-field">
       <label>Description</label>
@@ -24,32 +36,25 @@
         [(ngModel)]="newEvent.description" 
         name="description" 
         rows="3" 
+        placeholder="maximum of 160 characters"
+        class="no-horizontal-resize"
         required>
       </textarea>
     </div>
+    
 
     <div class="form-field">
       <label>Duration (in mins)</label>
       <input 
         type="number" 
         pInputText 
-        [(ngModel)]="newEvent.duration" 
+        [(ngModel)]="durationInt" 
         name="duration" 
         required
       />
     </div>
 
-    <div class="form-field">
-      <label>Category</label>
-      <p-dropdown 
-        [options]="categories"
-        [(ngModel)]="newEvent.category"
-        name="category"
-        optionLabel="label"
-        placeholder="Select category"
-        required>
-      </p-dropdown>
-    </div>
+    
 
     <div class="dialog-actions">
       <button 

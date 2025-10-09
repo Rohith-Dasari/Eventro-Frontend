@@ -24,13 +24,13 @@ export class SearchBarComponent {
 
   @Output() searchTriggered = new EventEmitter<string>();
 
-  categories = [
-    { label: 'Movie', value: 'movie' },
-    { label: 'Sports', value: 'sports' },
-    { label: 'Concert', value: 'concert' },
-    { label: 'Workshop', value: 'workshop' },
-    { label: 'Party', value: 'party' }
-  ];
+  // categories = [
+  //   { label: 'Movie', value: 'movie' },
+  //   { label: 'Sports', value: 'sports' },
+  //   { label: 'Concert', value: 'concert' },
+  //   { label: 'Workshop', value: 'workshop' },
+  //   { label: 'Party', value: 'party' }
+  // ];
 
   constructor(private eventService: EventService, private router: Router) {
     this.searchTerm
@@ -69,12 +69,5 @@ export class SearchBarComponent {
     this.showResults = false;
     this.searchQuery = '';
   }
-  onBlur() {
-  setTimeout(() => {
-    if (!this.searchQuery.trim() && !this.showResults) {
-      this.isFocused = false;
-    }
-  }, 150);
-}
 
 }

@@ -77,7 +77,6 @@ export class DashboardLayoutComponent {
       case 'Admin':
         this.navItems = [
           { label: 'Events', path: '/dashboard/events' },
-          { label: 'Venues', path: '/dashboard/venues' },
           { label: 'Profile', path: '/dashboard/profile' },
         ];
         break;

@@ -5,8 +5,9 @@ export interface User{
 }
 
 export interface UserProfile{
-    'User_id':string,
+    'UserID':string,
     'Username':string,
     'Email':string,
-    'Phone':string,
+    'PhoneNumber':string,
+    'Role':string
 }

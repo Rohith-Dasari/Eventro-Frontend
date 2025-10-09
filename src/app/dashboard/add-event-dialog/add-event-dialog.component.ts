@@ -21,10 +21,13 @@ export class AddEventDialogComponent {
   newEvent = {
     name: '',
     description: '',
-    duration: null,
+    duration:'',
     category: '',
     artists: ["7c234a3c-49bd-486d-99c6-b2120aa2c21c", "859478ed-0184-4053-823a-ed130e7cee99"]
   };
+
+  durationInt?:number;
+  categoryObject!:{value:'', label:''};
 
   categories = [
     { label: 'Movie', value: 'movie' },
@@ -46,13 +49,15 @@ export class AddEventDialogComponent {
   }
 
   resetForm() {
-    this.newEvent = { name: '', description: '', duration: null, category: '', artists: []};
+    this.newEvent = { name: '', description: '', duration: '', category: '', artists: []};
   }
 
   submit() {
-    if (!this.newEvent.name || !this.newEvent.description || !this.newEvent.duration || !this.newEvent.category) {
+    if (!this.newEvent.name || !this.newEvent.description) {
       return;
     }
+    this.newEvent.duration=this.transform(this.durationInt as number);
+    this.newEvent.category=this.categoryObject.value;
 
     this.eventService.addEvent(this.newEvent).subscribe({
       next: (res) => {
@@ -64,5 +69,15 @@ export class AddEventDialogComponent {
         console.error('Error adding event:', err);
       }
     });
+    console.log(this.newEvent);
+    console.log("just that")
+  }
+
+  transform(minutes:number): string {
+    if (minutes === null || minutes === undefined) {
+      return '';
+    }
+    const decimalHours = minutes / 60;
+    return `${decimalHours.toFixed(1)}h`;
   }
 }
