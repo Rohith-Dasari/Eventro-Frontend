@@ -19,18 +19,31 @@ export class VenuesRowComponent {
   @Output()moderateVenue=new EventEmitter();
 
   private venueService=inject(VenueService);
+  loadingVenueId: string | null = null;
 
-  onToggle(venue: Venues) {
+  onToggle(venue: Venues, event: Event) {
+    // Prevent default toggle behavior
+    event.preventDefault();
+    event.stopPropagation();
+    
+    // Prevent multiple clicks
+    if (this.loadingVenueId === venue.ID) {
+      return;
+    }
+    
+    this.loadingVenueId = venue.ID;
     const newStatus = !venue.IsBlocked;
     
     this.venueService.moderateVenue(venue.ID, newStatus).subscribe({
       next: (value) => {
         console.log('Venue moderated successfully:', value);
-        // Don't modify local state - let parent refresh handle it
+        this.loadingVenueId = null;
+        // Let parent refresh handle updating the lists
         this.moderateVenue.emit();
       },
       error: (err) => {
         console.error('Error moderating venue:', err);
+        this.loadingVenueId = null;
       }
     });
   }
