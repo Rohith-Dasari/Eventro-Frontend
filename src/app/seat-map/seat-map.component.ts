@@ -212,8 +212,7 @@ onClickConfirm() {
     return bookingData;
   }
 
-  onConfirmBooking(bookingData: any) {    
-    
+  onConfirmBooking(bookingData: any) {        
     this.router.navigate(['/dashboard/booking-confirmation'], {
       state: {
         bookingData: bookingData,

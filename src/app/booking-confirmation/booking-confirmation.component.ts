@@ -20,7 +20,6 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private location = inject(Location);
   private bookingService = inject(BookingService);
-  private authService= inject(AuthService);
   bookingData: any = {};
   timeRemaining = 120; 
   timerSubscription?: Subscription;
@@ -127,7 +126,7 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
     console.log('onPay stage: payment initiated');
     this.isProcessingPayment = true;
    
-    const userId = (this.authService.userSignal() as User).user_id;
+    const userId = this.bookingData.userID;
     const seats = this.bookingData.seats || [];
     console.log('payment validation stage: userId:', this.bookingData.userID);
     console.log('payment validation stage: showId:', this.showId);
