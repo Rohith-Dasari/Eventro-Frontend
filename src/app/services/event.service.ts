@@ -38,6 +38,10 @@ export class EventService{
     return this.httpClient.patch(`events/${eventID}`, requestBody);
   }
 
+  getEventsofShows(hostID:string):Observable<Event[]>{
+    return this.httpClient.get<Event[]>(`hosts/${hostID}/events`);
+  }
+
   getShows(eventId: string): Observable<any> {
     let params = new HttpParams().set('eventId', eventId);
     return this.httpClient.get('shows', { params });

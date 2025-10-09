@@ -1,10 +1,10 @@
-@if(upcomingBookings.length>0){
+@if(role=="Customer" && upcomingBookings.length>0){
 <app-upcoming-bookings-row 
   title="Upcoming Bookings"
   [bookings]="upcomingBookings"
   [defaultImage]="defaultImage"
   (bookingClick)="onBookingClick($event)" 
-  *ngIf="role === 'Customer'">
+  >
 </app-upcoming-bookings-row>
 }
 
@@ -45,3 +45,13 @@
   #addEventDialog
   (eventAdded)="refreshEvents()">
 </app-add-event-dialog>
+
+@if (role=="Host"&&hostedEvents.length>0){
+  <h2 class ="events-title">Your show Events</h2>
+  <app-events-row 
+  [events]="hostedEvents"
+  [defaultImage]="defaultImage"
+  (eventClick)="goToEventDetails($event)">
+</app-events-row>
+
+}

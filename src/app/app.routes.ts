@@ -20,14 +20,14 @@ export const routes: Routes = [
         loadComponent:()=>
           import('./events/events.component').then(m=>m.EventsComponent),
         canActivate: [AuthGuard],
-        data: { roles: ['Customer', 'Admin'] },
+        data: { roles: ['Customer', 'Admin', 'Host'] },
       },
       {
         path: 'events/:id',
         loadComponent:()=>
           import('./event-details/event-details.component').then(m=>m.EventDetailsComponent),
         canActivate: [AuthGuard],
-        data: { roles: ['Customer', 'Admin'] },
+        data: { roles: ['Customer', 'Admin','Host'] },
       },
       {
         path: 'booking-confirmation',
@@ -62,7 +62,7 @@ export const routes: Routes = [
         loadComponent:()=>
           import('./venues/venues.component').then(m=>m.VenuesComponent),
         canActivate: [AuthGuard],
-        data: { roles: ['Host', 'Admin'] },
+        data: { roles: ['Host'] },
       },
       {
         path: 'bookings',

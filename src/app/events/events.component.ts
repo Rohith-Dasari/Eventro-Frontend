@@ -26,15 +26,20 @@ export class EventsComponent implements OnInit {
   private eventService = inject(EventService);
   private bookingService = inject(BookingService);
   
+  
   upcomingBookings: EnrichedBooking[] = [];
   events: Event[] = [];
   blockedEvents:Event[]=[];
+  hostedEvents:Event[]=[];
+
   defaultImage = './images/hp3.jpg';
   loadingBookings = false;
   loadingEvents = false;
   loadingBlockedEvents=false;
+  loadingHostedEvents=false;
   bookingDialogVisible = false;
   selectedBooking: EnrichedBooking | null = null;
+  
   
   ngOnInit(): void {
     this.loadData();
@@ -87,7 +92,24 @@ export class EventsComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error loading events:', err);
-          this.loadingEvents = false;
+          this.loadingBlockedEvents = false;
+        }
+      })
+    }
+
+    if(this.role=="Host"){
+      this.loadingHostedEvents=true;
+      this.eventService.getEventsofShows(this.auth.getID() as string).subscribe({
+        next: (data) => {
+          if (data){
+          this.hostedEvents = data as Event[];
+          }
+          this.loadingHostedEvents = false;
+          console.log('hosted events loaded:', data);
+        },
+        error: (err) => {
+          console.error('Error loading hosted events:', err);
+          this.loadingHostedEvents = false;
         }
       })
     }

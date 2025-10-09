@@ -41,7 +41,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     }
 
     if (userRole === 'Customer') return this.router.parseUrl('/dashboard/events');
-    if (userRole === 'Host') return this.router.parseUrl('/dashboard/shows');
+    if (userRole === 'Host') return this.router.parseUrl('/dashboard/venues');
     if (userRole === 'Admin') return this.router.parseUrl('/dashboard/events');
 
     return this.router.parseUrl('/login');

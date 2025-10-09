@@ -67,9 +67,9 @@ export class DashboardLayoutComponent {
         break;
 
       case 'Host':
-        this.navItems = [
+        this.navItems = [          
+          { label: 'Events', path: '/dashboard/events' },
           { label: 'Venues', path: '/dashboard/venues' },
-          { label: 'Shows', path: '/dashboard/shows' },
           { label: 'Profile', path: '/dashboard/profile' },
         ];
         break;
