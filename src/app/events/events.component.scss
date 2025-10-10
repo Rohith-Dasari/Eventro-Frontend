@@ -1,3 +1,5 @@
+@use 'src/styles/constants' as c;
+
 .events-header {
   display: flex;
   justify-content: space-between;
@@ -7,13 +9,19 @@
   .events-title {
     font-size: 1.5rem;
     font-weight: 600;
-    color: #333;
+    color: c.$color-text-primary;
   }
 
   .add-btn {
     height: 2.5rem;
     width: 2.5rem;
     border-radius: 50%;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: c.$shadow-soft;
+    background-color: c.$color-primary; 
+    color: c.$color-white;
+
+    &:hover {
+      background-color: c.$color-primary-dark;
+    }
   }
 }

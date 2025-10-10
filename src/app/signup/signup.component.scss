@@ -1,9 +1,11 @@
+@use 'src/styles/constants' as c;
+
 .signup-page {
   display: flex;
   height: 100vh;
   width: 100vw;
-  background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: c.$color-bg-gradient;
+  font-family: c.$font-family-base;
 }
 
 .left-side {
@@ -20,10 +22,10 @@
 }
 
 .signup-form {
-  background: #ffffff;
+  background: c.$color-white;
   padding: 2.5rem;
-  border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  border-radius: c.$radius-lg;
+  box-shadow: c.$shadow-soft;
   width: 100%;
   max-width: 420px;
   text-align: center;
@@ -42,41 +44,40 @@
   input[pInputText] {
     width: 100%;
     padding: 0.875rem 1rem;
-    border-radius: 8px;
-    border: 2px solid #e5e7eb;
+    border-radius: c.$radius-md;
+    border: 2px solid c.$color-border;
     font-size: 1rem;
-    transition: all 0.2s ease;
+    transition: c.$transition-base;
     box-sizing: border-box;
-    
+
     &:focus {
-      border-color: #4f46e5;
-      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+      border-color: c.$color-primary;
+      box-shadow: c.$shadow-focus;
     }
 
     &::placeholder {
-      color: #9ca3af;
+      color: c.$color-text-muted;
     }
   }
 
   .phone-input-container {
-    position: relative;
     display: flex;
     align-items: center;
-    border: 2px solid #e5e7eb;
-    border-radius: 8px;
-    transition: all 0.2s ease;
+    border: 2px solid c.$color-border;
+    border-radius: c.$radius-md;
+    transition: c.$transition-base;
 
     &:focus-within {
-      border-color: #4f46e5;
-      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+      border-color: c.$color-primary;
+      box-shadow: c.$shadow-focus;
     }
 
     .country-code {
       padding: 0.875rem 0.75rem 0.875rem 1rem;
-      color: #6b7280;
+      color: c.$color-text-secondary;
       font-weight: 500;
-      background: #f9fafb;
-      border-right: 1px solid #e5e7eb;
+      background: c.$color-input-bg;
+      border-right: 1px solid c.$color-border;
     }
 
     .phone-input {
@@ -84,61 +85,61 @@
       padding: 0.875rem 1rem;
       border: none;
       outline: none;
-      border-radius: 0 8px 8px 0;
+      border-radius: 0 c.$radius-md c.$radius-md 0;
       font-size: 1rem;
 
       &::placeholder {
-        color: #9ca3af;
+        color: c.$color-text-muted;
       }
     }
   }
 
   ::ng-deep .p-password {
     width: 100%;
-    
+
     .p-password-input {
       width: 100%;
-      border-radius: 8px;
-      border: 2px solid #e5e7eb;
+      border-radius: c.$radius-md;
+      border: 2px solid c.$color-border;
       font-size: 1rem;
       padding: 0.875rem 1rem;
-      transition: all 0.2s ease;
+      transition: c.$transition-base;
       box-sizing: border-box;
-      
+
       &:focus {
-        border-color: #4f46e5;
-        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        border-color: c.$color-primary;
+        box-shadow: c.$shadow-focus;
       }
 
       &::placeholder {
-        color: #9ca3af;
+        color: c.$color-text-muted;
       }
     }
 
     .p-password-toggle-mask {
-      color: #6b7280;
-      
+      color: c.$color-text-secondary;
+
       &:hover {
-        color: #4f46e5;
+        color: c.$color-primary;
       }
     }
   }
 }
 
 .error {
-  color: #ef4444;
+  color: c.$color-danger;
   font-size: 0.875rem;
   margin-top: 0.25rem;
   text-align: left;
   line-height: 1.4;
-  
+
   &.signup-error {
     text-align: center;
     margin: 0.5rem 0;
     padding: 0.5rem;
-    background: #fef2f2;
-    border: 1px solid #fecaca;
-    border-radius: 6px;
+    background: c.$color-danger-bg;
+    border: 1px solid c.$color-danger-border;
+    border-radius: c.$radius-sm;
   }
 }
 
@@ -147,8 +148,8 @@
   padding: 0.875rem;
   font-size: 1rem;
   font-weight: 600;
-  border-radius: 8px;
-  
+  border-radius: c.$radius-md;
+
   .p-button-label {
     font-weight: 600;
   }
@@ -157,19 +158,18 @@
 .login-link {
   margin-top: 1.5rem;
   font-size: 0.95rem;
-  color: #6b7280;
-  
+  color: c.$color-text-secondary;
+
   a {
-    color: #4f46e5;
+    color: c.$color-primary;
     text-decoration: none;
     font-weight: 600;
-    
+
     &:hover {
       text-decoration: underline;
     }
   }
 }
-
 
 .brand {
   text-align: center;
@@ -178,13 +178,13 @@
   .brand-name {
     font-size: 3rem;
     font-weight: 800;
-    color: #4f46e5;
+    color: c.$color-primary;
     margin-bottom: 0.5rem;
   }
 
   .caption {
     font-size: 1.1rem;
     font-weight: 500;
-    color: #6b7280;
+    color: c.$color-text-secondary;
   }
 }
