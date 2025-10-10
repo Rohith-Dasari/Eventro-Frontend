@@ -1,10 +1,9 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import {
   Component,
   EventEmitter,
   inject,
   Input,
-  input,
   Output,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -30,6 +29,7 @@ import { DropdownModule } from 'primeng/dropdown';
     DatePickerModule,
     InputNumberModule,
     DropdownModule,
+    DatePipe
   ],
   templateUrl: './add-show-dialog.component.html',
   styleUrl: './add-show-dialog.component.scss',
@@ -41,6 +41,7 @@ export class AddShowDialogComponent {
   private showService = inject(ShowService);
   private venueService = inject(VenueService);
   private authService = inject(AuthService);
+  constructor(private datePipe: DatePipe){}
 
   minDate = new Date();
 
@@ -93,12 +94,14 @@ export class AddShowDialogComponent {
   submit() {
     if (!this.eventID || !this.selectedDate) return;
 
-    const dateISO = this.selectedDate.toISOString();
-    const [datePart, timePart] = dateISO.split('T');
+    const datePart = this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd')!;
+    const timePart = this.datePipe.transform(this.selectedDate, 'HH:mm')!;
+
+    console.log([datePart,timePart]);
 
     this.newShow.event_id = this.eventID;
     this.newShow.show_date = datePart;
-    this.newShow.show_time = timePart.slice(0, 5);
+    this.newShow.show_time = timePart;
 
     this.showService.addShow(this.newShow).subscribe({
       next: (res) => {

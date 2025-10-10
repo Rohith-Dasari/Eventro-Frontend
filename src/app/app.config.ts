@@ -7,9 +7,11 @@ import { authInterceptor } from './interceptors/auth.interceptor';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';
 import { customPreset } from './themePreset';
+import { DatePipe } from '@angular/common';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    DatePipe,
     provideAnimationsAsync(),
     providePrimeNG({
       theme: {
