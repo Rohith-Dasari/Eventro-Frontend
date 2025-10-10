@@ -23,7 +23,7 @@ export class AddEventDialogComponent {
     description: '',
     duration:'',
     category: '',
-    artists: ["7c234a3c-49bd-486d-99c6-b2120aa2c21c", "859478ed-0184-4053-823a-ed130e7cee99"]
+    artists: ["7c234a3c-49bd-486d-99c6-b2120aa2c21c"]
   };
 
   durationInt?:number;

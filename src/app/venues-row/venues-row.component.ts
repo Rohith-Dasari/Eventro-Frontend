@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { FormsModule } from '@angular/forms';
-import { DialogModule } from 'primeng/dialog';
 
 @Component({
   selector: 'app-venues-row',
@@ -14,35 +13,31 @@ import { DialogModule } from 'primeng/dialog';
   styleUrl: './venues-row.component.scss'
 })
 export class VenuesRowComponent {
-  @Input() venues:Venues[]=[];
-
-  @Output()moderateVenue=new EventEmitter();
-
-  private venueService=inject(VenueService);
+  @Input() venues: Venues[] = [];
+  @Output() moderateVenue = new EventEmitter<void>(); 
+  
+  private venueService = inject(VenueService);
   loadingVenueId: string | null = null;
-
-  onToggle(venue: Venues, event: Event) {
-    // Prevent default toggle behavior
-    event.preventDefault();
-    event.stopPropagation();
-    
-    // Prevent multiple clicks
+  
+  onToggle(venue: Venues, event: Event) {    
     if (this.loadingVenueId === venue.ID) {
       return;
     }
     
-    this.loadingVenueId = venue.ID;
-    const newStatus = !venue.IsBlocked;
+    const previousStatus = venue.IsBlocked;
+    venue.IsBlocked = !previousStatus;
     
-    this.venueService.moderateVenue(venue.ID, newStatus).subscribe({
-      next: (value) => {
-        console.log('Venue moderated successfully:', value);
+    this.loadingVenueId = venue.ID;
+    
+    this.venueService.moderateVenue(venue.ID, venue.IsBlocked).subscribe({
+      next: () => {
+        console.log('Venue moderated successfully');
         this.loadingVenueId = null;
-        // Let parent refresh handle updating the lists
-        this.moderateVenue.emit();
+        this.moderateVenue.emit(); 
       },
       error: (err) => {
         console.error('Error moderating venue:', err);
+        venue.IsBlocked = previousStatus;
         this.loadingVenueId = null;
       }
     });

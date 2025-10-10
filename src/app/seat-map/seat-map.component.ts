@@ -55,10 +55,6 @@ export class SeatMapComponent implements OnInit, OnChanges {
     
     const bookedSeats: string[] = rawBookedSeats.map(seat => seat.toLowerCase());
     
-    console.log('Show object:', this.show);
-    console.log('Raw booked seats from show:', rawBookedSeats);
-    console.log('Normalized booked seats (lowercase):', bookedSeats);
-
     this.seats = [];
     for (let row = 1; row <= 10; row++) {
       for (let seat = 1; seat <= 10; seat++) {
@@ -74,9 +70,6 @@ export class SeatMapComponent implements OnInit, OnChanges {
         });
       }
     }
-    
-    console.log('Total seats created:', this.seats.length);
-    console.log('Booked seats count:', this.seats.filter(s => s.isBooked).length);
   }
 
   getRowLetter(row: number): string {

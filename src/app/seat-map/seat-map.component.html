@@ -11,7 +11,7 @@
       <ng-container *ngIf="role === 'Host'; else customerHeader">
         <div class="host-summary">
           <span class="summary-item">
-            Total Tickets: <b>{{ show?.BookedSeats?.length || 0 }}</b>
+            Tickets Sold: <b>{{ show?.BookedSeats?.length || 0 }}</b>
           </span>
           <span class="summary-item">
             Total Sale: <b>₹{{ (show?.BookedSeats?.length || 0) * price }}</b>
@@ -20,74 +20,83 @@
       </ng-container>
 
       <ng-template #customerHeader>
-        <span *ngIf="errorMessage" class="error-message">{{
-          errorMessage
-        }}</span>
+        <span
+          *ngIf="errorMessage"
+          class="error-message"
+          [ngStyle]="{
+            color: '#d32f2f',
+            'font-weight': '600',
+            'font-size': '0.9rem',
+            'text-align': 'center'
+          }"
+          >{{ errorMessage }}</span
+        >
       </ng-template>
     </div>
   </ng-template>
   <div class="seatmap-wrapper">
-  <div class="seatmap-container">
-    <div class="screen">
-      <div class="screen-bar"></div>
-      <p>SCREEN</p>
-    </div>
-
-    <div class="seat-grid">
-      <div *ngFor="let row of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]" class="row">
-        <div class="row-label">{{ getRowLetter(row) }}</div>
-
-        <button
-          *ngFor="let col of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
-          (click)="toggleSeat(row, col)"
-          [disabled]="getSeat(row, col)?.isBooked"
-          [class]="getSeatClass(getSeat(row, col)!)"
-          [attr.data-seat]="getRowLetter(row) + col"
-          [attr.data-booked]="getSeat(row, col)?.isBooked"
-        >
-          {{ col }}
-        </button>
-      </div>
-    </div>
-
-    <div class="legend">
-      <div><span class="available"></span> Available</div>
-      <div><span class="selected"></span> Selected</div>
-      <div><span class="booked"></span> Booked</div>
-    </div>
-
-    @if(role!="Host"&&selectedSeats.length){
-
-    <div class="summary" *ngIf="selectedSeats.length">
-      <div class="summary-left">
-        <div class="seats-list">Seats: {{ selectedSeatCodes.join(", ") }}</div>
-        <div class="total">Total: ₹{{ totalPrice }}</div>
+    <div class="seatmap-container">
+      <div class="screen">
+        <p>SCREEN</p>
       </div>
 
-      <div *ngIf="role === 'Admin'" class="admin-input-box">
-        <input
-          id="adminEmail"
-          type="email"
-          pInputText
-          [(ngModel)]="adminUserEmail"
-          placeholder="Enter user's email ID"
-          class="admin-input"
-        />
-        <small *ngIf="userNotFound" class="error-text">
-          No user found with this email.
-        </small>
+      <div class="seat-grid">
+        <div *ngFor="let row of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]" class="row">
+          <div class="row-label">{{ getRowLetter(row) }}</div>
+
+          <button
+            *ngFor="let col of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+            (click)="toggleSeat(row, col)"
+            [disabled]="getSeat(row, col)?.isBooked"
+            [class]="getSeatClass(getSeat(row, col)!)"
+            [attr.data-seat]="getRowLetter(row) + col"
+            [attr.data-booked]="getSeat(row, col)?.isBooked"
+          >
+            {{ col }}
+          </button>
+        </div>
       </div>
 
-      <div class="summary-right">
-        <button
-          pButton
-          label="Confirm Booking"
-          class="p-button-success"
-          (click)="onClickConfirm()"
-        ></button>
+      <div class="legend">
+        <div><span class="available"></span> Available</div>
+        <div><span class="selected"></span> Selected</div>
+        <div><span class="booked"></span> Booked</div>
       </div>
+
+      @if(role!="Host"&&selectedSeats.length){
+
+      <div class="summary" *ngIf="selectedSeats.length">
+        <div class="summary-left">
+          <div class="seats-list">
+            Seats: {{ selectedSeatCodes.join(", ") }}
+          </div>
+          <div class="total">Total: ₹{{ totalPrice }}</div>
+        </div>
+
+        <div *ngIf="role === 'Admin'" class="admin-input-box">
+          <input
+            id="adminEmail"
+            type="email"
+            pInputText
+            [(ngModel)]="adminUserEmail"
+            placeholder="Enter user's email ID"
+            class="admin-input"
+          />
+          <small *ngIf="userNotFound" class="error-text">
+            No user found with this email.
+          </small>
+        </div>
+
+        <div class="summary-right">
+          <button
+            pButton
+            label="Confirm Booking"
+            class="p-button-success"
+            (click)="onClickConfirm()"
+          ></button>
+        </div>
+      </div>
+      }
     </div>
-    }
-  </div>
   </div>
 </p-dialog>

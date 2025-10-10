@@ -9,21 +9,6 @@
     text-align: center;
     margin-bottom: 1rem;
 
-    .screen-bar {
-      width: 95%;
-      height: 10px;
-      background: linear-gradient(
-        to right,
-        transparent 5%,
-        #777 20%,
-        #555 50%,
-        #777 80%,
-        transparent 95%
-      );
-      border-radius: 6px;
-      margin: 0 auto 6px;
-    }
-
     p {
       font-size: 0.8rem;
       color: #666;
@@ -163,12 +148,6 @@
     padding: 0.5rem;
   }
 
-  .error-message {
-    color: #d32f2f;
-    font-weight: 600;
-    font-size: 0.9rem;
-    text-align: center;
-  }
 }
 
 .admin-input-box {

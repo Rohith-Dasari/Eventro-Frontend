@@ -28,4 +28,16 @@
   }
   
 }
+.error-container {
+  min-height: 1.5rem; 
+  display: block;
+}
+
+.error-message {
+  color: #d32f2f;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
 

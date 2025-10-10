@@ -11,10 +11,11 @@ import { UpcomingBookingDetailsComponent } from '../upcoming-booking-details/upc
 import { AuthService } from '../services/auth.service';
 import { AddEventDialogComponent } from '../dashboard/add-event-dialog/add-event-dialog.component';
 import { ButtonModule } from 'primeng/button';
+import { BookingsListComponent } from '../bookings-list/bookings-list.component';
 
 @Component({
   selector: 'app-events',
-  imports: [UpcomingBookingDetailsComponent,CommonModule, EventsRowComponent, UpcomingBookingsRowComponent, AddEventDialogComponent,ButtonModule],
+  imports: [UpcomingBookingDetailsComponent,CommonModule, EventsRowComponent, UpcomingBookingsRowComponent, AddEventDialogComponent,ButtonModule,BookingsListComponent],
   templateUrl: './events.component.html',
   styleUrl: './events.component.scss'
 })

@@ -52,19 +52,17 @@ export class VenuesComponent {
     }
   }
 
-  refreshVenues() {
+    refreshVenues() {
     if (!this.userID) return;
 
     forkJoin({
-      venues: this.venueService.getVenues(this.userID),
-      blocked: this.venueService.getBlockedVenues(this.userID)
+      allVenues: this.venueService.getVenues(this.userID)
     }).subscribe({
-      next: ({ venues, blocked }) => {
-        this.venues = venues.filter(v => !v.IsBlocked);
-        this.blockedVenues = blocked.filter(v => v.IsBlocked);
+      next: ({ allVenues }) => {
+        this.venues = allVenues.filter(venue => !venue.IsBlocked);
+        this.blockedVenues = allVenues.filter(venue => venue.IsBlocked);
       },
       error: (err) => console.error(err)
     });
   }
-
 }

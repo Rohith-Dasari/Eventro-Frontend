@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, Input } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { EventService } from '../../services/event.service';
