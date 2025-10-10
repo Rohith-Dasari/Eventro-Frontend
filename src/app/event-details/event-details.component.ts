@@ -71,7 +71,10 @@ export class EventDetailsComponent implements OnInit {
 
     if (this.role === 'Host') {
       const hostID = this.authService.getID();
-      shows$ = this.eventService.getShowsByHostAndEvent(eventId, hostID as string);
+      shows$ = this.eventService.getShowsByHostAndEvent(
+        eventId,
+        hostID as string
+      );
     } else {
       shows$ = this.eventService.getShows(eventId);
     }
@@ -89,9 +92,7 @@ export class EventDetailsComponent implements OnInit {
 
         const uniqueDates = Array.from(
           new Set(
-            this.shows.map(
-              (s: any) => new Date(s.ShowDate).toDateString() 
-            )
+            this.shows.map((s: any) => new Date(s.ShowDate).toDateString())
           )
         )
           .map((d) => new Date(d))
@@ -114,16 +115,12 @@ export class EventDetailsComponent implements OnInit {
   }
 
   refreshShows() {
+    console.log('Refreshing shows after new show added...');
     this.refreshing = true;
-    this.eventService.getShows(this.event.id).subscribe((shows: any[]) => {
-      this.shows = shows;
 
-      this.shows.forEach((s) => {
-        s.ShowDate = new Date(s.ShowDate);
-      });
+    this.loadEvent(this.event.id);
 
-      this.refreshing = false;
-    });
+    this.refreshing = false;
   }
 
   onToggle(newValue: boolean) {

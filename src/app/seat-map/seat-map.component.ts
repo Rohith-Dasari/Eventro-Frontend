@@ -15,6 +15,7 @@ import { AuthService } from '../services/auth.service';
   templateUrl: './seat-map.component.html',
   styleUrl: './seat-map.component.scss'
 })
+
 export class SeatMapComponent implements OnInit, OnChanges {
   private router = inject(Router);
   private auth = inject(AuthService);
@@ -23,8 +24,6 @@ export class SeatMapComponent implements OnInit, OnChanges {
   userNotFound = false;
 
   bookingSummary=`Total Number of Tickets Booked:   Total Sale:`;
-
-
 
   @Input() visible = false;
   @Output() visibleChange = new EventEmitter<boolean>(); 

@@ -4,14 +4,29 @@
   [modal]="true"
   [style]="{ width: '70vw' }"
   [closable]="true"
-  header="{{bookingSummary}}"
+  header="{{ bookingSummary }}"
 >
   <ng-template pTemplate="header">
     <div class="header-bar">
-      <span *ngIf="errorMessage" class="error-message">{{ errorMessage }}</span>
+      <ng-container *ngIf="role === 'Host'; else customerHeader">
+        <div class="host-summary">
+          <span class="summary-item">
+            Total Tickets: <b>{{ show?.BookedSeats?.length || 0 }}</b>
+          </span>
+          <span class="summary-item">
+            Total Sale: <b>₹{{ (show?.BookedSeats?.length || 0) * price }}</b>
+          </span>
+        </div>
+      </ng-container>
+
+      <ng-template #customerHeader>
+        <span *ngIf="errorMessage" class="error-message">{{
+          errorMessage
+        }}</span>
+      </ng-template>
     </div>
   </ng-template>
-
+  <div class="seatmap-wrapper">
   <div class="seatmap-container">
     <div class="screen">
       <div class="screen-bar"></div>
@@ -72,6 +87,7 @@
         ></button>
       </div>
     </div>
-  }
+    }
+  </div>
   </div>
 </p-dialog>
