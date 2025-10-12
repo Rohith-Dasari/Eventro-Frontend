@@ -1,4 +1,5 @@
 import { Component, inject, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { EventService } from '../services/event.service';
 import { Event } from '../models/events';
 import { CommonModule, DatePipe } from '@angular/common';
@@ -47,33 +48,59 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
   private eventService = inject(EventService);
   private authService = inject(AuthService);
   private messageService = inject(MessageService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
   visible = false;
 
   ngOnInit(): void {
     this.role = this.authService.getRole() as string;
-    this.event = history.state?.selectedEvent;
-    if (!this.event) {
-      console.error('No event info available.');
+    const eventFromState = history.state?.selectedEvent as Event | undefined;
+    const eventId = eventFromState?.id ?? this.route.snapshot.paramMap.get('id');
+
+    if (!eventId) {
+      console.error('No event identifier available.');
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Missing Event',
+        detail: 'We could not determine which event to display.',
+        life: 3000,
+      });
+      this.router.navigate(['/dashboard/events']);
       return;
     }
-    this.eventService.getEventByID(this.event.id).subscribe({
-      next: (val) => {
-        this.event.is_blocked = val.is_blocked;
-        this.checked = this.event.is_blocked;
-        this.status = this.checked
-          ? 'The event has been blocked'
-          : 'The event has been unblocked';
+
+    if (eventFromState) {
+      this.event = eventFromState;
+      this.syncModerationState(eventFromState.is_blocked);
+    }
+
+    this.fetchEventDetails(eventId);
+    this.loadEvent(eventId);
+  }
+
+  private fetchEventDetails(eventId: string) {
+    this.eventService.getEventByID(eventId).subscribe({
+      next: (eventResponse) => {
+        this.event = eventResponse;
+        this.syncModerationState(eventResponse.is_blocked);
       },
       error: (err) => {
-        console.log(err);
+        console.error('Failed to load event details', err);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Load Failed',
+          detail: 'Unable to load the event details. Please try again later.',
+          life: 3000,
+        });
       },
     });
-    this.checked = this.event.is_blocked;
-    this.status = this.checked
+  }
+
+  private syncModerationState(isBlocked: boolean) {
+    this.checked = isBlocked;
+    this.status = isBlocked
       ? 'The event has been blocked'
       : 'The event has been unblocked';
-
-    this.loadEvent(this.event.id);
   }
 
   loadEvent(eventId: string) {
@@ -116,7 +143,7 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
           .map((d) => new Date(d))
           .sort((a, b) => a.getTime() - b.getTime());
 
-        this.availableDates = uniqueDates.slice(0, 7);
+        this.availableDates = uniqueDates.slice(0, 6);
 
         this.selectedDate = this.availableDates[0];
       },
@@ -165,24 +192,14 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
       .subscribe({
       next: (val) => {
         console.log('succesful moderation');
-        if (this.checked) {
-          this.status = 'The event has been blocked';
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Event Blocked',
-            detail: `${this.event.name} is now blocked.`,
-            life: 3000,
-          });
-        } else {
-          this.status = 'The event has been unblocked';
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Event Unblocked',
-            detail: `${this.event.name} is now active.`,
-            life: 3000,
-          });
-        }
+        this.syncModerationState(this.checked);
         this.event.is_blocked = this.checked;
+        this.messageService.add({
+          severity: 'success',
+          summary: this.checked ? 'Event Blocked' : 'Event Unblocked',
+          detail: `${this.event.name} is now ${this.checked ? 'blocked' : 'active'}.`,
+          life: 3000,
+        });
       },
       error: (err) => {
         console.log(err);
@@ -192,7 +209,7 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
           detail: 'We could not update the event status. Please try again.',
           life: 3000,
         });
-        this.checked = this.event.is_blocked;
+        this.syncModerationState(this.event.is_blocked);
       },
     });
   }

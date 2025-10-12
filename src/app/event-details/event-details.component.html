@@ -78,6 +78,7 @@
           (click)="refreshShows()"
           [attr.aria-label]="'Refresh shows'"
         ></button>
+        @if(role=="Host" || role=="Admin"){
         <div class="show-status-toggle">
           <span class="status-label">
             {{ showBlocked ? 'Blocked Shows' : 'Active Shows' }}
@@ -89,6 +90,7 @@
             (ngModelChange)="onShowStatusFilterChange($event)"
           ></p-toggleswitch>
         </div>
+        }
       </div>
     </div>
   </div>
