@@ -49,15 +49,36 @@ export class ShowsComponent implements OnChanges {
       groupedByVenue[show.Venue.ID].shows.push(show);
     });
 
-    Object.values(groupedByVenue).forEach((venueGroup) => {
-      venueGroup.shows.sort((a: any, b: any) => {
-        const timeA = new Date(`${a.ShowDate} ${a.ShowTime}`).getTime();
-        const timeB = new Date(`${b.ShowDate} ${b.ShowTime}`).getTime();
-        return timeA - timeB;
-      });
-    });
+    this.venues = Object.values(groupedByVenue).map((venueGroup) => ({
+      ...venueGroup,
+      shows: [...venueGroup.shows].sort((a: any, b: any) =>
+        this.compareByShowTime(a?.ShowTime ?? a?.show_time, b?.ShowTime ?? b?.show_time)
+      ),
+    }));
+  }
 
-    this.venues = Object.values(groupedByVenue);
+  private compareByShowTime(timeA?: string, timeB?: string): number {
+    const minutesA = this.showTimeToMinutes(timeA);
+    const minutesB = this.showTimeToMinutes(timeB);
+    return minutesA - minutesB;
+  }
+
+  private showTimeToMinutes(time?: string): number {
+    if (!time) return Number.MAX_SAFE_INTEGER;
+
+    const trimmed = time.trim();
+    if (!trimmed) return Number.MAX_SAFE_INTEGER;
+
+    const [hourPart, minutePart, secondPart] = trimmed.split(':');
+    const hours = Number(hourPart);
+    const minutes = Number(minutePart);
+    const seconds = secondPart !== undefined ? Number(secondPart) : 0;
+
+    if ([hours, minutes, seconds].some((value) => Number.isNaN(value))) {
+      return Number.MAX_SAFE_INTEGER;
+    }
+
+    return hours * 60 + minutes + seconds / 60;
   }
 
   getAvailabilityColor(show: any): string {
