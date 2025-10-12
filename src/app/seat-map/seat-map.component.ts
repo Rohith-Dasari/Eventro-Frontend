@@ -148,6 +148,10 @@ export class SeatMapComponent implements OnInit, OnChanges {
     return this.selectedSeats.length * this.price;
   }
 
+  get isShowBlocked(): boolean {
+    return !!(this.show?.IsBlocked ?? this.show?.is_blocked);
+  }
+
   getSeatClass(seat: Seat) {
     if (!seat) return 'available';
 
