@@ -71,13 +71,6 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
         data: { roles: ['Customer'] },
       },
-      {
-        path: 'shows',
-        loadComponent:()=>
-          import('./shows-page/shows-page.component').then(m=>m.ShowsPageComponent),
-        canActivate: [AuthGuard],
-        data: { roles: ['Host', 'Admin'] },
-      },
       { path: '', redirectTo: 'events', pathMatch: 'full' },
     ],
   },

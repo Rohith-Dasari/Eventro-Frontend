@@ -25,7 +25,7 @@
           [disabled]="role !== 'Admin'"
         />
       </div>
-      } @if(role=="Host"){
+      } @if(role=="Host" && !event.is_blocked){
       <p-button
         label="Add Show"
         severity="success"
