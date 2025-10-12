@@ -36,7 +36,31 @@ export class BookingsListComponent implements OnInit {
         console.log('bookings-list stage: raw bookings data received:', data);
         console.log('bookings-list stage: bookings count:', data.length);
         
-        this.bookings = data.sort((a, b) => {
+        const now = new Date();
+
+        const upcomingBookings = data.filter((booking) => {
+          const showDateValue = booking.show_details?.ShowDate;
+          if (!showDateValue) {
+            console.log('bookings-list stage: booking missing ShowDate, excluding from upcoming list.', booking);
+            return false;
+          }
+
+          const showDate = new Date(showDateValue);
+          const isValidDate = !Number.isNaN(showDate.getTime());
+
+          if (!isValidDate) {
+            console.log('bookings-list stage: invalid ShowDate encountered, excluding booking.', booking);
+            return false;
+          }
+
+          const isUpcoming = showDate.getTime() >= now.getTime();
+          if (!isUpcoming) {
+            console.log('bookings-list stage: filtering out past booking with ShowDate:', showDateValue);
+          }
+          return isUpcoming;
+        });
+
+        this.bookings = upcomingBookings.sort((a, b) => {
           const dateA = new Date(a.show_details?.ShowDate || '').getTime();
           const dateB = new Date(b.show_details?.ShowDate || '').getTime();
           return dateA - dateB;
