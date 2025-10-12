@@ -114,8 +114,7 @@ export class BookingUtilsService {
     yPos += 15;
     doc.setFontSize(11);
     doc.setTextColor(0, 0, 0);
-    
-    doc.text(`Booking ID: ${booking.booking_id}`, 20, yPos);
+  
     yPos += 10;
     doc.text(`Number of Tickets: ${booking.num_tickets}`, 20, yPos);
     yPos += 10;

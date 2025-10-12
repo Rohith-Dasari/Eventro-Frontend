@@ -14,7 +14,9 @@
   (moderateVenue)="refreshVenues()">
 </app-venues-row>
 
+@if(blockedVenues.length>0){
 <h2 class="venues-title">Blocked Venues</h2>
+}
 
 <app-venues-row 
   [venues]="blockedVenues"
