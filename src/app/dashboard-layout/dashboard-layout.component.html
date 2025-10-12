@@ -1,6 +1,15 @@
 <header class="header">
   <div class="left-section">
-  <div class="logo" (click)="goToEvents()" role="button" tabindex="0" (keydown.enter)="goToEvents()" (keydown.space)="goToEvents()">Eventro</div>
+    <div
+      class="logo"
+      (click)="goToEvents()"
+      role="button"
+      tabindex="0"
+      (keydown.enter)="goToEvents($event)"
+      (keydown.space)="goToEvents($event)"
+    >
+      Eventro
+    </div>
 
     <app-search-bar></app-search-bar>
 

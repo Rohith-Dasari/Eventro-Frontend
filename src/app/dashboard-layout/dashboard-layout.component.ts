@@ -91,7 +91,8 @@ export class DashboardLayoutComponent {
     this.router.navigate(['/login']);
   }
 
-  goToEvents() {
+  goToEvents(event?: Event) {
+    event?.preventDefault();
     this.router.navigate(['/dashboard/events']);
   }
 
@@ -105,7 +106,10 @@ export class DashboardLayoutComponent {
     if (path === '/dashboard/profile') {
       return this.isProfileSectionActive();
     }
-    return this.currentRoute === path;
+    return (
+      this.currentRoute === path ||
+      this.currentRoute.startsWith(path + '/')
+    );
   }
 }
 
