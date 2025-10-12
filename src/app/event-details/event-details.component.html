@@ -22,7 +22,7 @@
           (ngModelChange)="onToggle($event)"
           onLabel="Blocked"
           offLabel="Active"
-          [disabled]="role !== 'Admin'"
+          [disabled]="role !== 'Admin' || isModerating"
         />
       </div>
       } @if(role=="Host" && !event.is_blocked){
@@ -95,3 +95,5 @@
   </div>
   }
 </div>
+
+<app-spinner [visible]="isModerating || refreshing"></app-spinner>

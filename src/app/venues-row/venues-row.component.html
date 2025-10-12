@@ -12,7 +12,7 @@
       <ng-template pTemplate="content">
         <p-togglebutton
           [ngModel]="venue.IsBlocked"
-          [disabled]="loadingVenueId === venue.ID"
+          [disabled]="loadingVenueId !== null"
           onLabel="Blocked"
           offLabel="Active"
           [offIcon]="'pi pi-lock-open'"
@@ -25,3 +25,5 @@
     </p-card>
   </div>
 </div>
+
+<app-spinner [visible]="loadingVenueId !== null"></app-spinner>

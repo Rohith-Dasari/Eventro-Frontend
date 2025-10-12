@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { EventService } from '../services/event.service';
 import { Event } from '../models/events';
 import { CommonModule, DatePipe } from '@angular/common';
@@ -9,6 +9,10 @@ import { ShowsComponent } from '../shows/shows.component';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { AuthService } from '../services/auth.service';
 import { AddShowDialogComponent } from '../add-show-dialog/add-show-dialog.component';
+import { SpinnerComponent } from '../shared/spinner/spinner.component';
+import { MessageService } from 'primeng/api';
+import { finalize } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-event-details',
@@ -21,11 +25,12 @@ import { AddShowDialogComponent } from '../add-show-dialog/add-show-dialog.compo
     ShowsComponent,
     ToggleSwitchModule,
     AddShowDialogComponent,
+    SpinnerComponent,
   ],
   templateUrl: './event-details.component.html',
   styleUrl: './event-details.component.scss',
 })
-export class EventDetailsComponent implements OnInit {
+export class EventDetailsComponent implements OnInit, OnDestroy {
   event!: Event;
   shows: any[] = [];
   availableDates: Date[] = [];
@@ -35,9 +40,12 @@ export class EventDetailsComponent implements OnInit {
   checked!: boolean;
   status!: string;
   role!: string;
+  isModerating = false;
+  private showsSubscription?: Subscription;
 
   private eventService = inject(EventService);
   private authService = inject(AuthService);
+  private messageService = inject(MessageService);
   visible = false;
 
   ngOnInit(): void {
@@ -79,12 +87,20 @@ export class EventDetailsComponent implements OnInit {
       shows$ = this.eventService.getShows(eventId);
     }
 
-    shows$.subscribe({
+    this.showsSubscription?.unsubscribe();
+
+    this.showsSubscription = shows$
+      .pipe(finalize(() => (this.refreshing = false)))
+      .subscribe({
       next: (shows: any[]) => {
         console.log('Shows loaded:', shows);
         this.shows = shows;
 
-        if (!shows.length) return;
+        if (!shows.length) {
+          this.availableDates = [];
+          this.selectedDate = undefined as unknown as Date;
+          return;
+        }
 
         this.shows.forEach((s) => {
           s.ShowDate = new Date(s.ShowDate);
@@ -102,8 +118,16 @@ export class EventDetailsComponent implements OnInit {
 
         this.selectedDate = this.availableDates[0];
       },
-      error: (err) => console.error('Error loading shows:', err),
-    });
+        error: (err) => {
+          console.error('Error loading shows:', err);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Load Failed',
+            detail: 'Unable to refresh shows. Please try again.',
+            life: 3000,
+          });
+        },
+  });
   }
 
   openDialogBox() {
@@ -117,27 +141,51 @@ export class EventDetailsComponent implements OnInit {
   refreshShows() {
     console.log('Refreshing shows after new show added...');
     this.refreshing = true;
-
     this.loadEvent(this.event.id);
+  }
 
-    this.refreshing = false;
+  ngOnDestroy(): void {
+    this.showsSubscription?.unsubscribe();
   }
 
   onToggle(newValue: boolean) {
     console.log('Toggle switch changed to:', newValue);
+
+    this.isModerating = true;
 
     this.eventService.moderateEvent(this.event.id, this.checked).subscribe({
       next: (val) => {
         console.log('succesful moderation');
         if (this.checked) {
           this.status = 'The event has been blocked';
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Event Blocked',
+            detail: `${this.event.name} is now blocked.`,
+            life: 3000,
+          });
         } else {
           this.status = 'The event has been unblocked';
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Event Unblocked',
+            detail: `${this.event.name} is now active.`,
+            life: 3000,
+          });
         }
         this.event.is_blocked = !this.event.is_blocked;
+        this.isModerating = false;
       },
       error: (err) => {
         console.log(err);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Moderation Failed',
+          detail: 'We could not update the event status. Please try again.',
+          life: 3000,
+        });
+        this.checked = this.event.is_blocked;
+        this.isModerating = false;
       },
     });
   }
