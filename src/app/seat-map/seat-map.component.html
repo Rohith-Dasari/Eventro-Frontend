@@ -8,7 +8,7 @@
 >
   <ng-template pTemplate="header">
     <div class="header-bar">
-      <ng-container *ngIf="role === 'Host'; else customerHeader">
+      <ng-container *ngIf="role === 'Host'||role==='Admin'; else customerHeader">
         <div class="host-summary">
           <span class="summary-item">
             Tickets Sold: <b>{{ show?.BookedSeats?.length || 0 }}</b>
