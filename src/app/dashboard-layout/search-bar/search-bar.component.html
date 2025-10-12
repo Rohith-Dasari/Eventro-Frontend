@@ -7,8 +7,10 @@
       placeholder="Search events..."
       [(ngModel)]="searchQuery"
       (ngModelChange)="onSearchChange($event)"
-      (focus)="isFocused = true"
+      (focus)="onFocus()"
+      (blur)="onBlur()"
       class="search-input"
+      #searchInput
     />
   </span>
 

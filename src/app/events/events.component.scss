@@ -17,6 +17,7 @@
     box-shadow: c.$shadow-soft;
     background-color: c.$color-primary; 
     color: c.$color-white;
+    border: none;
 
     &:hover {
       background-color: c.$color-primary-dark;

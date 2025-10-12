@@ -4,14 +4,17 @@
   align-items: center;
   margin: 1rem 0 1.5rem;
 
-  // .venues-title {
-  //   font-size: 1.5rem;
-  // }
-
   .add-btn {
     height: 2.5rem;
     width: 2.5rem;
     border-radius: 50%;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    background-color: #4f46e5;
+    color: #fff;
+    border: none;
+
+    &:hover {
+      background-color: #4338ca;
+    }
   }
 }
