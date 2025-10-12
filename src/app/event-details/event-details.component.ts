@@ -58,18 +58,19 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
     this.eventService.getEventByID(this.event.id).subscribe({
       next: (val) => {
         this.event.is_blocked = val.is_blocked;
+        this.checked = this.event.is_blocked;
+        this.status = this.checked
+          ? 'The event has been blocked'
+          : 'The event has been unblocked';
       },
       error: (err) => {
         console.log(err);
       },
     });
     this.checked = this.event.is_blocked;
-
-    if (this.checked) {
-      this.status = 'The event has been blocked';
-    } else {
-      this.status = 'The event has been unblocked';
-    }
+    this.status = this.checked
+      ? 'The event has been blocked'
+      : 'The event has been unblocked';
 
     this.loadEvent(this.event.id);
   }
@@ -153,7 +154,10 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
 
     this.isModerating = true;
 
-    this.eventService.moderateEvent(this.event.id, this.checked).subscribe({
+    this.eventService
+      .moderateEvent(this.event.id, this.checked)
+      .pipe(finalize(() => (this.isModerating = false)))
+      .subscribe({
       next: (val) => {
         console.log('succesful moderation');
         if (this.checked) {
@@ -173,8 +177,7 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
             life: 3000,
           });
         }
-        this.event.is_blocked = !this.event.is_blocked;
-        this.isModerating = false;
+        this.event.is_blocked = this.checked;
       },
       error: (err) => {
         console.log(err);
@@ -185,7 +188,6 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
           life: 3000,
         });
         this.checked = this.event.is_blocked;
-        this.isModerating = false;
       },
     });
   }

@@ -91,6 +91,10 @@ export class DashboardLayoutComponent {
     this.router.navigate(['/login']);
   }
 
+  goToEvents() {
+    this.router.navigate(['/dashboard/events']);
+  }
+
 
   isProfileSectionActive(): boolean {
     return this.currentRoute.includes('/dashboard/profile') || 
