@@ -6,6 +6,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { Event } from '../../models/events';
+import { UserService } from '../../services/user.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-search-bar',
@@ -21,6 +23,7 @@ export class SearchBarComponent {
   showResults = false;
   selectedCategory: string | null = null;
   private searchTerm = new Subject<string>();
+  private authService = new AuthService();
 
   @Output() searchTriggered = new EventEmitter<string>();
 
@@ -43,6 +46,9 @@ export class SearchBarComponent {
         console.log('Search results:', results);
         this.searchResults = results;
         this.showResults = results.length > 0;
+        if (this.authService.getRole() === 'Customer') {
+          this.searchResults = this.searchResults.filter(event => !event.is_blocked);
+        }
       });
   }
 
