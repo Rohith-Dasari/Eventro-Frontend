@@ -19,6 +19,6 @@ export class ShowService {
     const reqBody = {
       is_blocked: shouldBlock,
     };
-    return this.httpClient.post(`shows/${showID}`, reqBody);
+    return this.httpClient.patch(`shows/${showID}`, reqBody);
   }
 }

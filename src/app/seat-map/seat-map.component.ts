@@ -55,6 +55,7 @@ export class SeatMapComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     if (this.show) {
+      console.log(this.show);
       this.initializeSeats();
     }
     this.bookingSummary = `Total Number of Tickets Booked:${
@@ -266,14 +267,8 @@ export class SeatMapComponent implements OnInit, OnChanges {
   onBlockShow() {
     if (!this.show) return;
 
-    const isCurrentlyBlocked = this.show?.is_blocked || false;
+    const isCurrentlyBlocked = this.show?.IsBlocked;
     const shouldBlock = !isCurrentlyBlocked;
-
-    const confirmMsg = shouldBlock
-      ? `Are you sure you want to block this show (${this.show?.Event?.Name})?`
-      : `Are you sure you want to unblock this show (${this.show?.Event?.Name})?`;
-
-    if (!confirm(confirmMsg)) return;
 
     this.isBlocking = true;
 
