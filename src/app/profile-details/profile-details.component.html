@@ -6,22 +6,90 @@
   [closable]="true"
   [style]="{ width: '420px' }"
 >
-  <p-card *ngIf="userProfile">
-    <div class="details-content">
-      <div class="detail-item">
-        <i class="pi pi-user"></i>
-        <span><strong>Username:</strong> {{ userProfile.Username }}</span>
+  <p-card *ngIf="editedProfile" class="profile-card">
+    <form
+      class="profile-form"
+      (ngSubmit)="onSubmit()"
+      #profileForm="ngForm"
+    >
+      <div class="form-field">
+        <label for="profileUsername">Username</label>
+        <div class="input-wrapper">
+          <i class="pi pi-user"></i>
+          <input
+            pInputText
+            id="profileUsername"
+            name="username"
+            [(ngModel)]="editedProfile.Username"
+            #usernameCtrl="ngModel"
+            required
+            autocomplete="off"
+          />
+        </div>
+        <div class="error-slot">
+          <small
+            class="error-message"
+            *ngIf="usernameCtrl.invalid && usernameCtrl.touched"
+          >
+            Username can't be empty.
+          </small>
+        </div>
       </div>
 
-      <div class="detail-item">
-        <i class="pi pi-envelope"></i>
-        <span><strong>Email:</strong> {{ userProfile.Email }}</span>
+      <div class="form-field">
+        <label for="profileEmail">Email</label>
+        <div class="input-wrapper read-only">
+          <i class="pi pi-envelope"></i>
+          <input
+            pInputText
+            id="profileEmail"
+            name="email"
+            [readonly]="true"
+            [value]="editedProfile.Email"
+          />
+        </div>
       </div>
 
-      <div class="detail-item">
-        <i class="pi pi-phone"></i>
-        <span><strong>Phone:</strong> {{ userProfile.PhoneNumber || 'Not provided' }}</span>
+      <div class="form-field">
+        <label for="profilePhone">Phone Number</label>
+        <div class="input-wrapper">
+          <i class="pi pi-phone"></i>
+          <input
+            pInputText
+            id="profilePhone"
+            name="phone"
+            [(ngModel)]="editedProfile.PhoneNumber"
+            #phoneCtrl="ngModel"
+            required
+            autocomplete="tel"
+          />
+        </div>
+        <div class="error-slot">
+          <small
+            class="error-message"
+            *ngIf="phoneCtrl.invalid && phoneCtrl.touched"
+          >
+            Phone number can't be empty.
+          </small>
+        </div>
       </div>
-    </div>
+
+      <div class="form-actions">
+        <button
+          type="button"
+          pButton
+          label="Cancel"
+          class="p-button-text"
+          (click)="onCancel()"
+        ></button>
+        <button
+          type="submit"
+          pButton
+          label="Save Changes"
+          class="p-button-success"
+          [disabled]="!isFormValid || !hasChanges"
+        ></button>
+      </div>
+    </form>
   </p-card>
 </p-dialog>
