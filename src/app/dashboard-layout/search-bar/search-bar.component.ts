@@ -22,6 +22,7 @@ export class SearchBarComponent implements OnDestroy {
   searchResults: Event[] = [];
   showResults = false;
   selectedCategory: string | null = null;
+  isInteractingWithResults = false;
   private searchTerm = new Subject<string>();
   private destroy$ = new Subject<void>();
   private authService = inject(AuthService);
@@ -82,6 +83,7 @@ export class SearchBarComponent implements OnDestroy {
 
     this.showResults = false;
     this.searchQuery = '';
+    this.isInteractingWithResults = false;
     this.blurInput();
   }
 
@@ -91,9 +93,17 @@ export class SearchBarComponent implements OnDestroy {
 
   onBlur() {
     setTimeout(() => {
+      if (this.isInteractingWithResults) {
+        this.isInteractingWithResults = false;
+        return;
+      }
       this.showResults = false;
       this.isFocused = false;
     }, 150);
+  }
+
+  onResultsPointerDown() {
+    this.isInteractingWithResults = true;
   }
 
   private blurInput() {

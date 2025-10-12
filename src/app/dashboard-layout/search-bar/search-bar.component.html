@@ -28,19 +28,20 @@
 
     <div class="search-results" *ngIf="showResults">
       <div
-        *ngFor="let event of searchResults"
+        *ngFor="let searchEvent of searchResults"
         class="result-item"
-        (click)="selectEvent(event)"
+        (pointerdown)="onResultsPointerDown()"
+        (click)="selectEvent(searchEvent)"
       >
-        <span>{{ event.name }}</span>
+        <span>{{ searchEvent.name }}</span>
         <i
           class="pi"
           [ngClass]="{
-            'pi-video': event.category === 'movie',
-            'pi-flag': event.category === 'sports',
-            'pi-microphone': event.category === 'concert',
-            'pi-briefcase': event.category === 'workshop',
-            'pi-glass': event.category === 'party'
+            'pi-video': searchEvent.category === 'movie',
+            'pi-flag': searchEvent.category === 'sports',
+            'pi-microphone': searchEvent.category === 'concert',
+            'pi-briefcase': searchEvent.category === 'workshop',
+            'pi-glass': searchEvent.category === 'party'
           }"
         ></i>
       </div>

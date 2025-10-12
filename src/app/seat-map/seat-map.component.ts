@@ -169,6 +169,7 @@ export class SeatMapComponent implements OnInit, OnChanges {
 
     if (role === 'Customer') {
       this.bookingData.userID = this.auth.getID();
+      this.persistBookingContext(this.show?.ID || '');
       this.onConfirmBooking(this.bookingData);
     } else if (role === 'Admin') {
       const mailID = this.adminUserEmail.trim();
@@ -176,6 +177,9 @@ export class SeatMapComponent implements OnInit, OnChanges {
         this.errorMessage = 'Please enter a user email before confirming.';
         return;
       }
+
+      this.bookingData.bookedForEmail = mailID;
+      this.persistBookingContext(this.show?.ID || '');
 
       this.auth.getUserByMailID(mailID).subscribe({
         next: (user) => {
@@ -186,6 +190,7 @@ export class SeatMapComponent implements OnInit, OnChanges {
           this.userNotFound = false;
           this.bookingData.userID = user.UserID;
           console.log(user.UserID);
+          this.persistBookingContext(this.show?.ID || '');
           this.onConfirmBooking(this.bookingData);
         },
         error: () => {
@@ -241,15 +246,14 @@ export class SeatMapComponent implements OnInit, OnChanges {
     console.log('booking data creation stage: bookingData:', bookingData);
     console.log('booking data creation stage: showId:', this.show?.ID);
 
-    sessionStorage.setItem('bookingData', JSON.stringify(bookingData));
-    sessionStorage.setItem('selectedShowId', this.show?.ID || '');
-    console.log('seat-map storage stage: data stored in sessionStorage');
-
+    this.bookingData = bookingData;
+    this.persistBookingContext(this.show?.ID || '');
     this.onDialogHide();
     return bookingData;
   }
 
   onConfirmBooking(bookingData: any) {
+    this.persistBookingContext(this.show?.ID || '');
     this.router.navigate(['/dashboard/booking-confirmation'], {
       state: {
         bookingData: bookingData,
@@ -304,5 +308,19 @@ export class SeatMapComponent implements OnInit, OnChanges {
         });
       },
     });
+  }
+
+  private persistBookingContext(showId: string) {
+    if (!this.bookingData) {
+      return;
+    }
+
+    try {
+      sessionStorage.setItem('bookingData', JSON.stringify(this.bookingData));
+      sessionStorage.setItem('selectedShowId', showId);
+      console.log('seat-map storage stage: booking context persisted');
+    } catch (error) {
+      console.error('seat-map storage stage: failed to persist booking context', error);
+    }
   }
 }

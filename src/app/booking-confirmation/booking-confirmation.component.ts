@@ -7,7 +7,6 @@ import { interval, Subscription } from 'rxjs';
 import { BookingSummaryComponent, BookingSummaryData } from '../shared/booking-summary/booking-summary.component';
 import { BookingService } from '../services/bookings.service';
 import { AuthService } from '../services/auth.service';
-import { User } from '../models/user';
 
 @Component({
   selector: 'app-booking-confirmation',
@@ -17,14 +16,16 @@ import { User } from '../models/user';
 })
 export class BookingConfirmationComponent implements OnInit, OnDestroy {
   private router = inject(Router);
-  private route = inject(ActivatedRoute);
   private location = inject(Location);
   private bookingService = inject(BookingService);
+  private authService = inject(AuthService);
   bookingData: any = {};
   timeRemaining = 120; 
   timerSubscription?: Subscription;
   isProcessingPayment = false;
   showId: string = '';
+  isResolvingUser = false;
+  userResolutionError = false;
 
   ngOnInit() {
     console.log('ngOnInit stage: history.state:', history.state);
@@ -63,6 +64,8 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
     }
     
     if (bookingDataFound) {
+      console.log('user resolution stage: ensuring booking context has user ID');
+      this.ensureBookingUserId();
       console.log('timer start stage: starting timer');
       this.startTimer();
     } else {
@@ -126,6 +129,12 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
     console.log('onPay stage: payment initiated');
     this.isProcessingPayment = true;
    
+    if (this.isResolvingUser) {
+      console.log('payment validation failed stage: waiting for user resolution');
+      this.isProcessingPayment = false;
+      return;
+    }
+
     const userId = this.bookingData.userID;
     const seats = this.bookingData.seats || [];
     console.log('payment validation stage: userId:', this.bookingData.userID);
@@ -165,5 +174,69 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
         this.isProcessingPayment = false;
       }
     });
+  }
+
+  private ensureBookingUserId() {
+    const role = this.authService.getRole();
+    if (!role) {
+      console.warn('user resolution stage: unable to determine role');
+      return;
+    }
+
+    if (this.bookingData.userID) {
+      this.persistBookingState();
+      return;
+    }
+
+    if (role === 'Customer') {
+      const currentUserId = this.authService.getID();
+      if (currentUserId) {
+        this.bookingData.userID = currentUserId;
+        console.log('user resolution stage: applied current customer userID');
+        this.persistBookingState();
+      }
+      return;
+    }
+
+    if (role === 'Admin') {
+      const customerEmail = this.bookingData.bookedForEmail || this.bookingData.customerEmail;
+      if (!customerEmail) {
+        console.warn('user resolution stage: admin booking missing customer email');
+        this.userResolutionError = true;
+        return;
+      }
+
+      this.isResolvingUser = true;
+      this.authService.getUserByMailID(customerEmail).subscribe({
+        next: (user) => {
+          this.bookingData.userID = user?.UserID;
+          this.userResolutionError = !this.bookingData.userID;
+          if (this.bookingData.userID) {
+            console.log('user resolution stage: resolved user ID for email', customerEmail);
+            this.persistBookingState();
+          } else {
+            console.warn('user resolution stage: user not found for email', customerEmail);
+          }
+          this.isResolvingUser = false;
+        },
+        error: (error) => {
+          console.error('user resolution stage: failed to resolve user by email', error);
+          this.isResolvingUser = false;
+          this.userResolutionError = true;
+        }
+      });
+    }
+  }
+
+  private persistBookingState() {
+    try {
+      sessionStorage.setItem('bookingData', JSON.stringify(this.bookingData));
+      if (this.showId) {
+        sessionStorage.setItem('selectedShowId', this.showId);
+      }
+      console.log('booking confirmation stage: booking data persisted with user ID');
+    } catch (error) {
+      console.error('booking confirmation stage: failed to persist booking data', error);
+    }
   }
 }
