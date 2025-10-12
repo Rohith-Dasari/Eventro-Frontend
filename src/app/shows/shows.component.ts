@@ -65,8 +65,27 @@ export class ShowsComponent implements OnChanges {
   }
 
   private matchesBlockedFilter(show: any): boolean {
-    const isBlocked = !!(show?.IsBlocked ?? show?.is_blocked);
+    const rawValue = show?.IsBlocked ?? show?.is_blocked ?? show?.isBlocked;
+    const isBlocked = this.normalizeBlockedFlag(rawValue);
     return this.showBlocked ? isBlocked : !isBlocked;
+  }
+
+  private normalizeBlockedFlag(value: any): boolean {
+    if (typeof value === 'string') {
+      const normalized = value.trim().toLowerCase();
+      if (normalized === 'true' || normalized === '1' || normalized === 'yes') {
+        return true;
+      }
+      if (normalized === 'false' || normalized === '0' || normalized === 'no') {
+        return false;
+      }
+    }
+
+    if (typeof value === 'number') {
+      return value !== 0;
+    }
+
+    return !!value;
   }
 
   private compareByShowTime(timeA?: string, timeB?: string): number {
