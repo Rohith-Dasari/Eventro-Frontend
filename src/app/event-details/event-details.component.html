@@ -78,6 +78,17 @@
           (click)="refreshShows()"
           [attr.aria-label]="'Refresh shows'"
         ></button>
+        <div class="show-status-toggle">
+          <span class="status-label">
+            {{ showBlocked ? 'Blocked Shows' : 'Active Shows' }}
+          </span>
+          <p-toggleswitch
+            [(ngModel)]="showBlocked"
+            onLabel="Blocked"
+            offLabel="Active"
+            (ngModelChange)="onShowStatusFilterChange($event)"
+          ></p-toggleswitch>
+        </div>
       </div>
     </div>
   </div>
@@ -87,6 +98,7 @@
     [shows]="shows"
     [selectedDate]="selectedDate"
     [priceRange]="rangeValues"
+    [showBlocked]="showBlocked"
   >
   </app-shows>
 

@@ -15,13 +15,19 @@ export class ShowsComponent implements OnChanges {
   @Input() shows: any[] = [];
   @Input() selectedDate!: Date;
   @Input() priceRange!: number[];
+  @Input() showBlocked: boolean = false;
 
   venues: { name: string; shows: any[] }[] = [];
   selectedShow!: any;
   seatMapVisible: boolean = false;
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['shows'] || changes['selectedDate'] || changes['priceRange']) {
+    if (
+      changes['shows'] ||
+      changes['selectedDate'] ||
+      changes['priceRange'] ||
+      changes['showBlocked']
+    ) {
       this.filterShows();
     }
   }
@@ -34,7 +40,8 @@ export class ShowsComponent implements OnChanges {
         new Date(s.ShowDate).toDateString() ===
           this.selectedDate.toDateString() &&
         s.Price >= this.priceRange[0] &&
-        s.Price <= this.priceRange[1]
+        s.Price <= this.priceRange[1] &&
+        this.matchesBlockedFilter(s)
     );
 
     const groupedByVenue: { [venueId: string]: any } = {};
@@ -55,6 +62,11 @@ export class ShowsComponent implements OnChanges {
         this.compareByShowTime(a?.ShowTime ?? a?.show_time, b?.ShowTime ?? b?.show_time)
       ),
     }));
+  }
+
+  private matchesBlockedFilter(show: any): boolean {
+    const isBlocked = !!(show?.IsBlocked ?? show?.is_blocked);
+    return this.showBlocked ? isBlocked : !isBlocked;
   }
 
   private compareByShowTime(timeA?: string, timeB?: string): number {

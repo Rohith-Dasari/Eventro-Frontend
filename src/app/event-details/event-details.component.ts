@@ -40,6 +40,7 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
   checked!: boolean;
   status!: string;
   role!: string;
+  showBlocked = false;
   isModerating = false;
   private showsSubscription?: Subscription;
 
@@ -143,6 +144,10 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
     console.log('Refreshing shows after new show added...');
     this.refreshing = true;
     this.loadEvent(this.event.id);
+  }
+
+  onShowStatusFilterChange(newValue: boolean) {
+    this.showBlocked = newValue;
   }
 
   ngOnDestroy(): void {

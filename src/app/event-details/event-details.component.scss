@@ -133,6 +133,20 @@
           transition: transform 0.3s ease;
         }
       }
+
+      .show-status-toggle {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-left: 1rem;
+
+        .status-label {
+          font-size: 0.9rem;
+          font-weight: 500;
+          color: #555;
+          white-space: nowrap;
+        }
+      }
     }
   }
 }
@@ -169,6 +183,10 @@
           margin-left: 0.5rem;
           width: 36px;
           height: 36px 
+        }
+
+        .show-status-toggle {
+          margin-left: 0;
         }
       }
     }
