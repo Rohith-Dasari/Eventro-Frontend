@@ -2,11 +2,12 @@ import { CommonModule, DatePipe } from '@angular/common';
 import {
   Component,
   EventEmitter,
-  inject,
-  Input,
   Output,
+  Input,
+  ViewChild,
+  inject,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
@@ -17,6 +18,7 @@ import { AuthService } from '../services/auth.service';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DatePickerModule } from 'primeng/datepicker';
 import { DropdownModule } from 'primeng/dropdown';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-add-show-dialog',
@@ -29,7 +31,6 @@ import { DropdownModule } from 'primeng/dropdown';
     DatePickerModule,
     InputNumberModule,
     DropdownModule,
-    DatePipe
   ],
   templateUrl: './add-show-dialog.component.html',
   styleUrl: './add-show-dialog.component.scss',
@@ -37,10 +38,12 @@ import { DropdownModule } from 'primeng/dropdown';
 export class AddShowDialogComponent {
   @Input() eventID = '';
   @Output() showAdded = new EventEmitter<void>();
+  @ViewChild('addShowForm') addShowForm?: NgForm;
 
   private showService = inject(ShowService);
   private venueService = inject(VenueService);
   private authService = inject(AuthService);
+  private messageService = inject(MessageService);
   constructor(private datePipe: DatePipe){}
 
   minDate = new Date();
@@ -65,6 +68,7 @@ export class AddShowDialogComponent {
 
   close() {
     this.visible = false;
+    this.addShowForm?.resetForm();
     this.resetForm();
   }
 
@@ -93,8 +97,26 @@ export class AddShowDialogComponent {
     });
   }
 
-  submit() {
-    if (!this.eventID || !this.selectedDate) return;
+  submit(form: NgForm) {
+    if (!this.eventID) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Missing Event',
+        detail: 'Could not determine the event to host a show for.',
+        life: 3000,
+      });
+      return;
+    }
+
+    if (form.invalid || !this.selectedDate || !this.newShow.price || this.newShow.price <= 0) {
+      if (this.newShow.price === null || this.newShow.price === undefined) {
+        form.controls['price']?.setErrors({ required: true });
+      } else if (this.newShow.price <= 0) {
+        form.controls['price']?.setErrors({ min: true });
+      }
+      form.form.markAllAsTouched();
+      return;
+    }
 
     const datePart = this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd')!;
     const timePart = this.datePipe.transform(this.selectedDate, 'HH:mm')!;
@@ -108,11 +130,23 @@ export class AddShowDialogComponent {
     this.showService.addShow(this.newShow).subscribe({
       next: (res) => {
         console.log('Show added successfully:', res);
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Show Added',
+          detail: 'Your show has been scheduled successfully.',
+          life: 3000,
+        });
         this.showAdded.emit();
         this.close();
       },
       error: (err) => {
         console.error('Error adding show:', err);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Creation Failed',
+          detail: 'We could not schedule this show. Please try again.',
+          life: 3000,
+        });
       },
     });
   }

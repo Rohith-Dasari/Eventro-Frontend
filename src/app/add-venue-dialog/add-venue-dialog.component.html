@@ -6,39 +6,63 @@
   (onHide)="close()"
   [closable]="false"
 >
-<form (ngSubmit)="submit()" #addVenueForm="ngForm" class="add-venue-form">
+<form (ngSubmit)="submit(addVenueForm)" #addVenueForm="ngForm" class="add-venue-form">
 
   <div class="form-field">
-    <label>Name</label>
+    <label for="venueName">Name</label>
     <input 
       type="text"
       pInputText
       [(ngModel)]="newVenue.name"
       name="name"
+      id="venueName"
+      #nameCtrl="ngModel"
       required
+      autocomplete="off"
     />
+    <div class="error-slot">
+      <small class="error-message" *ngIf="nameCtrl.invalid && nameCtrl.touched">
+        Name can't be empty.
+      </small>
+    </div>
   </div>
 
   <div class="form-field">
-    <label>City</label>
+    <label for="venueCity">City</label>
     <input 
       type="text"
       pInputText
       [(ngModel)]="newVenue.city"
       name="city"
+      id="venueCity"
+      #cityCtrl="ngModel"
       required
+      autocomplete="off"
     />
+    <div class="error-slot">
+      <small class="error-message" *ngIf="cityCtrl.invalid && cityCtrl.touched">
+        City can't be empty.
+      </small>
+    </div>
   </div>
 
   <div class="form-field">
-    <label>State</label>
+    <label for="venueState">State</label>
     <input 
       type="text"
       pInputText
       [(ngModel)]="newVenue.state"
       name="state"
+      id="venueState"
+      #stateCtrl="ngModel"
       required
+      autocomplete="off"
     />
+    <div class="error-slot">
+      <small class="error-message" *ngIf="stateCtrl.invalid && stateCtrl.touched">
+        State can't be empty.
+      </small>
+    </div>
   </div>
 
   <div class="dialog-actions">

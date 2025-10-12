@@ -6,38 +6,66 @@
   (onHide)="close()"
   [closable]="false"
 >
-  <form (ngSubmit)="submit()" #addShowForm="ngForm" class="add-show-form">
+  <form (ngSubmit)="submit(addShowForm)" #addShowForm="ngForm" class="add-show-form">
     <div class="form-field">
-      <label>Venue</label>
+      <label for="venueSelect">Venue</label>
       <p-dropdown
         [options]="venues"
         optionLabel="name"
         optionValue="id"
         [(ngModel)]="newShow.venue_id"
         name="venue"
+        id="venueSelect"
+        #venueCtrl="ngModel"
         placeholder="Select venue"
         required
       ></p-dropdown>
+      <div class="error-slot">
+        <small
+          class="error-message"
+          *ngIf="venueCtrl.invalid && venueCtrl.touched"
+        >
+          Venue selection is required.
+        </small>
+      </div>
     </div>
 
     <div class="form-field">
-      <label>Ticket Price</label>
+      <label for="ticketPrice">Ticket Price</label>
       <p-inputNumber
         [(ngModel)]="newShow.price"
         name="price"
+        #priceCtrl="ngModel"
+        inputId="ticketPrice"
         mode="currency"
         currency="INR"
         locale="en-IN"
-        [min]="0"
+        [min]="1"
         required
       ></p-inputNumber>
+      <div class="error-slot">
+        <small
+          class="error-message"
+          *ngIf="priceCtrl.touched && priceCtrl.errors?.['required']"
+        >
+          Ticket price can't be empty.
+        </small>
+        <small
+          class="error-message"
+          *ngIf="priceCtrl.touched && priceCtrl.errors?.['min']"
+        >
+          Ticket price must be at least ₹1.
+        </small>
+      </div>
     </div>
 
     <div class="form-field">
-      <label>Show Date & Time</label>
+      <label for="showDate">Show Date & Time</label>
       <p-datepicker
         [(ngModel)]="selectedDate"
         name="showDate"
+        #dateCtrl="ngModel"
+        inputId="showDate"
         [showTime]="true"
         hourFormat="24"
         [minDate]="minDate"
@@ -45,6 +73,14 @@
         required
         appendTo="body"
       ></p-datepicker>
+      <div class="error-slot">
+        <small
+          class="error-message"
+          *ngIf="dateCtrl.invalid && dateCtrl.touched"
+        >
+          Show date and time are required.
+        </small>
+      </div>
     </div>
 
     <div class="dialog-actions">
