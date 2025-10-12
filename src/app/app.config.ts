@@ -8,6 +8,8 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { providePrimeNG } from 'primeng/config';
 import { customPreset } from './themePreset';
 import { DatePipe } from '@angular/common';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -24,5 +26,6 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor,BaseUrlInterceptor])),
+    MessageService
   ],
 };

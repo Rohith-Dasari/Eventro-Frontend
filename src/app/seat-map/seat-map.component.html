@@ -16,6 +16,14 @@
           <span class="summary-item">
             Total Sale: <b>₹{{ (show?.BookedSeats?.length || 0) * price }}</b>
           </span>
+
+          <button
+            pButton
+            [label]="show?.is_blocked ? 'Unblock Show' : 'Block Show'"
+            [class]="show?.is_blocked ? 'p-button-warning' : 'p-button-danger'"
+            class="p-button-sm"
+            (click)="onBlockShow()"
+          ></button>
         </div>
       </ng-container>
 
@@ -100,3 +108,4 @@
     </div>
   </div>
 </p-dialog>
+<app-spinner [visible]="isBlocking"></app-spinner>
