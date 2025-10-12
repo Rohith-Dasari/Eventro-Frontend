@@ -6,67 +6,114 @@
   (onHide)="close()"
   [closable]="false"
 >
-  <form (ngSubmit)="submit()" #addEventForm="ngForm" class="add-event-form">
+  <form (ngSubmit)="submit(addEventForm)" #addEventForm="ngForm" class="add-event-form">
     <div class="form-field">
-      <label>Name</label>
-      <input 
-        type="text" 
-        pInputText 
-        [(ngModel)]="newEvent.name" 
-        name="name" 
+      <label for="eventName">Name</label>
+      <input
+        type="text"
+        pInputText
+        [(ngModel)]="newEvent.name"
+        name="name"
+        id="eventName"
+        #nameCtrl="ngModel"
         required
+        autocomplete="off"
       />
-    </div>
-    <div class="form-field">
-      <label>Category</label>
-      <p-dropdown 
-        [options]="categories"
-        [(ngModel)]="categoryObject"
-        name="category"
-        optionLabel="label"
-        placeholder="Select category"
-        required>
-      </p-dropdown>
+      <div class="error-slot">
+        <small
+          class="error-message"
+          *ngIf="nameCtrl.invalid && nameCtrl.touched"
+        >
+          Name can't be empty.
+        </small>
+      </div>
     </div>
 
     <div class="form-field">
-      <label>Description</label>
-      <textarea 
-        pInputTextarea 
-        [(ngModel)]="newEvent.description" 
-        name="description" 
-        rows="3" 
+      <label for="eventCategory">Category</label>
+      <p-dropdown
+        [options]="categories"
+        [(ngModel)]="newEvent.category"
+        name="category"
+        id="eventCategory"
+        #categoryCtrl="ngModel"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Select category"
+        required
+      ></p-dropdown>
+      <div class="error-slot">
+        <small
+          class="error-message"
+          *ngIf="categoryCtrl.invalid && categoryCtrl.touched"
+        >
+          Category can't be empty.
+        </small>
+      </div>
+    </div>
+
+    <div class="form-field">
+      <label for="eventDescription">Description</label>
+      <textarea
+        pInputTextarea
+        [(ngModel)]="newEvent.description"
+        name="description"
+        id="eventDescription"
+        #descriptionCtrl="ngModel"
+        rows="3"
         placeholder="maximum of 160 characters"
         class="no-horizontal-resize"
-        required>
-      </textarea>
+        required
+      ></textarea>
+      <div class="error-slot">
+        <small
+          class="error-message"
+          *ngIf="descriptionCtrl.invalid && descriptionCtrl.touched"
+        >
+          Description can't be empty.
+        </small>
+      </div>
     </div>
-    
 
     <div class="form-field">
-      <label>Duration (in mins)</label>
-      <input 
-        type="number" 
-        pInputText 
-        [(ngModel)]="durationInt" 
-        name="duration" 
+      <label for="eventDuration">Duration (in mins)</label>
+      <input
+        type="number"
+        pInputText
+        [(ngModel)]="durationInt"
+        name="duration"
+        id="eventDuration"
+        #durationCtrl="ngModel"
         required
+        min="1"
       />
+      <div class="error-slot">
+        <small
+          class="error-message"
+          *ngIf="durationCtrl.touched && durationCtrl.errors?.['required']"
+        >
+          Duration can't be empty.
+        </small>
+        <small
+          class="error-message"
+          *ngIf="durationCtrl.touched && durationCtrl.errors?.['min']"
+        >
+          Duration must be at least 1 minute.
+        </small>
+      </div>
     </div>
 
-    
-
     <div class="dialog-actions">
-      <button 
-        pButton 
-        label="Cancel" 
+      <button
+        pButton
+        label="Cancel"
         class="p-button-text"
         type="button"
         (click)="close()"
       ></button>
 
-      <button 
-        pButton 
+      <button
+        pButton
         label="Submit"
         class="p-button-success"
         type="submit"

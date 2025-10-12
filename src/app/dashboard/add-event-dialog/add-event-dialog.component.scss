@@ -12,6 +12,13 @@
       font-weight: 500;
       color: #444;
     }
+
+    .error-slot {
+      min-height: 1.2rem;
+      display: flex;
+      align-items: center;
+      margin-top: 0.1rem;
+    }
   }
 
   .dialog-actions {
@@ -28,16 +35,10 @@
   }
   
 }
-.error-container {
-  min-height: 1.5rem; 
-  display: block;
-}
-
 .error-message {
   color: #d32f2f;
   font-weight: 600;
-  font-size: 0.9rem;
-  text-align: center;
+  font-size: 0.8rem;
 }
 
 
