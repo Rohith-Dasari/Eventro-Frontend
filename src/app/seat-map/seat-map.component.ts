@@ -267,7 +267,8 @@ export class SeatMapComponent implements OnInit, OnChanges {
   onBlockShow() {
     if (!this.show) return;
 
-    const isCurrentlyBlocked = this.show?.IsBlocked;
+    const isCurrentlyBlocked =
+      (this.show?.IsBlocked ?? this.show?.is_blocked) ?? false;
     const shouldBlock = !isCurrentlyBlocked;
 
     this.isBlocking = true;
@@ -275,7 +276,10 @@ export class SeatMapComponent implements OnInit, OnChanges {
     this.showService.blockShow(this.show.ID, shouldBlock).subscribe({
       next: (res) => {
         this.isBlocking = false;
-        this.show.is_blocked = shouldBlock;
+        this.show.IsBlocked = shouldBlock;
+        if ('is_blocked' in this.show) {
+          this.show.is_blocked = shouldBlock;
+        }
 
         this.messageService.add({
           severity: 'success',

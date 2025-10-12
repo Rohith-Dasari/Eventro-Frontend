@@ -19,8 +19,8 @@
 
           <button
             pButton
-            [label]="show?.is_blocked ? 'Unblock Show' : 'Block Show'"
-            [class]="show?.is_blocked ? 'p-button-warning' : 'p-button-danger'"
+            [label]="(show?.IsBlocked ?? show?.is_blocked) ? 'Unblock Show' : 'Block Show'"
+            [class]="(show?.IsBlocked ?? show?.is_blocked) ? 'p-button-warning' : 'p-button-danger'"
             class="p-button-sm"
             (click)="onBlockShow()"
           ></button>
