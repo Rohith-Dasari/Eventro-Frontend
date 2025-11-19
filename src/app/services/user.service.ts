@@ -9,5 +9,8 @@ export class UserService {
   getProfile(userId:string){
     return this.httpClient.get(`${userId}/profile`);
   }
+  updateProfile(userId:string,reqBody:any){
+    return this.httpClient.patch(`${userId}/profile`,reqBody);
+  }
 
 }

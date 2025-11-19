@@ -52,13 +52,16 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.role = this.authService.getRole() as string;
     this.event = history.state?.selectedEvent;
+  //  this.eventService.getEventByID(this.event.id);
+    console.log("event-details stage: event from history",this.event);
     if (!this.event) {
       console.error('No event info available.');
       return;
     }
     this.eventService.getEventByID(this.event.id).subscribe({
       next: (val) => {
-        this.event.is_blocked = val.is_blocked;
+        console.log(val)
+        this.event.is_blocked = val[0].is_blocked;
         this.checked = this.event.is_blocked;
         this.status = this.checked
           ? 'The event has been blocked'
@@ -68,6 +71,7 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
         console.log(err);
       },
     });
+    console.log("after fetching",this.event)
     this.checked = this.event.is_blocked;
     this.status = this.checked
       ? 'The event has been blocked'
@@ -116,7 +120,7 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
           .map((d) => new Date(d))
           .sort((a, b) => a.getTime() - b.getTime());
 
-        this.availableDates = uniqueDates.slice(0, 7);
+        this.availableDates = uniqueDates.slice(0, 6);
 
         this.selectedDate = this.availableDates[0];
       },

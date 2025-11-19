@@ -71,13 +71,8 @@
           </p-slider>
         </div>
         <span class="price-label max-price">₹{{ rangeValues[1] }}</span>
-        <button
-          pButton
-          icon="pi pi-refresh"
-          class="refresh-btn"
-          (click)="refreshShows()"
-          [attr.aria-label]="'Refresh shows'"
-        ></button>
+
+        @if(role=='Admin'||role=='Host'){
         <div class="show-status-toggle">
           <span class="status-label">
             {{ showBlocked ? 'Blocked Shows' : 'Active Shows' }}
@@ -89,6 +84,14 @@
             (ngModelChange)="onShowStatusFilterChange($event)"
           ></p-toggleswitch>
         </div>
+      }
+      <button
+          pButton
+          icon="pi pi-refresh"
+          class="refresh-btn"
+          (click)="refreshShows()"
+          [attr.aria-label]="'Refresh shows'"
+        ></button>
       </div>
     </div>
   </div>

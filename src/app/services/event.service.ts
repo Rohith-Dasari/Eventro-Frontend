@@ -12,9 +12,9 @@ export class EventService {
   getEvents(): Observable<Event[]> {
     return this.httpClient.get<Event[]>('events?location=noida');
   }
-  getEventByID(id: string): Observable<Event> {
+  getEventByID(id: string): Observable<Event[]> {
     const params = new HttpParams().set('eventID', id);
-    return this.httpClient.get<Event>('events', { params });
+    return this.httpClient.get<Event[]>('events', { params });
   }
 
   searchEventsByName(

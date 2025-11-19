@@ -5,6 +5,7 @@ import {
   EventEmitter,
   OnChanges,
   SimpleChanges,
+  inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
@@ -13,19 +14,30 @@ import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { UserProfile } from '../models/user';
+import { UserService } from '../services/user.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-profile-details',
-  imports: [CommonModule, DialogModule, CardModule, FormsModule, InputTextModule, ButtonModule],
+  imports: [
+    CommonModule,
+    DialogModule,
+    CardModule,
+    FormsModule,
+    InputTextModule,
+    ButtonModule,
+  ],
   templateUrl: './profile-details.component.html',
   styleUrls: ['./profile-details.component.scss'],
 })
 export class ProfileDetailsComponent implements OnChanges {
   @Input() userProfile!: UserProfile;
-  @Input() visible = false; 
+  @Input() visible = false;
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() profileUpdated = new EventEmitter<UserProfile>();
 
+  private userService = inject(UserService);
+  private messageService=inject(MessageService);
   editedProfile: UserProfile | null = null;
 
   onVisibleChange(visible: boolean) {
@@ -68,8 +80,7 @@ export class ProfileDetailsComponent implements OnChanges {
     const currentPhone = this.editedProfile.PhoneNumber?.trim() ?? '';
 
     return (
-      originalUsername !== currentUsername ||
-      originalPhone !== currentPhone
+      originalUsername !== currentUsername || originalPhone !== currentPhone
     );
   }
 
@@ -86,8 +97,28 @@ export class ProfileDetailsComponent implements OnChanges {
       PhoneNumber: trimmedPhone,
     };
 
-    this.profileUpdated.emit(payload);
-    this.closeDialog();
+    this.userService.updateProfile(this.userProfile.UserID, payload).subscribe({
+      next: (res) => {
+        console.log('profile updated successfully:', res);
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Show Added',
+          detail: 'Your show has been scheduled successfully.',
+          life: 3000,
+        });
+        this.profileUpdated.emit(payload);
+        this.closeDialog();
+      },
+      error: (err) => {
+        console.error('Error updating profiel:', err);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Updation Failed',
+          detail: 'Error updating profile. Please try again.',
+          life: 3000,
+        });
+      },
+    });
   }
 
   onCancel() {

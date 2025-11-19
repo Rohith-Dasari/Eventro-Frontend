@@ -179,6 +179,7 @@ export class SeatMapComponent implements OnInit, OnChanges {
       }
 
       this.bookingData.bookedForEmail = mailID;
+
       this.persistBookingContext(this.show?.ID || '');
 
       this.auth.getUserByMailID(mailID).subscribe({
@@ -276,7 +277,7 @@ export class SeatMapComponent implements OnInit, OnChanges {
     if (!this.show) return;
 
     const isCurrentlyBlocked =
-      (this.show?.IsBlocked ?? this.show?.is_blocked) ?? false;
+      this.show?.IsBlocked ?? this.show?.is_blocked ?? false;
     const shouldBlock = !isCurrentlyBlocked;
 
     this.isBlocking = true;
@@ -320,7 +321,10 @@ export class SeatMapComponent implements OnInit, OnChanges {
       sessionStorage.setItem('selectedShowId', showId);
       console.log('seat-map storage stage: booking context persisted');
     } catch (error) {
-      console.error('seat-map storage stage: failed to persist booking context', error);
+      console.error(
+        'seat-map storage stage: failed to persist booking context',
+        error
+      );
     }
   }
 }
