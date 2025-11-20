@@ -17,12 +17,13 @@ export class AuthService {
     const localUser = localStorage.getItem('user');
 
     if (localUser) {
-      this.userSignal.set(JSON.parse(localUser) as User);
+      const parsedUser = JSON.parse(localUser) as User;
+      this.userSignal.set(parsedUser);
+      this.persistUserMetadata(parsedUser);
     }
   }
 
   login(email: string, password: string) {
-    // console.log('hit')
     return this.httpClient.post<AuthResponse>('login', {
       email: email,
       password: password
@@ -32,6 +33,7 @@ export class AuthService {
         this.userSignal.set(user);
         localStorage.setItem('user', JSON.stringify(user));
         localStorage.setItem('token',val.token);
+        this.persistUserMetadata(user);
       } catch (e) {
         console.log(e);
       }
@@ -72,6 +74,7 @@ export class AuthService {
         this.userSignal.set(user);
         localStorage.setItem('user', JSON.stringify(user));
         localStorage.setItem('token',val.token);
+        this.persistUserMetadata(user);
       } catch (e) {
         console.log(e);
       }
@@ -87,5 +90,21 @@ export class AuthService {
   
   getUserByMailID(email: string) {
     return this.httpClient.get<UserProfile>(`users/email/${email}`);
+  }
+
+  private persistUserMetadata(user: User | null) {
+    if (!user) {
+      localStorage.removeItem('user_id');
+      localStorage.removeItem('role');
+      return;
+    }
+
+    if (user.user_id) {
+      localStorage.setItem('user_id', user.user_id);
+    }
+
+    if (user.role) {
+      localStorage.setItem('role', user.role);
+    }
   }
 }

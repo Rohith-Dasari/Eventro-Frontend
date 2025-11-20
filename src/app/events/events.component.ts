@@ -6,7 +6,7 @@ import { Event } from '../models/events';
 import { EventsRowComponent } from '../events-row/events-row.component';
 import { UpcomingBookingsRowComponent } from '../upcoming-bookings-row/upcoming-bookings-row.component';
 import { BookingService } from '../services/bookings.service';
-import { EnrichedBooking } from '../models/bookings';
+import { Booking } from '../models/bookings';
 import { UpcomingBookingDetailsComponent } from '../upcoming-booking-details/upcoming-booking-details.component';
 import { AuthService } from '../services/auth.service';
 import { AddEventDialogComponent } from '../dashboard/add-event-dialog/add-event-dialog.component';
@@ -28,7 +28,7 @@ export class EventsComponent implements OnInit {
   private bookingService = inject(BookingService);
   
   
-  upcomingBookings: EnrichedBooking[] = [];
+  upcomingBookings: Booking[] = [];
   events: Event[] = [];
   blockedEvents:Event[]=[];
   hostedEvents:Event[]=[];
@@ -39,7 +39,7 @@ export class EventsComponent implements OnInit {
   loadingBlockedEvents=false;
   loadingHostedEvents=false;
   bookingDialogVisible = false;
-  selectedBooking: EnrichedBooking | null = null;
+  selectedBooking: Booking | null = null;
   
   
   ngOnInit(): void {
@@ -47,8 +47,21 @@ export class EventsComponent implements OnInit {
   }
 
   refreshEvents() {
-    this.eventService.getEvents().subscribe(events => {
-      this.events = events;
+    this.loadingEvents = true;
+    if (this.role === 'Admin') {
+      this.loadingBlockedEvents = true;
+    }
+    this.eventService.getEvents().subscribe({
+      next: (events) => {
+        this.partitionEvents(events);
+        this.loadingEvents = false;
+        this.loadingBlockedEvents = false;
+      },
+      error: (err) => {
+        console.error('Error refreshing events:', err);
+        this.loadingEvents = false;
+        this.loadingBlockedEvents = false;
+      }
     });
   }
 
@@ -69,34 +82,22 @@ export class EventsComponent implements OnInit {
   }
 
     this.loadingEvents = true;
+    if (this.role === 'Admin') {
+      this.loadingBlockedEvents = true;
+    }
     this.eventService.getEvents().subscribe({
       next: (data) => {
-        this.events = (data as Event[]).filter((eve)=>!eve.is_blocked);
+        this.partitionEvents(data);
         this.loadingEvents = false;
+        this.loadingBlockedEvents = false;
         console.log('events loaded:', data);
       },
       error: (err) => {
         console.error('Error loading events:', err);
         this.loadingEvents = false;
+        this.loadingBlockedEvents = false;
       }
     });
-    
-    if(this.role=="Admin"){
-      this.loadingBlockedEvents=true;
-      this.eventService.getBlockedEvents().subscribe({
-        next: (data) => {
-          if (data){
-          this.blockedEvents = data as Event[];
-          }
-          this.loadingBlockedEvents = false;
-          console.log('blocked events loaded:', data);
-        },
-        error: (err) => {
-          console.error('Error loading events:', err);
-          this.loadingBlockedEvents = false;
-        }
-      })
-    }
 
     if(this.role=="Host"){
       this.loadingHostedEvents=true;
@@ -123,7 +124,7 @@ export class EventsComponent implements OnInit {
     });
   }
 
-  onBookingClick(booking: EnrichedBooking) {
+  onBookingClick(booking: Booking) {
     console.log('Opening booking dialog for:', booking);
     this.selectedBooking = booking;
     this.bookingDialogVisible = true;
@@ -131,6 +132,12 @@ export class EventsComponent implements OnInit {
 
   openAddEventDialog() {
     console.log('Opening add event dialog');
+  }
+
+  private partitionEvents(events: Event[] | undefined) {
+    const safeEvents = events ?? [];
+    this.events = safeEvents.filter((event) => !event.is_blocked);
+    this.blockedEvents = safeEvents.filter((event) => event.is_blocked);
   }
 }
     

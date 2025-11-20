@@ -2,7 +2,7 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
-import { EnrichedBooking } from '../models/bookings';
+import { Booking } from '../models/bookings';
 import { CommonModule } from '@angular/common';
 import { BookingUtilsService } from '../services/booking-utils.service';
 
@@ -14,7 +14,7 @@ import { BookingUtilsService } from '../services/booking-utils.service';
 })
 export class UpcomingBookingDetailsComponent {
   @Input() visible: boolean = false;
-  @Input() booking: EnrichedBooking | null = null;
+  @Input() booking: Booking | null = null;
   @Output() visibleChange = new EventEmitter<boolean>();
   
   isGeneratingPDF: boolean = false;
@@ -31,38 +31,28 @@ export class UpcomingBookingDetailsComponent {
   }
 
   get eventName(): string {
-    const show = this.booking?.show_details as any;
-    return show?.event?.name ?? show?.Event?.Name ?? 'Event Name Not Available';
+    return this.booking?.event_name ?? 'Event Name Not Available';
   }
 
   get venueName(): string {
-    const venue = this.getVenueDetails();
-    return venue?.venue_name ?? venue?.Name ?? 'Venue Not Available';
+    return this.booking?.venue_name ?? 'Venue Not Available';
   }
 
   get venueAddress(): string {
-    const venue = this.getVenueDetails();
-    const city = venue?.city ?? venue?.City ?? '';
-    const state = venue?.state ?? venue?.State ?? '';
-    if (city && state) return `${city}, ${state}`;
+    const city = this.booking?.venue_city ?? '';
+    const state = this.booking?.venue_state ?? '';
+    if (city && state) {
+      return `${city}, ${state}`;
+    }
     return city || state || 'Address not available';
   }
 
   get showDate(): string | undefined {
-    const show = this.booking?.show_details as any;
-    const rawDate = show?.show_date ?? show?.ShowDate;
-    if (!rawDate) return undefined;
-    return rawDate instanceof Date ? rawDate.toISOString() : rawDate;
+    return this.booking?.booking_date;
   }
 
   get showTime(): string {
-    const show = this.booking?.show_details as any;
-    return show?.show_time ?? show?.ShowTime ?? 'Time TBD';
-  }
-
-  private getVenueDetails(): any {
-    const show = this.booking?.show_details as any;
-    return show?.venue ?? show?.Venue ?? {};
+    return this.booking ? this.bookingUtils.formatTime(this.booking.booking_date) : 'Time TBD';
   }
 
   async downloadTicketPDF() {

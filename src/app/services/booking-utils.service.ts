@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { EnrichedBooking } from '../models/bookings';
+import { Booking } from '../models/bookings';
 import jsPDF from 'jspdf';
 import * as QRCode from 'qrcode';
 
@@ -23,30 +23,23 @@ export class BookingUtilsService {
     }
   }
 
-  generateQRData(booking: EnrichedBooking | null): string {
+  generateQRData(booking: Booking | null): string {
     if (!booking) return '';
-    const show = booking.show_details as any;
-    const venue = this.getVenue(show);
-    const event = this.getEvent(show);
-
-    const showDate = this.getShowDate(show);
-    const showTime = this.getShowTime(show);
-    const eventName = event?.name ?? event?.Name ?? 'Event Name Not Available';
-    const venueName = venue?.venue_name ?? venue?.Name ?? 'Venue Not Available';
-
     const qrData = {
       bookingId: booking.booking_id,
-      eventId: show?.event_id ?? event?.ID,
-      eventName,
-      showId: show?.id ?? show?.ID,
-      userId: booking.user_id,
+      eventId: booking.event_id,
+      eventName: booking.event_name,
+      showId: booking.show_id,
+      userEmail: booking.user_email,
       seats: booking.seats,
-      numTickets: booking.num_tickets,
-      totalAmount: booking.total_booking_price,
-      showDate,
-      showTime,
-      venueId: venue?.venue_id ?? venue?.ID,
-      venueName,
+      numTickets: booking.num_tickets_booked,
+      totalAmount: booking.total_price,
+      showDate: booking.booking_date,
+      showTime: this.formatTime(booking.booking_date),
+      venueName: booking.venue_name,
+      venueCity: booking.venue_city,
+      venueState: booking.venue_state,
+      timeBooked: booking.time_booked,
       timestamp: new Date().toISOString()
     };
     return JSON.stringify(qrData);
@@ -76,7 +69,7 @@ export class BookingUtilsService {
     }
   }
 
-  async downloadTicketPDF(booking: EnrichedBooking): Promise<void> {
+  async downloadTicketPDF(booking: Booking): Promise<void> {
     const doc = new jsPDF();
     
     doc.setFont('times');
@@ -96,15 +89,12 @@ export class BookingUtilsService {
     doc.setFontSize(11);
     doc.setTextColor(0, 0, 0);
     
-    const show = booking.show_details as any;
-    const venue = this.getVenue(show);
-    const event = this.getEvent(show);
-    const venueCity = venue?.city ?? venue?.City ?? '';
-    const venueState = venue?.state ?? venue?.State ?? '';
-    const showDate = this.formatDate(this.getShowDate(show));
-    const showTime = this.getShowTime(show) || 'Time TBD';
-    const eventName = event?.name ?? event?.Name ?? 'Event Name Not Available';
-    const venueName = venue?.venue_name ?? venue?.Name ?? 'Venue Not Available';
+    const venueCity = booking.venue_city ?? '';
+    const venueState = booking.venue_state ?? '';
+    const showDate = this.formatDate(booking.booking_date);
+    const showTime = this.formatTime(booking.booking_date) || 'Time TBD';
+    const eventName = booking.event_name ?? 'Event Name Not Available';
+    const venueName = booking.venue_name ?? 'Venue Not Available';
     
     let yPos = 65;
     
@@ -128,11 +118,11 @@ export class BookingUtilsService {
     doc.setTextColor(0, 0, 0);
   
     yPos += 10;
-    doc.text(`Number of Tickets: ${booking.num_tickets}`, 20, yPos);
+    doc.text(`Number of Tickets: ${booking.num_tickets_booked}`, 20, yPos);
     yPos += 10;
     doc.text(`Seat Numbers: ${booking.seats.join(', ')}`, 20, yPos);
     yPos += 10;
-    doc.text(`Total Amount: ₹${booking.total_booking_price}`, 20, yPos);
+    doc.text(`Total Amount: ₹${booking.total_price}`, 20, yPos);
     yPos += 10;
     doc.text(`Booking Date: ${this.formatDate(booking.time_booked)}`, 20, yPos);
     
@@ -158,19 +148,13 @@ export class BookingUtilsService {
     doc.save(fileName);
   }
 
-  private getVenue(show: any): any {
-    return show?.venue ?? show?.Venue ?? {};
-  }
-
-  private getEvent(show: any): any {
-    return show?.event ?? show?.Event ?? {};
-  }
-
-  private getShowDate(show: any): string | Date | undefined {
-    return show?.show_date ?? show?.ShowDate;
-  }
-
-  private getShowTime(show: any): string | undefined {
-    return show?.show_time ?? show?.ShowTime;
+  formatTime(dateInput: string | Date | undefined): string {
+    if (!dateInput) return 'Time TBD';
+    const date = dateInput instanceof Date ? dateInput : new Date(dateInput);
+    if (Number.isNaN(date.getTime())) return 'Time TBD';
+    return date.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   }
 }

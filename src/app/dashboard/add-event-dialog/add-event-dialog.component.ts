@@ -8,6 +8,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputTextarea } from 'primeng/inputtextarea';
 import { EventService } from '../../services/event.service';
 import { MessageService } from 'primeng/api';
+import { CreateEventRequest } from '../../models/events';
 
 @Component({
   selector: 'app-add-event-dialog',
@@ -22,12 +23,13 @@ export class AddEventDialogComponent {
 
   visible = false;
 
-  newEvent = {
+  newEvent: CreateEventRequest = {
     name: '',
     description: '',
-    duration:'',
+    duration: '',
     category: '',
-    artists: ['1']
+    artist_ids: ['1'],
+    artist_names: ['Artist1']
   };
 
   durationInt: number | null = null;
@@ -61,7 +63,8 @@ export class AddEventDialogComponent {
       description: '',
       duration: '',
       category: '',
-      artists: ['1'],
+      artist_ids: ['1'],
+      artist_names: ['Artist1']
     };
     this.durationInt = null;
   }
@@ -83,7 +86,7 @@ export class AddEventDialogComponent {
       return;
     }
 
-    const payload = {
+    const payload: CreateEventRequest = {
       ...this.newEvent,
       duration: this.transform(this.durationInt as number),
     };

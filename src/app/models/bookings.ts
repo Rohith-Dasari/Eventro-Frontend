@@ -1,48 +1,26 @@
-import { Show } from "./shows";
+export interface Booking {
+  user_email: string;
+  booking_date: string;
+  booking_id: string;
+  show_id: string;
+  time_booked: string;
+  num_tickets_booked: number;
+  total_price: number;
+  seats: string[];
+  venue_city: string;
+  venue_name: string;
+  venue_state: string;
+  event_name: string;
+  event_duration: string;
+  event_id: string;
+}
 
 export interface BookingResponse {
   booking_id: string;
   user_id: string;
   show_id: string;
-  time_booked: string; 
+  time_booked: string;
   num_tickets: number;
   total_booking_price: number;
   seats: string[];
-}
-
-export interface Host {
-  UserID: string;
-  Username: string;
-  Email: string;
-  PhoneNumber: string;
-  Password: string;
-  Role: string;
-  IsBlocked: boolean;
-}
-
-export interface Venue {
-  ID: string;
-  Name: string;
-  HostID: string;
-  Host: Host;
-  City: string;
-  State: string;
-  IsBlocked: boolean;
-  IsSeatLayoutRequired: boolean;
-}
-
-export interface Event {
-  ID: string;
-  Name: string;
-  Description: string;
-  HypeMeter: number;
-  Duration: string;
-  Category: string;
-  IsBlocked: boolean;
-}
-
-
-
-export interface EnrichedBooking extends BookingResponse {
-  show_details?: Show;
 }

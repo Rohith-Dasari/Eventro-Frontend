@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BookingService } from '../services/bookings.service';
 import { Router } from '@angular/router';
-import { EnrichedBooking } from '../models/bookings';
+import { Booking } from '../models/bookings';
 
 @Component({
   selector: 'app-my-bookings',
@@ -14,7 +14,7 @@ export class MyBookingsComponent implements OnInit {
   private bookingService = inject(BookingService);
   private router = inject(Router);
 
-  bookings: EnrichedBooking[] = [];
+  bookings: Booking[] = [];
   upcomingCount: number = 0;
   loading = true;
 
@@ -32,12 +32,13 @@ export class MyBookingsComponent implements OnInit {
         const now = new Date();
 
         this.upcomingCount = bookings.filter(b => {
-          const show = b.show_details as any;
-          const rawDate = show?.show_date ?? show?.ShowDate;
-          if (!rawDate) {
+          if (!b.booking_date) {
             return false;
           }
-          const showDate = rawDate instanceof Date ? rawDate : new Date(rawDate);
+          const showDate = new Date(b.booking_date);
+          if (Number.isNaN(showDate.getTime())) {
+            return false;
+          }
           return showDate > now;
         }).length;
         

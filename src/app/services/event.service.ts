@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Event } from '../models/events';
+import { CreateEventRequest, Event } from '../models/events';
 
 @Injectable({
   providedIn: 'root',
@@ -69,7 +69,7 @@ export class EventService {
     let params = new HttpParams().set('hostId', hostId);
     return this.httpClient.get('shows', { params });
   }
-  addEvent(eventData: any): Observable<any> {
+  addEvent(eventData: CreateEventRequest): Observable<any> {
     return this.httpClient.post('events', eventData);
   }
 }

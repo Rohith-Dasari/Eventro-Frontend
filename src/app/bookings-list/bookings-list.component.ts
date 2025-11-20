@@ -4,7 +4,7 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { BookingService } from '../services/bookings.service';
-import { EnrichedBooking } from '../models/bookings';
+import { Booking } from '../models/bookings';
 import { UpcomingBookingDetailsComponent } from '../upcoming-booking-details/upcoming-booking-details.component';
 
 @Component({
@@ -18,9 +18,9 @@ export class BookingsListComponent implements OnInit {
   private bookingService = inject(BookingService);
   private location = inject(Location);
 
-  bookings: EnrichedBooking[] = [];
+  bookings: Booking[] = [];
   loading = true;
-  selectedBooking: EnrichedBooking | null = null;
+  selectedBooking: Booking | null = null;
   dialogVisible = false;
   defaultImage = './images/hp3.jpg';
 
@@ -84,7 +84,7 @@ export class BookingsListComponent implements OnInit {
     });
   }
 
-  onBookingClick(booking: EnrichedBooking) {
+  onBookingClick(booking: Booking) {
     console.log('bookings-list stage: booking card clicked');
     console.log('bookings-list stage: selected booking data:', booking);
     this.selectedBooking = booking;
@@ -127,33 +127,34 @@ export class BookingsListComponent implements OnInit {
     }
   }
 
-  getEventName(booking: EnrichedBooking): string {
-    const show = booking.show_details as any;
-    return show?.event?.name ?? show?.Event?.Name ?? 'Event Name Not Available';
+  getEventName(booking: Booking): string {
+    return booking.event_name || 'Event Name Not Available';
   }
 
-  getVenueName(booking: EnrichedBooking): string {
-    const venue = this.getVenue(booking);
-    return venue?.venue_name ?? venue?.Name ?? 'Venue Not Available';
+  getVenueName(booking: Booking): string {
+    return booking.venue_name || 'Venue Not Available';
   }
 
-  getVenueCity(booking: EnrichedBooking): string {
-    const venue = this.getVenue(booking);
-    return venue?.city ?? venue?.City ?? '';
+  getVenueCity(booking: Booking): string {
+    return booking.venue_city || '';
   }
 
-  getShowTimeDisplay(booking: EnrichedBooking): string {
-    const show = booking.show_details as any;
-    return show?.show_time ?? show?.ShowTime ?? 'Time TBD';
+  getShowTimeDisplay(booking: Booking): string {
+    const rawDate = booking.booking_date;
+    if (!rawDate) {
+      return 'Time TBD';
+    }
+    const date = new Date(rawDate);
+    if (Number.isNaN(date.getTime())) {
+      return 'Time TBD';
+    }
+    return date.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   }
 
-  getShowDateRaw(booking: EnrichedBooking): string | Date | undefined {
-    const show = booking.show_details as any;
-    return show?.show_date ?? show?.ShowDate;
-  }
-
-  private getVenue(booking: EnrichedBooking): any {
-    const show = booking.show_details as any;
-    return show?.venue ?? show?.Venue;
+  getShowDateRaw(booking: Booking): string | Date | undefined {
+    return booking.booking_date;
   }
 }

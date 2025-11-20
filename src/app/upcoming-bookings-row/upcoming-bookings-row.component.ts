@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
-import { EnrichedBooking } from '../models/bookings';
+import { Booking } from '../models/bookings';
 
 @Component({
   selector: 'app-upcoming-bookings-row',
@@ -11,15 +11,15 @@ import { EnrichedBooking } from '../models/bookings';
 })
 export class UpcomingBookingsRowComponent implements OnInit {
   @Input() title: string = 'Upcoming Bookings';
-  @Input() bookings: EnrichedBooking[] = [];
+  @Input() bookings: Booking[] = [];
   @Input() defaultImage: string = './images/hp3.jpg';
-  @Output() bookingClick = new EventEmitter<EnrichedBooking>();
+  @Output() bookingClick = new EventEmitter<Booking>();
 
   ngOnInit() {
     console.log('Bookings received in component:', this.bookings);
   }
 
-  onBookingClick(booking: EnrichedBooking) {
+  onBookingClick(booking: Booking) {
     console.log('Booking clicked:', booking);
     this.bookingClick.emit(booking);
   }
@@ -40,36 +40,37 @@ export class UpcomingBookingsRowComponent implements OnInit {
     }
   }
 
-  getEventName(booking: EnrichedBooking, index: number): string {
-    const show = booking.show_details as any;
-    const eventName = show?.event?.name ?? show?.Event?.Name;
-    return eventName || `Event ${index + 1}`;
+  getEventName(booking: Booking, index: number): string {
+    return booking.event_name || `Event ${index + 1}`;
   }
 
-  getShowDate(booking: EnrichedBooking): string | undefined {
-    const show = booking.show_details as any;
-    const rawDate = show?.show_date ?? show?.ShowDate;
-    if (!rawDate) return undefined;
-    return rawDate instanceof Date ? rawDate.toISOString() : rawDate;
+  getShowDate(booking: Booking): string | undefined {
+    return booking.booking_date;
   }
 
-  getShowTime(booking: EnrichedBooking): string {
-    const show = booking.show_details as any;
-    return show?.show_time ?? show?.ShowTime ?? 'Time TBD';
+  getShowTime(booking: Booking): string {
+    return this.formatTime(booking.booking_date);
   }
 
-  getVenueName(booking: EnrichedBooking): string {
-    const venue = this.getVenue(booking);
-    return venue?.venue_name ?? venue?.Name ?? 'Venue TBD';
+  getVenueName(booking: Booking): string {
+    return booking.venue_name || 'Venue TBD';
   }
 
-  getVenueCity(booking: EnrichedBooking): string {
-    const venue = this.getVenue(booking);
-    return venue?.city ?? venue?.City ?? 'City TBD';
+  getVenueCity(booking: Booking): string {
+    return booking.venue_city || 'City TBD';
   }
 
-  private getVenue(booking: EnrichedBooking): any {
-    const show = booking.show_details as any;
-    return show?.venue ?? show?.Venue;
+  private formatTime(dateInput: string | Date | undefined): string {
+    if (!dateInput) {
+      return 'Time TBD';
+    }
+    const date = dateInput instanceof Date ? dateInput : new Date(dateInput);
+    if (Number.isNaN(date.getTime())) {
+      return 'Time TBD';
+    }
+    return date.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   }
 }

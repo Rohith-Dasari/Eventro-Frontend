@@ -1,16 +1,13 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
-import { Observable, forkJoin, switchMap, map, of, catchError } from "rxjs";
-import { BookingResponse, EnrichedBooking } from "../models/bookings";
-import { EventService } from "./event.service";
-import { Show } from "../models/shows";
+import { Observable, of, catchError, tap } from "rxjs";
+import { BookingResponse, Booking } from "../models/bookings";
 
 @Injectable({
   providedIn: 'root'
 })
 export class BookingService {
   private httpClient = inject(HttpClient);
-  private eventService = inject(EventService);
 
   addBooking(showId: string, seats: string[], userIdentifier?: string | null): Observable<BookingResponse> {
     const bookingRequest: any = {
@@ -21,13 +18,25 @@ export class BookingService {
     if (userIdentifier) {
       bookingRequest.user_id = userIdentifier;
     }
+    
 
-    return this.httpClient.put<BookingResponse>('bookings', bookingRequest);
+    return this.httpClient.post<BookingResponse>('bookings', bookingRequest);
   }
 
-  getBookings(): Observable<EnrichedBooking[]> {
+  getBookings(): Observable<Booking[]> {
     console.log('booking-service stage: getBookings method called');
-    const userID = localStorage.getItem('user_id');
+    let userID = localStorage.getItem('user_id');
+    if (!userID) {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        try {
+          const parsedUser = JSON.parse(storedUser);
+          userID = parsedUser?.user_id;
+        } catch (error) {
+          console.warn('booking-service stage: failed to parse stored user for fallback id', error);
+        }
+      }
+    }
     if (!userID) {
       console.warn('booking-service stage: no user ID found in storage, returning empty bookings list');
       return of([]);
@@ -35,67 +44,15 @@ export class BookingService {
     const endpoint = `users/${userID}/bookings`;
     console.log('booking-service stage: making API call to', endpoint);
     
-    return this.httpClient.get<BookingResponse[]>(endpoint).pipe(
-      switchMap(bookings => {
+    return this.httpClient.get<Booking[]>(endpoint).pipe(
+      tap(bookings => {
         console.log('booking-service stage: raw API response received:', bookings);
-        console.log('booking-service stage: response type:', typeof bookings);
         console.log('booking-service stage: response length:', bookings?.length || 0);
-        
-        if (!bookings || bookings.length === 0) {
-          console.log('booking-service stage: no bookings found, returning empty array');
-          return of([]);
-        }
-        
-        console.log('booking-service stage: processing bookings for enrichment');
-        const enrichedBookings$ = bookings.map(booking => {
-          console.log('booking-service stage: enriching booking:', booking.booking_id);
-          return this.enrichBookingWithDetails(booking);
-        });
-        
-        console.log('booking-service stage: waiting for all enriched bookings to complete');
-        return forkJoin(enrichedBookings$);
       }),
       catchError(error => {
         console.error('booking-service stage: API error occurred:', error);
         console.log('booking-service stage: returning empty array due to error');
         return of([]); 
-      })
-    );
-  }
-
-  private enrichBookingWithDetails(booking: BookingResponse): Observable<EnrichedBooking> {
-    console.log('Enriching booking:', booking);
-    console.log('Calling getShowById with showId:', booking.show_id);
-    
-    return this.eventService.getShowById(booking.show_id).pipe(
-      map((showResponse: Show[]) => {
-        console.log('Show response for booking:', showResponse);
-        
-        const show = showResponse[0];
-        
-        if (!show) {
-          console.warn('No show data found for showId:', booking.show_id);
-          return {
-            ...booking,
-            show_details: undefined
-          };
-        }
-        
-        console.log('Show details:', show);
-        
-        const enrichedBooking: EnrichedBooking = {
-          ...booking,
-          show_details: show
-        };
-        
-        return enrichedBooking;
-      }),
-      catchError(error => {
-        console.error('Error getting show details for booking:', booking, error);
-        return of({
-          ...booking,
-          show_details: undefined
-        });
       })
     );
   }

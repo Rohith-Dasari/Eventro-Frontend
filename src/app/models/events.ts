@@ -8,3 +8,12 @@ export interface Event{
     artist_ids: string[]
     artist_names:string[]
 }
+
+export interface CreateEventRequest {
+    name: string;
+    description: string;
+    duration: string;
+    category: string;
+    artist_ids: string[];
+    artist_names?: string[];
+}
