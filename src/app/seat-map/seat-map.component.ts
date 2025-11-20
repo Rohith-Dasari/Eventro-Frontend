@@ -50,6 +50,7 @@ export class SeatMapComponent implements OnInit, OnChanges {
 
   @Input() show: any;
   @Input() price: number = 0;
+  @Input() eventName?: string;
 
   seats: Seat[] = [];
 
@@ -368,7 +369,12 @@ export class SeatMapComponent implements OnInit, OnChanges {
 
   private getEventName(): string {
     const event = (this.show as any)?.event ?? (this.show as any)?.Event;
-    return event?.name ?? event?.Name ?? 'Event Name Not Available';
+    return (
+      event?.name ??
+      event?.Name ??
+      this.eventName ??
+      'Event Name Not Available'
+    );
   }
 
   private isShowCurrentlyBlocked(): boolean {

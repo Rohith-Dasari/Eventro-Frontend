@@ -46,6 +46,7 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
   showBlocked = false;
   isModerating = false;
   private showsSubscription?: Subscription;
+  loadingEventDetails = true;
 
   private eventService = inject(EventService);
   private authService = inject(AuthService);
@@ -59,9 +60,14 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
     console.log("event-details stage: event from history",this.event);
     if (!this.event) {
       console.error('No event info available.');
+      this.loadingEventDetails = false;
       return;
     }
-    this.eventService.getEventByID(this.event.id).subscribe({
+    this.eventService.getEventByID(this.event.id)
+    .pipe(finalize(() => {
+      this.loadingEventDetails = false;
+    }))
+    .subscribe({
       next: (fetchedEvent) => {
         console.log('Fetched event details:', fetchedEvent);
         this.event = {
@@ -91,10 +97,18 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
   }
 
   loadEvent(eventId: string) {
+    if (!this.refreshing) {
+      this.refreshing = true;
+    }
     let shows$;
 
     if (this.role === 'Host') {
       const hostID = this.authService.getID();
+      if (!hostID) {
+        console.warn('Host ID missing, unable to load host-specific shows');
+        this.refreshing = false;
+        return;
+      }
       shows$ = this.eventService.getShowsByHostAndEvent(
         eventId,
         hostID as string
@@ -110,10 +124,14 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (shows: Show[]) => {
           console.log('Shows loaded:', shows);
-          this.shows = shows.map((show) => ({
-            ...show,
-            showDateObj: this.parseShowDate(show),
-          }));
+          const processedShows = shows
+            .map((show) => ({
+              ...show,
+              showDateObj: this.parseShowDate(show),
+            }))
+            .filter((show) => this.isUpcomingShow(show.showDateObj));
+
+          this.shows = processedShows;
 
           if (!this.shows.length) {
             this.availableDates = [];
@@ -174,12 +192,31 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
       return undefined;
     }
 
-    if (rawValue instanceof Date) {
-      return rawValue;
+    const parsed = rawValue instanceof Date ? new Date(rawValue) : new Date(rawValue);
+    if (Number.isNaN(parsed.getTime())) {
+      return undefined;
     }
 
-    const parsed = new Date(rawValue);
-    return Number.isNaN(parsed.getTime()) ? undefined : parsed;
+    const rawTime = (show as any).show_time ?? (show as any).ShowTime;
+    if (typeof rawTime === 'string') {
+      const [hoursStr = '0', minutesStr = '0', secondsStr = '0'] = rawTime.split(':');
+      const hours = Number(hoursStr);
+      const minutes = Number(minutesStr);
+      const seconds = Number(secondsStr);
+      if (![hours, minutes, seconds].some((value) => Number.isNaN(value))) {
+        parsed.setHours(hours, minutes, seconds, 0);
+      }
+    }
+
+    return parsed;
+  }
+
+  private isUpcomingShow(date?: Date): boolean {
+    if (!(date instanceof Date)) {
+      return false;
+    }
+
+    return date.getTime() >= Date.now();
   }
 
   ngOnDestroy(): void {

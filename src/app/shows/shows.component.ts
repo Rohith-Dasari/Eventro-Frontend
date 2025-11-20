@@ -20,6 +20,7 @@ export class ShowsComponent implements OnChanges {
   @Input() priceRange!: number[];
   @Input() showBlocked: boolean = false;
   @Input() userRole: string | null = null;
+  @Input() eventName?: string;
 
   venues: { name: string; shows: ShowInput[] }[] = [];
   selectedShow: ShowInput | null = null;

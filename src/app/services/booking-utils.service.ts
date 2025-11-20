@@ -71,6 +71,8 @@ export class BookingUtilsService {
 
   async downloadTicketPDF(booking: Booking): Promise<void> {
     const doc = new jsPDF();
+    const marginX = 20;
+    const usableWidth = 170;
     
     doc.setFont('times');
     
@@ -82,61 +84,43 @@ export class BookingUtilsService {
     doc.setLineWidth(0.5);
     doc.line(20, 35, 190, 35);
     
-    doc.setFontSize(16);
-    doc.setTextColor(52, 73, 94);
-    doc.text('Event Details', 20, 50);
-    
-    doc.setFontSize(11);
-    doc.setTextColor(0, 0, 0);
-    
+    const qrData = this.generateQRData(booking);
+    await this.addQRCodeToPDF(doc, qrData, 150, 50);
+    doc.setFontSize(9);
+    doc.setTextColor(100, 100, 100);
+    doc.text('Show this QR at entry', 170, 95, { align: 'center' });
+
     const venueCity = booking.venue_city ?? '';
     const venueState = booking.venue_state ?? '';
     const showDate = this.formatDate(booking.booking_date);
     const showTime = this.formatTime(booking.booking_date) || 'Time TBD';
     const eventName = booking.event_name ?? 'Event Name Not Available';
     const venueName = booking.venue_name ?? 'Venue Not Available';
-    
-    let yPos = 65;
-    
-    doc.text(`Event: ${eventName}`, 20, yPos);
-    yPos += 10;
-    doc.text(`Venue: ${venueName}`, 20, yPos);
-    yPos += 10;
-    doc.text(`Address: ${venueCity}${venueState ? ', ' + venueState : ''}`, 20, yPos);
-    yPos += 10;
-    doc.text(`Date: ${showDate}`, 20, yPos);
-    yPos += 10;
-    doc.text(`Time: ${showTime}`, 20, yPos);
-    
-    yPos += 25;
-    doc.setFontSize(16);
-    doc.setTextColor(52, 73, 94);
-    doc.text('Booking Details', 20, yPos);
-    
+
+    let yPos = 55;
+
+    yPos = this.addSection(doc, 'Event Details', [
+      { label: 'Event', value: eventName },
+      { label: 'Venue', value: venueName },
+      { label: 'Address', value: `${venueCity}${venueState ? ', ' + venueState : ''}` || 'Address not available' },
+      { label: 'Date', value: showDate },
+      { label: 'Time', value: showTime }
+    ], marginX, yPos, usableWidth - 60);
+
+    yPos += 12;
+
+    yPos = this.addSection(doc, 'Booking Details', [
+      { label: 'Booking ID', value: booking.booking_id },
+      { label: 'Seats', value: booking.seats.join(', ') || 'N/A' },
+      { label: 'Number of Tickets', value: `${booking.num_tickets_booked}` },
+      { label: 'Total Amount', value: `Rs. ${booking.total_price}` },
+      { label: 'Booked On', value: this.formatDate(booking.time_booked) }
+    ], marginX, yPos, usableWidth - 20);
+
     yPos += 15;
-    doc.setFontSize(11);
-    doc.setTextColor(0, 0, 0);
-  
-    yPos += 10;
-    doc.text(`Number of Tickets: ${booking.num_tickets_booked}`, 20, yPos);
-    yPos += 10;
-    doc.text(`Seat Numbers: ${booking.seats.join(', ')}`, 20, yPos);
-    yPos += 10;
-    doc.text(`Total Amount: ₹${booking.total_price}`, 20, yPos);
-    yPos += 10;
-    doc.text(`Booking Date: ${this.formatDate(booking.time_booked)}`, 20, yPos);
-    
-    yPos += 25;
-    doc.setFontSize(12);
+    doc.setFontSize(10);
     doc.setTextColor(52, 73, 94);
-    doc.text('Scan QR Code at Venue:', 20, yPos);
-    
-    const qrData = this.generateQRData(booking);
-    await this.addQRCodeToPDF(doc, qrData, 20, yPos + 5);
-    
-    doc.setFontSize(8);
-    doc.setTextColor(100, 100, 100);
-    doc.text('Contains booking verification data', 20, yPos + 50);
+    doc.text('Contains booking verification data. Arrive 30 mins early.', marginX, yPos);
     
     doc.setFontSize(10);
     doc.setTextColor(100, 100, 100);
@@ -156,5 +140,47 @@ export class BookingUtilsService {
       hour: '2-digit',
       minute: '2-digit'
     });
+  }
+
+  private addSection(
+    doc: jsPDF,
+    title: string,
+    entries: Array<{ label: string; value: string }>,
+    startX: number,
+    startY: number,
+    width: number
+  ): number {
+    doc.setFontSize(14);
+    doc.setTextColor(52, 73, 94);
+    doc.text(title, startX, startY);
+    let yPos = startY + 8;
+    doc.setFontSize(11);
+    doc.setTextColor(0, 0, 0);
+
+    entries.forEach(entry => {
+      yPos = this.addKeyValueLine(doc, entry.label, entry.value, startX, yPos, width);
+      yPos += 4;
+    });
+
+    return yPos;
+  }
+
+  private addKeyValueLine(
+    doc: jsPDF,
+    label: string,
+    value: string,
+    startX: number,
+    startY: number,
+    width: number
+  ): number {
+    const labelWidth = 32;
+    doc.setFont('times', 'bold');
+    doc.text(`${label}:`, startX, startY);
+    doc.setFont('times', 'normal');
+    const textLines = doc.splitTextToSize(value || '-', width - labelWidth);
+    doc.text(textLines, startX + labelWidth, startY);
+    const lineHeight = 5.5;
+    const consumedHeight = lineHeight * (textLines.length || 1);
+    return startY + consumedHeight;
   }
 }

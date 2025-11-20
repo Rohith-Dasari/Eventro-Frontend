@@ -1,4 +1,4 @@
-<div *ngIf="event" class="event-details-container">
+<div *ngIf="event && !loadingEventDetails" class="event-details-container">
   <div class="event-header">
     <div class="event-image">
       <img src="./images/hp3.jpg" alt="{{ event.name }}" />
@@ -103,6 +103,7 @@
     [priceRange]="rangeValues"
     [showBlocked]="showBlocked"
     [userRole]="role"
+    [eventName]="event?.name"
   >
   </app-shows>
 
@@ -112,4 +113,4 @@
   }
 </div>
 
-<app-spinner [visible]="isModerating || refreshing"></app-spinner>
+<app-spinner [visible]="isModerating || refreshing || loadingEventDetails"></app-spinner>

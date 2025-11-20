@@ -23,5 +23,6 @@
 *ngIf="seatMapVisible && selectedShow"
   [(visible)]="seatMapVisible" 
   [show]="selectedShow" 
-  [price]="getShowPrice(selectedShow)">
+  [price]="getShowPrice(selectedShow)"
+  [eventName]="eventName">
 </app-seat-map>
