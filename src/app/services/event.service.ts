@@ -10,18 +10,17 @@ export class EventService {
   private httpClient = inject(HttpClient);
 
   getEvents(): Observable<Event[]> {
-    return this.httpClient.get<Event[]>('events?location=noida');
+    return this.httpClient.get<Event[]>('events?city=noida');
   }
-  getEventByID(id: string): Observable<Event[]> {
-    const params = new HttpParams().set('eventID', id);
-    return this.httpClient.get<Event[]>('events', { params });
+  getEventByID(id: string): Observable<Event> {
+    return this.httpClient.get<Event>(`events/${id}`);
   }
 
   searchEventsByName(
     name: string,
     category: string | null
   ): Observable<Event[]> {
-    let params = new HttpParams().set('eventname', name);
+    let params = new HttpParams().set('name', name);
     if (category) {
       params = params.set('category', category);
     }
@@ -29,15 +28,17 @@ export class EventService {
   }
 
   getBlockedEvents(): Observable<Event[]> {
-    return this.httpClient.get<Event[]>('events?isBlocked=true');
+    return this.httpClient.get<Event[]>('events?city=noida&isBlocked=true');
   }
 
   moderateEvent(eventID: string, isBlocked: boolean): Observable<any> {
     console.log('sent request');
     const requestBody = {
-      isBlocked: isBlocked,
+      is_blocked: isBlocked,
     };
-    return this.httpClient.patch(`events/${eventID}`, requestBody);
+    return this.httpClient.patch(`events/${eventID}`, requestBody, {
+      responseType: 'text' as 'json',
+    });
   }
 
   getEventsofShows(hostID: string): Observable<Event[]> {
@@ -45,12 +46,12 @@ export class EventService {
   }
 
   getShows(eventId: string): Observable<any> {
-    let params = new HttpParams().set('eventId', eventId);
+    let params = new HttpParams().set('eventID', eventId).set('city', "noida");
     return this.httpClient.get('shows', { params });
   }
 
   getShowsByHostAndEvent(eventId: string, hostID: string): Observable<any> {
-    let params = new HttpParams().set('eventId', eventId).set('hostId', hostID);
+    let params = new HttpParams().set('eventID', eventId).set('hostID', hostID).set('city', "noida");
 
     return this.httpClient.get('shows', { params });
   }

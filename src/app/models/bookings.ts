@@ -1,3 +1,5 @@
+import { Show } from "./shows";
+
 export interface BookingResponse {
   booking_id: string;
   user_id: string;
@@ -39,21 +41,7 @@ export interface Event {
   IsBlocked: boolean;
 }
 
-export interface Show {
-  ID: string;
-  HostID: string;
-  Host: Host;
-  VenueID: string;
-  Venue: Venue;
-  EventID: string;
-  Event: Event;
-  CreatedAt: string;
-  IsBlocked: boolean;
-  Price: number;
-  ShowDate: string;
-  ShowTime: string;
-  BookedSeats: string[];
-}
+
 
 export interface EnrichedBooking extends BookingResponse {
   show_details?: Show;

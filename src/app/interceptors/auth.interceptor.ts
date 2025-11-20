@@ -9,7 +9,6 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, ne
                 Authorization: `Bearer ${token}`
             }
         });
-        console.log('hitttttt')
         return next(newReq);
     }
     return next(req);

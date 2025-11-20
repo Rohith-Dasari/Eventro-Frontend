@@ -32,7 +32,12 @@ export class MyBookingsComponent implements OnInit {
         const now = new Date();
 
         this.upcomingCount = bookings.filter(b => {
-          const showDate = new Date(b.show_details?.ShowDate || '');
+          const show = b.show_details as any;
+          const rawDate = show?.show_date ?? show?.ShowDate;
+          if (!rawDate) {
+            return false;
+          }
+          const showDate = rawDate instanceof Date ? rawDate : new Date(rawDate);
           return showDate > now;
         }).length;
         

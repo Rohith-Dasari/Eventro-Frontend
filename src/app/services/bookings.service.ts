@@ -1,8 +1,9 @@
-import { HttpClient, HttpParams } from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
 import { Observable, forkJoin, switchMap, map, of, catchError } from "rxjs";
-import { BookingResponse, EnrichedBooking, Show } from "../models/bookings";
+import { BookingResponse, EnrichedBooking } from "../models/bookings";
 import { EventService } from "./event.service";
+import { Show } from "../models/shows";
 
 @Injectable({
   providedIn: 'root'
@@ -11,22 +12,30 @@ export class BookingService {
   private httpClient = inject(HttpClient);
   private eventService = inject(EventService);
 
-  addBooking(showId: string, seats: string[], userId: string): Observable<BookingResponse> {
-    const bookingRequest = {
+  addBooking(showId: string, seats: string[], userIdentifier?: string | null): Observable<BookingResponse> {
+    const bookingRequest: any = {
       show_id: showId,
       seats: seats,
-      user_id: userId
     };
-    return this.httpClient.post<BookingResponse>('bookings', bookingRequest);
+
+    if (userIdentifier) {
+      bookingRequest.user_id = userIdentifier;
+    }
+
+    return this.httpClient.put<BookingResponse>('bookings', bookingRequest);
   }
 
   getBookings(): Observable<EnrichedBooking[]> {
     console.log('booking-service stage: getBookings method called');
     const userID = localStorage.getItem('user_id');
-    let params = new HttpParams().set('userId', userID as string);
-    console.log('booking-service stage: making API call to /bookings with params:', params.toString());
+    if (!userID) {
+      console.warn('booking-service stage: no user ID found in storage, returning empty bookings list');
+      return of([]);
+    }
+    const endpoint = `users/${userID}/bookings`;
+    console.log('booking-service stage: making API call to', endpoint);
     
-    return this.httpClient.get<BookingResponse[]>('bookings', { params }).pipe(
+    return this.httpClient.get<BookingResponse[]>(endpoint).pipe(
       switchMap(bookings => {
         console.log('booking-service stage: raw API response received:', bookings);
         console.log('booking-service stage: response type:', typeof bookings);

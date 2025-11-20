@@ -14,7 +14,7 @@
       </ng-template>
 
       <ng-template pTemplate="subtitle">
-        {{ event.artist_names.join(', ') || 'Unknown' }}
+        {{ event.artist_names && event.artist_names.length ? event.artist_names.join(', ') : 'Unknown' }}
       </ng-template>
     </p-card>
   </div>

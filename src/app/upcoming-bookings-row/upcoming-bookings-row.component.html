@@ -8,21 +8,21 @@
       (click)="onBookingClick(booking)">
       
       <ng-template pTemplate="header">
-        <img [src]="defaultImage" alt="{{ booking.show_details?.Event?.Name }}" class="booking-img" />
+        <img [src]="defaultImage" alt="{{ getEventName(booking, i) }}" class="booking-img" />
       </ng-template>
 
       <ng-template pTemplate="title">
-        {{ booking.show_details?.Event?.Name || ('Event ' + (i+1)) }}
+        {{ getEventName(booking, i) }}
       </ng-template>
 
       <ng-template pTemplate="subtitle">
         <div class="booking-info">
           <div class="show-details">
-            <span class="show-date">{{ formatDate(booking.show_details?.ShowDate) }}</span>
-            <span class="show-time">{{ booking.show_details?.ShowTime || 'Time TBD' }}</span>
+            <span class="show-date">{{ formatDate(getShowDate(booking)) }}</span>
+            <span class="show-time">{{ getShowTime(booking) }}</span>
           </div>
           <div class="venue-location">
-            {{ booking.show_details?.Venue?.Name || 'Venue TBD' }}, {{ booking.show_details?.Venue?.City || 'City TBD' }}
+            {{ getVenueName(booking) }}, {{ getVenueCity(booking) }}
           </div>
         </div>
       </ng-template>

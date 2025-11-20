@@ -13,6 +13,9 @@ import { SpinnerComponent } from '../shared/spinner/spinner.component';
 import { MessageService } from 'primeng/api';
 import { finalize } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
+import { Show } from '../models/shows';
+
+type ShowWithDate = Show & { showDateObj?: Date };
 
 @Component({
   selector: 'app-event-details',
@@ -32,7 +35,7 @@ import { Subscription } from 'rxjs';
 })
 export class EventDetailsComponent implements OnInit, OnDestroy {
   event!: Event;
-  shows: any[] = [];
+  shows: ShowWithDate[] = [];
   availableDates: Date[] = [];
   selectedDate!: Date;
   rangeValues: number[] = [0, 3000];
@@ -59,9 +62,16 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
       return;
     }
     this.eventService.getEventByID(this.event.id).subscribe({
-      next: (val) => {
-        console.log(val)
-        this.event.is_blocked = val[0].is_blocked;
+      next: (fetchedEvent) => {
+        console.log('Fetched event details:', fetchedEvent);
+        this.event = {
+          ...this.event,
+          ...fetchedEvent,
+          artist_names: fetchedEvent.artist_names ?? [],
+          artist_ids: fetchedEvent.artist_ids ?? [],
+          description: fetchedEvent.description ?? 'No description available.',
+          duration: fetchedEvent.duration ?? 'Duration not available',
+        };
         this.checked = this.event.is_blocked;
         this.status = this.checked
           ? 'The event has been blocked'
@@ -98,32 +108,36 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
     this.showsSubscription = shows$
       .pipe(finalize(() => (this.refreshing = false)))
       .subscribe({
-      next: (shows: any[]) => {
-        console.log('Shows loaded:', shows);
-        this.shows = shows;
+        next: (shows: Show[]) => {
+          console.log('Shows loaded:', shows);
+          this.shows = shows.map((show) => ({
+            ...show,
+            showDateObj: this.parseShowDate(show),
+          }));
 
-        if (!shows.length) {
-          this.availableDates = [];
-          this.selectedDate = undefined as unknown as Date;
-          return;
-        }
+          if (!this.shows.length) {
+            this.availableDates = [];
+            this.selectedDate = undefined as unknown as Date;
+            return;
+          }
 
-        this.shows.forEach((s) => {
-          s.ShowDate = new Date(s.ShowDate);
-        });
-
-        const uniqueDates = Array.from(
-          new Set(
-            this.shows.map((s: any) => new Date(s.ShowDate).toDateString())
+          const uniqueDates = Array.from(
+            new Set(
+              this.shows
+                .map((s) => s.showDateObj)
+                .filter((date): date is Date => !!date)
+                .map((date) => date.toDateString())
+            )
           )
-        )
-          .map((d) => new Date(d))
-          .sort((a, b) => a.getTime() - b.getTime());
+            .map((d) => new Date(d))
+            .sort((a, b) => a.getTime() - b.getTime());
 
-        this.availableDates = uniqueDates.slice(0, 6);
+          this.availableDates = uniqueDates.slice(0, 6);
 
-        this.selectedDate = this.availableDates[0];
-      },
+          this.selectedDate = this.availableDates.length
+            ? this.availableDates[0]
+            : (undefined as unknown as Date);
+        },
         error: (err) => {
           console.error('Error loading shows:', err);
           this.messageService.add({
@@ -133,7 +147,7 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
             life: 3000,
           });
         },
-  });
+      });
   }
 
   openDialogBox() {
@@ -154,6 +168,20 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
     this.showBlocked = newValue;
   }
 
+  private parseShowDate(show: Show): Date | undefined {
+    const rawValue = (show as any).show_date ?? (show as any).ShowDate;
+    if (!rawValue) {
+      return undefined;
+    }
+
+    if (rawValue instanceof Date) {
+      return rawValue;
+    }
+
+    const parsed = new Date(rawValue);
+    return Number.isNaN(parsed.getTime()) ? undefined : parsed;
+  }
+
   ngOnDestroy(): void {
     this.showsSubscription?.unsubscribe();
   }
@@ -161,10 +189,11 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
   onToggle(newValue: boolean) {
     console.log('Toggle switch changed to:', newValue);
 
+    this.checked = newValue;
     this.isModerating = true;
 
     this.eventService
-      .moderateEvent(this.event.id, this.checked)
+      .moderateEvent(this.event.id, newValue)
       .pipe(finalize(() => (this.isModerating = false)))
       .subscribe({
       next: (val) => {

@@ -135,20 +135,26 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const userId = this.bookingData.userID;
     const seats = this.bookingData.seats || [];
-    console.log('payment validation stage: userId:', this.bookingData.userID);
+    const role = this.authService.getRole();
+    const isAdminBooking = role === 'Admin';
+    const adminUserIdentifier = isAdminBooking
+      ? this.bookingData.bookedForEmail || this.bookingData.customerEmail || ''
+      : null;
+
+    console.log('payment validation stage: role:', role);
+    console.log('payment validation stage: admin user identifier:', adminUserIdentifier);
     console.log('payment validation stage: showId:', this.showId);
     console.log('payment validation stage: seats:', seats);
     
-    if (!userId || !this.showId || seats.length === 0) {
+    if (!this.showId || seats.length === 0 || (isAdminBooking && !adminUserIdentifier)) {
       console.log('payment validation failed stage: missing data');
       this.isProcessingPayment = false;
       return;
     }
     
     console.log('API call stage: calling addBooking');
-    this.bookingService.addBooking(this.showId, seats, this.bookingData.userID).subscribe({
+    this.bookingService.addBooking(this.showId, seats, adminUserIdentifier).subscribe({
       next: (response) => {
         console.log('API success stage: response:', response);
         

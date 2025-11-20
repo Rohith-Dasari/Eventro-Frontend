@@ -43,7 +43,7 @@ export class SeatMapComponent implements OnInit, OnChanges {
   adminUserEmail = '';
   userNotFound = false;
 
-  bookingSummary = `Total Number of Tickets Booked:   Total Sale:`;
+  bookingSummary = `Total Number of Tickets Booked: 0   Total Sale: ₹0`;
 
   @Input() visible = false;
   @Output() visibleChange = new EventEmitter<boolean>();
@@ -58,14 +58,17 @@ export class SeatMapComponent implements OnInit, OnChanges {
       console.log(this.show);
       this.initializeSeats();
     }
-    this.bookingSummary = `Total Number of Tickets Booked:${
-      this.show?.BookedSeats.length
-    }   Total Sale:₹${this.show?.BookedSeats.length * this.price}`;
+    this.updateBookingSummary();
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['show'] && changes['show'].currentValue) {
       this.initializeSeats();
+      this.updateBookingSummary();
+    }
+
+    if (changes['price']) {
+      this.updateBookingSummary();
     }
 
     if (changes['visible'] && changes['visible'].currentValue) {
@@ -74,8 +77,7 @@ export class SeatMapComponent implements OnInit, OnChanges {
   }
 
   initializeSeats() {
-    const rawBookedSeats: string[] =
-      this.show?.BookedSeats || this.show?.booked_seats || [];
+    const rawBookedSeats: string[] = this.getBookedSeats();
 
     const bookedSeats: string[] = rawBookedSeats.map((seat) =>
       seat.toLowerCase()
@@ -149,7 +151,7 @@ export class SeatMapComponent implements OnInit, OnChanges {
   }
 
   get isShowBlocked(): boolean {
-    return !!(this.show?.IsBlocked ?? this.show?.is_blocked);
+    return this.isShowCurrentlyBlocked();
   }
 
   getSeatClass(seat: Seat) {
@@ -207,8 +209,9 @@ export class SeatMapComponent implements OnInit, OnChanges {
       return;
     }
 
-    const venueCity = this.show?.Venue?.City || '';
-    const venueState = this.show?.Venue?.State || '';
+    const venue = this.getVenueDetails();
+    const venueCity = venue?.city ?? venue?.City ?? '';
+    const venueState = venue?.state ?? venue?.State ?? '';
     let venueAddress = '';
     if (venueCity && venueState) {
       venueAddress = `${venueCity}, ${venueState}`;
@@ -227,38 +230,39 @@ export class SeatMapComponent implements OnInit, OnChanges {
     );
     console.log('seat selection stage: total price:', this.totalPrice);
 
-    const showDateFormatted = this.show?.ShowDate
-      ? this.show.ShowDate instanceof Date
-        ? this.show.ShowDate.toISOString()
-        : this.show.ShowDate
+    const rawShowDate = this.getShowDateValue();
+    const showDateFormatted = rawShowDate
+      ? rawShowDate instanceof Date
+        ? rawShowDate.toISOString()
+        : rawShowDate
       : '';
 
     const bookingData: BookingSummaryData = {
-      eventName: this.show?.Event?.Name || 'Event Name Not Available',
-      venueName: this.show?.Venue?.Name || 'Venue Name Not Available',
+      eventName: this.getEventName(),
+      venueName: venue?.venue_name ?? venue?.Name ?? 'Venue Name Not Available',
       venueAddress: venueAddress,
       showDate: showDateFormatted,
-      showTime: this.show?.ShowTime || 'Time TBD',
+      showTime: this.getShowTimeValue() || 'Time TBD',
       seats: [...this.selectedSeatCodes],
       numTickets: this.selectedSeats.length,
       totalAmount: this.totalPrice,
     };
 
     console.log('booking data creation stage: bookingData:', bookingData);
-    console.log('booking data creation stage: showId:', this.show?.ID);
+    console.log('booking data creation stage: showId:', this.getShowId());
 
     this.bookingData = bookingData;
-    this.persistBookingContext(this.show?.ID || '');
+    this.persistBookingContext(this.getShowId());
     this.onDialogHide();
     return bookingData;
   }
 
   onConfirmBooking(bookingData: any) {
-    this.persistBookingContext(this.show?.ID || '');
+    this.persistBookingContext(this.getShowId());
     this.router.navigate(['/dashboard/booking-confirmation'], {
       state: {
         bookingData: bookingData,
-        showId: this.show?.ID || '',
+        showId: this.getShowId(),
         showData: this.show,
       },
     });
@@ -276,18 +280,21 @@ export class SeatMapComponent implements OnInit, OnChanges {
   onBlockShow() {
     if (!this.show) return;
 
-    const isCurrentlyBlocked =
-      this.show?.IsBlocked ?? this.show?.is_blocked ?? false;
+    const isCurrentlyBlocked = this.isShowCurrentlyBlocked();
     const shouldBlock = !isCurrentlyBlocked;
 
     this.isBlocking = true;
 
-    this.showService.blockShow(this.show.ID, shouldBlock).subscribe({
+    this.showService.blockShow(this.getShowId(), shouldBlock).subscribe({
       next: (res) => {
         this.isBlocking = false;
-        this.show.IsBlocked = shouldBlock;
-        if ('is_blocked' in this.show) {
-          this.show.is_blocked = shouldBlock;
+        if (this.show) {
+          if ('IsBlocked' in this.show) {
+            (this.show as any).IsBlocked = shouldBlock;
+          }
+          if ('is_blocked' in this.show) {
+            (this.show as any).is_blocked = shouldBlock;
+          }
         }
 
         this.messageService.add({
@@ -326,5 +333,45 @@ export class SeatMapComponent implements OnInit, OnChanges {
         error
       );
     }
+  }
+
+  private getBookedSeats(): string[] {
+    const seats = (this.show as any)?.booked_seats ?? (this.show as any)?.BookedSeats ?? [];
+    return Array.isArray(seats) ? seats : [];
+  }
+
+  get bookedSeatsCount(): number {
+    return this.getBookedSeats().length;
+  }
+
+  private updateBookingSummary() {
+    this.bookingSummary = `Total Number of Tickets Booked: ${
+      this.bookedSeatsCount
+    }   Total Sale: ₹${this.bookedSeatsCount * this.price}`;
+  }
+
+  private getShowId(): string {
+    return (this.show as any)?.id ?? (this.show as any)?.ID ?? '';
+  }
+
+  private getVenueDetails(): any {
+    return (this.show as any)?.venue ?? (this.show as any)?.Venue ?? {};
+  }
+
+  private getShowDateValue(): string | Date | undefined {
+    return (this.show as any)?.show_date ?? (this.show as any)?.ShowDate;
+  }
+
+  private getShowTimeValue(): string | undefined {
+    return (this.show as any)?.show_time ?? (this.show as any)?.ShowTime;
+  }
+
+  private getEventName(): string {
+    const event = (this.show as any)?.event ?? (this.show as any)?.Event;
+    return event?.name ?? event?.Name ?? 'Event Name Not Available';
+  }
+
+  private isShowCurrentlyBlocked(): boolean {
+    return !!((this.show as any)?.is_blocked ?? (this.show as any)?.IsBlocked);
   }
 }

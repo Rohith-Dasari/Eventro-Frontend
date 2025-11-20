@@ -29,8 +29,13 @@ export class ProfileComponent implements OnInit {
   }
 
   loadProfile() {
-    const userId = this.user.user_id;
-    this.userService.getProfile(userId).subscribe({
+    const email = this.user?.email || localStorage.getItem('user_email');
+    if (!email) {
+      console.error('Error loading profile: missing user email');
+      return;
+    }
+
+    this.userService.getProfile(email).subscribe({
       next: (profile) => (this.userProfile = profile as UserProfile),
       error: (err) => console.error('Error loading profile:', err)
     });

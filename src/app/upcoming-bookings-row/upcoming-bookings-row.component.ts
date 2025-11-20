@@ -24,11 +24,12 @@ export class UpcomingBookingsRowComponent implements OnInit {
     this.bookingClick.emit(booking);
   }
 
-  formatDate(dateString: string | undefined): string {
-    if (!dateString) return 'Date TBD';
+  formatDate(dateInput: string | Date | undefined): string {
+    if (!dateInput) return 'Date TBD';
     
     try {
-      const date = new Date(dateString);
+      const date =
+        dateInput instanceof Date ? dateInput : new Date(dateInput);
       return date.toLocaleDateString('en-US', {
         month: 'short',
         day: 'numeric',
@@ -37,5 +38,38 @@ export class UpcomingBookingsRowComponent implements OnInit {
     } catch {
       return 'Date TBD';
     }
+  }
+
+  getEventName(booking: EnrichedBooking, index: number): string {
+    const show = booking.show_details as any;
+    const eventName = show?.event?.name ?? show?.Event?.Name;
+    return eventName || `Event ${index + 1}`;
+  }
+
+  getShowDate(booking: EnrichedBooking): string | undefined {
+    const show = booking.show_details as any;
+    const rawDate = show?.show_date ?? show?.ShowDate;
+    if (!rawDate) return undefined;
+    return rawDate instanceof Date ? rawDate.toISOString() : rawDate;
+  }
+
+  getShowTime(booking: EnrichedBooking): string {
+    const show = booking.show_details as any;
+    return show?.show_time ?? show?.ShowTime ?? 'Time TBD';
+  }
+
+  getVenueName(booking: EnrichedBooking): string {
+    const venue = this.getVenue(booking);
+    return venue?.venue_name ?? venue?.Name ?? 'Venue TBD';
+  }
+
+  getVenueCity(booking: EnrichedBooking): string {
+    const venue = this.getVenue(booking);
+    return venue?.city ?? venue?.City ?? 'City TBD';
+  }
+
+  private getVenue(booking: EnrichedBooking): any {
+    const show = booking.show_details as any;
+    return show?.venue ?? show?.Venue;
   }
 }

@@ -8,12 +8,12 @@
 >
   <div *ngIf="booking" class="booking-details-dialog">
     <div class="dialog-section">
-      <div class="detail-row"><strong>Event:</strong> {{ booking.show_details?.Event?.Name }}</div>
+      <div class="detail-row"><strong>Event:</strong> {{ eventName }}</div>
       <div class="detail-row"><strong>Booking ID:</strong> {{ booking.booking_id }}</div>
-      <div class="detail-row"><strong>Venue:</strong> {{ booking.show_details?.Venue?.Name }}</div>
-      <div class="detail-row"><strong>Address:</strong> {{ booking.show_details?.Venue?.City }}, {{ booking.show_details?.Venue?.State }}</div>
+      <div class="detail-row"><strong>Venue:</strong> {{ venueName }}</div>
+      <div class="detail-row"><strong>Address:</strong> {{ venueAddress }}</div>
       <div class="detail-row">
-        <strong>Date & Time:</strong> {{ formatDate(booking.show_details?.ShowDate) }}, {{ booking.show_details?.ShowTime }}
+        <strong>Date & Time:</strong> {{ formatDate(showDate) }}, {{ showTime }}
       </div>
       <div class="detail-row"><strong>Seat Numbers:</strong> {{ booking.seats.join(', ') }}</div>
       <div class="detail-row"><strong>Total Amount:</strong> ₹{{ booking.total_booking_price }}</div>

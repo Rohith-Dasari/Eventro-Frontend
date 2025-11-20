@@ -30,6 +30,41 @@ export class UpcomingBookingDetailsComponent {
     return this.bookingUtils.formatDate(dateString);
   }
 
+  get eventName(): string {
+    const show = this.booking?.show_details as any;
+    return show?.event?.name ?? show?.Event?.Name ?? 'Event Name Not Available';
+  }
+
+  get venueName(): string {
+    const venue = this.getVenueDetails();
+    return venue?.venue_name ?? venue?.Name ?? 'Venue Not Available';
+  }
+
+  get venueAddress(): string {
+    const venue = this.getVenueDetails();
+    const city = venue?.city ?? venue?.City ?? '';
+    const state = venue?.state ?? venue?.State ?? '';
+    if (city && state) return `${city}, ${state}`;
+    return city || state || 'Address not available';
+  }
+
+  get showDate(): string | undefined {
+    const show = this.booking?.show_details as any;
+    const rawDate = show?.show_date ?? show?.ShowDate;
+    if (!rawDate) return undefined;
+    return rawDate instanceof Date ? rawDate.toISOString() : rawDate;
+  }
+
+  get showTime(): string {
+    const show = this.booking?.show_details as any;
+    return show?.show_time ?? show?.ShowTime ?? 'Time TBD';
+  }
+
+  private getVenueDetails(): any {
+    const show = this.booking?.show_details as any;
+    return show?.venue ?? show?.Venue ?? {};
+  }
+
   async downloadTicketPDF() {
     if (!this.booking) return;
 

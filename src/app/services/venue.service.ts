@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { createVenue, Venues } from '../models/venues';
@@ -11,16 +11,12 @@ export class VenueService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getVenues(hostId:string):Observable<Venues[]>{
-    let params=new HttpParams().set('hostId',hostId);
-    params.set('isBlocked',"false");
-    return this.httpClient.get<Venues[]>(`venues?isBlocked=false&hostId=${hostId}`);
+  getVenues(hostId: string): Observable<Venues[]> {
+    return this.httpClient.get<Venues[]>(`host/${hostId}/venues`);
   }
 
-  getBlockedVenues(hostId:string):Observable<Venues[]>{
-    let params=new HttpParams().set('hostId',hostId);
-    params.set('isBlocked',"true");
-    return this.httpClient.get<Venues[]>(`venues?isBlocked=true&hostId=${hostId}`);
+  getBlockedVenues(hostId: string): Observable<Venues[]> {
+    return this.httpClient.get<Venues[]>(`host/${hostId}/venues?isBlocked=true`);
   }
 
   moderateVenue(venueID:string, status:boolean):Observable<any>{

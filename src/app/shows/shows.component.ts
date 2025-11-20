@@ -4,6 +4,9 @@ import { Input } from '@angular/core';
 import { OnChanges, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SeatMapComponent } from '../seat-map/seat-map.component';
+import { Show } from '../models/shows';
+
+type ShowInput = Show & { showDateObj?: Date };
 
 @Component({
   selector: 'app-shows',
@@ -12,13 +15,14 @@ import { SeatMapComponent } from '../seat-map/seat-map.component';
   styleUrl: './shows.component.scss',
 })
 export class ShowsComponent implements OnChanges {
-  @Input() shows: any[] = [];
+  @Input() shows: ShowInput[] = [];
   @Input() selectedDate!: Date;
   @Input() priceRange!: number[];
   @Input() showBlocked: boolean = false;
+  @Input() userRole: string | null = null;
 
-  venues: { name: string; shows: any[] }[] = [];
-  selectedShow!: any;
+  venues: { name: string; shows: ShowInput[] }[] = [];
+  selectedShow: ShowInput | null = null;
   seatMapVisible: boolean = false;
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -26,47 +30,87 @@ export class ShowsComponent implements OnChanges {
       changes['shows'] ||
       changes['selectedDate'] ||
       changes['priceRange'] ||
-      changes['showBlocked']
+      changes['showBlocked'] ||
+      changes['userRole']
     ) {
       this.filterShows();
     }
   }
 
   filterShows() {
-    if (!this.selectedDate || !this.shows) return;
+    if (!this.selectedDate || !this.shows?.length) return;
 
-    const showsForDate = this.shows.filter(
-      (s) =>
-        new Date(s.ShowDate).toDateString() ===
-          this.selectedDate.toDateString() &&
-        s.Price >= this.priceRange[0] &&
-        s.Price <= this.priceRange[1] &&
-        this.matchesBlockedFilter(s)
-    );
+    const showsForDate = this.shows.filter((show) => {
+      const showDate = this.getShowDate(show);
+      if (!showDate) {
+        return false;
+      }
 
-    const groupedByVenue: { [venueId: string]: any } = {};
+      const price = this.getPrice(show);
+
+      return (
+        showDate.toDateString() === this.selectedDate.toDateString() &&
+        price >= this.priceRange[0] &&
+        price <= this.priceRange[1] &&
+        this.matchesBlockedFilter(show)
+      );
+    });
+
+    const groupedByVenue: { [venueId: string]: { name: string; shows: ShowInput[] } } = {};
 
     showsForDate.forEach((show) => {
-      if (!groupedByVenue[show.Venue.ID]) {
-        groupedByVenue[show.Venue.ID] = {
-          name: show.Venue.Name,
+      const venueId = this.getVenueId(show);
+      const venueName = this.getVenueName(show);
+
+      if (!groupedByVenue[venueId]) {
+        groupedByVenue[venueId] = {
+          name: venueName,
           shows: [],
         };
       }
-      groupedByVenue[show.Venue.ID].shows.push(show);
+      groupedByVenue[venueId].shows.push(show);
     });
 
     this.venues = Object.values(groupedByVenue).map((venueGroup) => ({
       ...venueGroup,
-      shows: [...venueGroup.shows].sort((a: any, b: any) =>
-        this.compareByShowTime(a?.ShowTime ?? a?.show_time, b?.ShowTime ?? b?.show_time)
+      shows: [...venueGroup.shows].sort((a, b) =>
+        this.compareByShowTime(this.getShowTime(a), this.getShowTime(b))
       ),
     }));
   }
 
-  private matchesBlockedFilter(show: any): boolean {
-    const isBlocked = !!(show?.IsBlocked ?? show?.is_blocked);
-    return this.showBlocked ? isBlocked : !isBlocked;
+  private matchesBlockedFilter(show: ShowInput): boolean {
+    const isBlocked = this.isShowBlocked(show);
+
+    if (!this.canModerateShows()) {
+      return !isBlocked;
+    }
+
+    if (this.showBlocked) {
+      return isBlocked;
+    }
+
+    return true;
+  }
+
+  private isShowBlocked(show: ShowInput): boolean {
+    const rawValue = (show as any)?.is_blocked ?? (show as any)?.IsBlocked;
+    if (typeof rawValue === 'boolean') {
+      return rawValue;
+    }
+    if (typeof rawValue === 'string') {
+      const normalized = rawValue.trim().toLowerCase();
+      return normalized === 'true' || normalized === '1' || normalized === 'yes';
+    }
+    if (typeof rawValue === 'number') {
+      return rawValue === 1;
+    }
+    return false;
+  }
+
+  private canModerateShows(): boolean {
+    const role = (this.userRole ?? '').toLowerCase();
+    return role === 'admin' || role === 'host';
   }
 
   private compareByShowTime(timeA?: string, timeB?: string): number {
@@ -93,17 +137,69 @@ export class ShowsComponent implements OnChanges {
     return hours * 60 + minutes + seconds / 60;
   }
 
-  getAvailabilityColor(show: any): string {
+  getAvailabilityColor(show: ShowInput): string {
     const totalSeats = 100;
-    const bookedSeatsCount = show.BookedSeats?.length || 0;
+    const bookedSeatsCount = this.getBookedSeats(show).length;
     const availableSeats = totalSeats - bookedSeatsCount;
 
     if (availableSeats > 60) return 'green';
     if (availableSeats > 30) return 'orange';
     return 'red';
   }
-  openSeatMap(show: any) {
+  openSeatMap(show: ShowInput) {
     this.selectedShow = show;
     this.seatMapVisible = true;
+  }
+
+  getShowTime(show: ShowInput | null): string {
+    if (!show) return 'Time TBD';
+    return (
+      ((show as any)?.show_time ?? (show as any)?.ShowTime ?? 'Time TBD')
+    );
+  }
+
+  getShowPrice(show: ShowInput | null): number {
+    if (!show) return 0;
+    const price = this.getPrice(show);
+    return typeof price === 'number' ? price : 0;
+  }
+
+  private getShowDate(show: ShowInput): Date | null {
+    if (show.showDateObj instanceof Date) {
+      return show.showDateObj;
+    }
+    const raw = (show as any)?.show_date ?? (show as any)?.ShowDate;
+    if (!raw) {
+      return null;
+    }
+    if (raw instanceof Date) {
+      return raw;
+    }
+    const parsed = new Date(raw);
+    return Number.isNaN(parsed.getTime()) ? null : parsed;
+  }
+
+  private getPrice(show: ShowInput): number {
+    const value = (show as any)?.price ?? (show as any)?.Price;
+    return typeof value === 'number' ? value : 0;
+  }
+
+  private getVenue(show: ShowInput): any {
+    return (show as any)?.venue ?? (show as any)?.Venue;
+  }
+
+  private getVenueId(show: ShowInput): string {
+    const venue = this.getVenue(show);
+    return venue?.venue_id ?? venue?.ID ?? 'unknown-venue';
+  }
+
+  private getVenueName(show: ShowInput): string {
+    const venue = this.getVenue(show);
+    return venue?.venue_name ?? venue?.Name ?? 'Venue TBD';
+  }
+
+  private getBookedSeats(show: ShowInput): string[] {
+    const seats = (show as any)?.booked_seats ?? (show as any)?.BookedSeats;
+    return Array.isArray(seats) ? seats : [];
   }
 }

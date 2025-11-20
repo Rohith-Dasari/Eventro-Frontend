@@ -16,11 +16,11 @@
       (click)="onBookingClick(booking)">
       
       <ng-template pTemplate="header">
-        <img [src]="defaultImage" [alt]="booking.show_details?.Event?.Name" class="booking-img" />
+        <img [src]="defaultImage" [alt]="getEventName(booking)" class="booking-img" />
       </ng-template>
 
       <ng-template pTemplate="title">
-        {{ booking.show_details?.Event?.Name || 'Event Name Not Available' }}
+        {{ getEventName(booking) }}
       </ng-template>
 
       <ng-template pTemplate="subtitle">
@@ -28,17 +28,17 @@
           <div class="show-details">
             <span class="show-date">
               <i class="pi pi-calendar"></i>
-              {{ formatDate(booking.show_details?.ShowDate) }}
+              {{ formatDate(getShowDateRaw(booking)) }}
             </span>
             <span class="show-time">
               <i class="pi pi-clock"></i>
-              {{ booking.show_details?.ShowTime || 'Time TBD' }}
+              {{ getShowTimeDisplay(booking) }}
             </span>
           </div>
           <div class="venue-location">
             <i class="pi pi-map-marker"></i>
-            {{ booking.show_details?.Venue?.Name || 'Venue TBD' }}
-            <span *ngIf="booking.show_details?.Venue?.City">, {{ booking.show_details?.Venue?.City }}</span>
+            {{ getVenueName(booking) }}
+            <span *ngIf="getVenueCity(booking)">, {{ getVenueCity(booking) }}</span>
           </div>
           <div class="booking-details">
             <span class="seats">

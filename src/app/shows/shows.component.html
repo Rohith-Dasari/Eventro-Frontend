@@ -8,8 +8,8 @@
         class="show-card"
         (click)="openSeatMap(show)"
         [ngStyle]="{'border-color': getAvailabilityColor(show), 'color': getAvailabilityColor(show)}">
-        <div class="show-time">{{ show.ShowTime }}</div>
-        <div class="show-price">₹{{ show.Price }}</div>
+        <div class="show-time">{{ getShowTime(show) }}</div>
+        <div class="show-price">₹{{ getShowPrice(show) }}</div>
       </div>
     </div>
   </div>
@@ -23,5 +23,5 @@
 *ngIf="seatMapVisible && selectedShow"
   [(visible)]="seatMapVisible" 
   [show]="selectedShow" 
-  [price]="selectedShow?.Price">
+  [price]="getShowPrice(selectedShow)">
 </app-seat-map>

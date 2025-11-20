@@ -11,10 +11,10 @@
       <ng-container *ngIf="role === 'Host'||role==='Admin'; else customerHeader">
         <div class="host-summary">
           <span class="summary-item">
-            Tickets Sold: <b>{{ show?.BookedSeats?.length || 0 }}</b>
+            Tickets Sold: <b>{{ bookedSeatsCount }}</b>
           </span>
           <span class="summary-item">
-            Total Sale: <b>₹{{ (show?.BookedSeats?.length || 0) * price }}</b>
+            Total Sale: <b>₹{{ bookedSeatsCount * price }}</b>
           </span>
 
           <button

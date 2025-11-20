@@ -75,7 +75,7 @@
         @if(role=='Admin'||role=='Host'){
         <div class="show-status-toggle">
           <span class="status-label">
-            {{ showBlocked ? 'Blocked Shows' : 'Active Shows' }}
+            {{ showBlocked ? 'Blocked Shows Only' : 'All Shows' }}
           </span>
           <p-toggleswitch
             [(ngModel)]="showBlocked"
@@ -102,6 +102,7 @@
     [selectedDate]="selectedDate"
     [priceRange]="rangeValues"
     [showBlocked]="showBlocked"
+    [userRole]="role"
   >
   </app-shows>
 

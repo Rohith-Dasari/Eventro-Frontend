@@ -8,10 +8,11 @@ import * as QRCode from 'qrcode';
 })
 export class BookingUtilsService {
 
-  formatDate(dateString: string | undefined): string {
-    if (!dateString) return 'Date TBD';
+  formatDate(dateInput: string | Date | undefined): string {
+    if (!dateInput) return 'Date TBD';
     try {
-      const date = new Date(dateString);
+      const date =
+        dateInput instanceof Date ? dateInput : new Date(dateInput);
       return date.toLocaleDateString('en-US', {
         month: 'short',
         day: 'numeric',
@@ -24,20 +25,28 @@ export class BookingUtilsService {
 
   generateQRData(booking: EnrichedBooking | null): string {
     if (!booking) return '';
-    
+    const show = booking.show_details as any;
+    const venue = this.getVenue(show);
+    const event = this.getEvent(show);
+
+    const showDate = this.getShowDate(show);
+    const showTime = this.getShowTime(show);
+    const eventName = event?.name ?? event?.Name ?? 'Event Name Not Available';
+    const venueName = venue?.venue_name ?? venue?.Name ?? 'Venue Not Available';
+
     const qrData = {
       bookingId: booking.booking_id,
-      eventId: booking.show_details?.Event?.ID,
-      eventName: booking.show_details?.Event?.Name,
-      showId: booking.show_details?.ID,
+      eventId: show?.event_id ?? event?.ID,
+      eventName,
+      showId: show?.id ?? show?.ID,
       userId: booking.user_id,
       seats: booking.seats,
       numTickets: booking.num_tickets,
       totalAmount: booking.total_booking_price,
-      showDate: booking.show_details?.ShowDate,
-      showTime: booking.show_details?.ShowTime,
-      venueId: booking.show_details?.Venue?.ID,
-      venueName: booking.show_details?.Venue?.Name,
+      showDate,
+      showTime,
+      venueId: venue?.venue_id ?? venue?.ID,
+      venueName,
       timestamp: new Date().toISOString()
     };
     return JSON.stringify(qrData);
@@ -87,12 +96,15 @@ export class BookingUtilsService {
     doc.setFontSize(11);
     doc.setTextColor(0, 0, 0);
     
-    const eventName = booking.show_details?.Event?.Name || 'Event Name Not Available';
-    const venueName = booking.show_details?.Venue?.Name || 'Venue Not Available';
-    const venueCity = booking.show_details?.Venue?.City || '';
-    const venueState = booking.show_details?.Venue?.State || '';
-    const showDate = this.formatDate(booking.show_details?.ShowDate);
-    const showTime = booking.show_details?.ShowTime || 'Time TBD';
+    const show = booking.show_details as any;
+    const venue = this.getVenue(show);
+    const event = this.getEvent(show);
+    const venueCity = venue?.city ?? venue?.City ?? '';
+    const venueState = venue?.state ?? venue?.State ?? '';
+    const showDate = this.formatDate(this.getShowDate(show));
+    const showTime = this.getShowTime(show) || 'Time TBD';
+    const eventName = event?.name ?? event?.Name ?? 'Event Name Not Available';
+    const venueName = venue?.venue_name ?? venue?.Name ?? 'Venue Not Available';
     
     let yPos = 65;
     
@@ -141,7 +153,24 @@ export class BookingUtilsService {
     doc.text('Thank you for choosing EVENTRO!', 105, 280, { align: 'center' });
     doc.text('Please arrive 30 minutes before the show time.', 105, 290, { align: 'center' });
     
-    const fileName = `EVENTRO_Ticket_${booking.booking_id}_${eventName.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`;
+    const safeEventName = eventName.replace(/[^a-zA-Z0-9]/g, '_');
+    const fileName = `EVENTRO_Ticket_${booking.booking_id}_${safeEventName}.pdf`;
     doc.save(fileName);
+  }
+
+  private getVenue(show: any): any {
+    return show?.venue ?? show?.Venue ?? {};
+  }
+
+  private getEvent(show: any): any {
+    return show?.event ?? show?.Event ?? {};
+  }
+
+  private getShowDate(show: any): string | Date | undefined {
+    return show?.show_date ?? show?.ShowDate;
+  }
+
+  private getShowTime(show: any): string | undefined {
+    return show?.show_time ?? show?.ShowTime;
   }
 }
