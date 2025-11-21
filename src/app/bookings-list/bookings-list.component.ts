@@ -36,41 +36,33 @@ export class BookingsListComponent implements OnInit {
         console.log('bookings-list stage: raw bookings data received:', data);
         console.log('bookings-list stage: bookings count:', data.length);
         
-        const now = new Date();
+        const enriched = data.map((booking) => {
+          const rawValue = this.getShowDateRaw(booking);
+          const parsedDate = rawValue
+            ? rawValue instanceof Date
+              ? rawValue
+              : new Date(rawValue)
+            : undefined;
 
-        const upcomingBookings = data.filter((booking) => {
-          const showDateValue = this.getShowDateRaw(booking);
-          if (!showDateValue) {
-            console.log('bookings-list stage: booking missing show_date, excluding from upcoming list.', booking);
-            return false;
-          }
-
-          const showDate = showDateValue instanceof Date ? showDateValue : new Date(showDateValue);
-          const isValidDate = !Number.isNaN(showDate.getTime());
-
-          if (!isValidDate) {
-            console.log('bookings-list stage: invalid ShowDate encountered, excluding booking.', booking);
-            return false;
-          }
-
-          const isUpcoming = showDate.getTime() >= now.getTime();
-          if (!isUpcoming) {
-            console.log('bookings-list stage: filtering out past booking with show_date:', showDateValue);
-          }
-          return isUpcoming;
+          return {
+            booking,
+            showDate: parsedDate && !Number.isNaN(parsedDate.getTime()) ? parsedDate : undefined,
+          };
         });
 
-        this.bookings = upcomingBookings.sort((a, b) => {
-          const dateAValue = this.getShowDateRaw(a);
-          const dateBValue = this.getShowDateRaw(b);
-          const dateA = dateAValue
-            ? (dateAValue instanceof Date ? dateAValue : new Date(dateAValue)).getTime()
-            : Number.MAX_SAFE_INTEGER;
-          const dateB = dateBValue
-            ? (dateBValue instanceof Date ? dateBValue : new Date(dateBValue)).getTime()
-            : Number.MAX_SAFE_INTEGER;
-          return dateA - dateB;
+        const withValidDates = enriched.filter((entry) => !!entry.showDate);
+        const withoutValidDates = enriched.filter((entry) => !entry.showDate);
+
+        withValidDates.sort((a, b) => {
+          const timeA = a.showDate!.getTime();
+          const timeB = b.showDate!.getTime();
+          return timeA - timeB;
         });
+
+        this.bookings = [
+          ...withValidDates.map((entry) => entry.booking),
+          ...withoutValidDates.map((entry) => entry.booking),
+        ];
         
         console.log('bookings-list stage: bookings after sorting:', this.bookings);
         console.log('bookings-list stage: setting loading to false');
@@ -140,7 +132,7 @@ export class BookingsListComponent implements OnInit {
   }
 
   getShowTimeDisplay(booking: Booking): string {
-    const rawDate = booking.booking_date;
+    const rawDate = this.getShowDateRaw(booking);
     if (!rawDate) {
       return 'Time TBD';
     }
@@ -155,6 +147,18 @@ export class BookingsListComponent implements OnInit {
   }
 
   getShowDateRaw(booking: Booking): string | Date | undefined {
-    return booking.booking_date;
+    return this.resolveShowDate(booking);
+  }
+
+  private resolveShowDate(booking: Booking): string | Date | undefined {
+    return (
+      booking.booking_date ??
+      booking.show_date ??
+      booking.ShowDate ??
+      (booking as any)?.showDate ??
+      (booking as any)?.Show_date ??
+      (booking as any)?.bookingDate ??
+      (booking as any)?.BookingDate
+    );
   }
 }

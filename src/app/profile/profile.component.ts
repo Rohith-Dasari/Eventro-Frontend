@@ -22,7 +22,6 @@ export class ProfileComponent implements OnInit {
   role = this.user?.role || this.authService.getRole();
 
   showDetailsDialog = false;
-  upcomingCount = 2;
 
   ngOnInit() {
     this.loadProfile();

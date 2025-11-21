@@ -26,8 +26,8 @@ export class UpcomingBookingDetailsComponent {
     this.visibleChange.emit(false);
   }
 
-  formatDate(dateString: string | undefined): string {
-    return this.bookingUtils.formatDate(dateString);
+  formatDate(dateInput: string | Date | undefined): string {
+    return this.bookingUtils.formatDate(dateInput);
   }
 
   get eventName(): string {
@@ -47,12 +47,12 @@ export class UpcomingBookingDetailsComponent {
     return city || state || 'Address not available';
   }
 
-  get showDate(): string | undefined {
-    return this.booking?.booking_date;
+  get showDate(): string | Date | undefined {
+    return this.resolveShowDate();
   }
 
   get showTime(): string {
-    return this.booking ? this.bookingUtils.formatTime(this.booking.booking_date) : 'Time TBD';
+    return this.booking ? this.bookingUtils.formatTime(this.resolveShowDate()) : 'Time TBD';
   }
 
   async downloadTicketPDF() {
@@ -68,5 +68,21 @@ export class UpcomingBookingDetailsComponent {
     } finally {
       this.isGeneratingPDF = false;
     }
+  }
+
+  private resolveShowDate(): string | Date | undefined {
+    if (!this.booking) {
+      return undefined;
+    }
+
+    return (
+      this.booking.booking_date ??
+      this.booking.show_date ??
+      this.booking.ShowDate ??
+      (this.booking as any)?.showDate ??
+      (this.booking as any)?.Show_date ??
+      (this.booking as any)?.bookingDate ??
+      (this.booking as any)?.BookingDate
+    );
   }
 }

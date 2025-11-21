@@ -44,12 +44,12 @@ export class UpcomingBookingsRowComponent implements OnInit {
     return booking.event_name || `Event ${index + 1}`;
   }
 
-  getShowDate(booking: Booking): string | undefined {
-    return booking.booking_date;
+  getShowDate(booking: Booking): string | Date | undefined {
+    return this.resolveShowDate(booking);
   }
 
   getShowTime(booking: Booking): string {
-    return this.formatTime(booking.booking_date);
+    return this.formatTime(this.resolveShowDate(booking));
   }
 
   getVenueName(booking: Booking): string {
@@ -72,5 +72,17 @@ export class UpcomingBookingsRowComponent implements OnInit {
       hour: '2-digit',
       minute: '2-digit'
     });
+  }
+
+  private resolveShowDate(booking: Booking): string | Date | undefined {
+    return (
+      booking.booking_date ??
+      booking.show_date ??
+      booking.ShowDate ??
+      (booking as any)?.showDate ??
+      (booking as any)?.Show_date ??
+      (booking as any)?.bookingDate ??
+      (booking as any)?.BookingDate
+    );
   }
 }

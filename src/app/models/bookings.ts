@@ -4,6 +4,8 @@ export interface Booking {
   booking_id: string;
   show_id: string;
   time_booked: string;
+  show_date?: string;
+  ShowDate?: string;
   num_tickets_booked: number;
   total_price: number;
   seats: string[];

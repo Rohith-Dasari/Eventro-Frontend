@@ -23,6 +23,7 @@ export class BookingUtilsService {
 
   generateQRData(booking: Booking | null): string {
     if (!booking) return '';
+    const showDateValue = this.resolveShowDate(booking);
     const qrData = {
       bookingId: booking.booking_id,
       eventId: booking.event_id,
@@ -32,8 +33,8 @@ export class BookingUtilsService {
       seats: booking.seats,
       numTickets: booking.num_tickets_booked,
       totalAmount: booking.total_price,
-      showDate: booking.booking_date,
-      showTime: this.formatTime(booking.booking_date),
+      showDate: showDateValue,
+      showTime: this.formatTime(showDateValue),
       venueName: booking.venue_name,
       venueCity: booking.venue_city,
       venueState: booking.venue_state,
@@ -90,8 +91,9 @@ export class BookingUtilsService {
 
     const venueCity = booking.venue_city ?? '';
     const venueState = booking.venue_state ?? '';
-    const showDate = this.formatDate(booking.booking_date);
-    const showTime = this.formatTime(booking.booking_date) || 'Time TBD';
+    const showDateValue = this.resolveShowDate(booking);
+    const showDate = this.formatDate(showDateValue);
+    const showTime = this.formatTime(showDateValue) || 'Time TBD';
     const eventName = booking.event_name ?? 'Event Name Not Available';
     const venueName = booking.venue_name ?? 'Venue Not Available';
 
@@ -238,5 +240,17 @@ export class BookingUtilsService {
     }
 
     return new Date(year, month, day, hours, minutes, seconds);
+  }
+
+  private resolveShowDate(booking: Booking): string | Date | undefined {
+    return (
+      booking.booking_date ??
+      booking.show_date ??
+      booking.ShowDate ??
+      (booking as any)?.showDate ??
+      (booking as any)?.Show_date ??
+      (booking as any)?.bookingDate ??
+      (booking as any)?.BookingDate
+    );
   }
 }
