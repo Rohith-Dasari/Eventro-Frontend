@@ -9,18 +9,16 @@ import * as QRCode from 'qrcode';
 export class BookingUtilsService {
 
   formatDate(dateInput: string | Date | undefined): string {
-    if (!dateInput) return 'Date TBD';
-    try {
-      const date =
-        dateInput instanceof Date ? dateInput : new Date(dateInput);
-      return date.toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric'
-      });
-    } catch {
+    const date = this.parseDateInput(dateInput);
+    if (!date) {
       return 'Date TBD';
     }
+
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
   }
 
   generateQRData(booking: Booking | null): string {
@@ -133,9 +131,10 @@ export class BookingUtilsService {
   }
 
   formatTime(dateInput: string | Date | undefined): string {
-    if (!dateInput) return 'Time TBD';
-    const date = dateInput instanceof Date ? dateInput : new Date(dateInput);
-    if (Number.isNaN(date.getTime())) return 'Time TBD';
+    const date = this.parseDateInput(dateInput);
+    if (!date) {
+      return 'Time TBD';
+    }
     return date.toLocaleTimeString('en-US', {
       hour: '2-digit',
       minute: '2-digit'
@@ -182,5 +181,62 @@ export class BookingUtilsService {
     const lineHeight = 5.5;
     const consumedHeight = lineHeight * (textLines.length || 1);
     return startY + consumedHeight;
+  }
+
+  private parseDateInput(dateInput: string | Date | undefined): Date | undefined {
+    if (!dateInput) {
+      return undefined;
+    }
+
+    if (dateInput instanceof Date) {
+      return Number.isNaN(dateInput.getTime()) ? undefined : dateInput;
+    }
+
+    const trimmed = `${dateInput}`.trim();
+    if (!trimmed) {
+      return undefined;
+    }
+
+    const direct = new Date(trimmed);
+    if (!Number.isNaN(direct.getTime())) {
+      return direct;
+    }
+
+    const normalized = trimmed.replace(/\//g, '-');
+    const match = normalized.match(/^(\d{1,4})-(\d{1,2})-(\d{1,4})(?:[T\s](\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
+    if (!match) {
+      return undefined;
+    }
+
+    const [, part1, part2, part3, hourStr, minuteStr, secondStr] = match;
+    let year: number;
+    let month: number;
+    let day: number;
+
+    if ((part1?.length ?? 0) === 4) {
+      year = Number(part1);
+      month = Number(part2) - 1;
+      day = Number(part3);
+    } else if ((part3?.length ?? 0) === 4) {
+      day = Number(part1);
+      month = Number(part2) - 1;
+      year = Number(part3);
+    } else {
+      return undefined;
+    }
+
+    if ([year, month, day].some((value) => Number.isNaN(value))) {
+      return undefined;
+    }
+
+    const hours = hourStr !== undefined ? Number(hourStr) : 0;
+    const minutes = minuteStr !== undefined ? Number(minuteStr) : 0;
+    const seconds = secondStr !== undefined ? Number(secondStr) : 0;
+
+    if ([hours, minutes, seconds].some((value) => Number.isNaN(value))) {
+      return undefined;
+    }
+
+    return new Date(year, month, day, hours, minutes, seconds);
   }
 }

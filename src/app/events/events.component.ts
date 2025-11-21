@@ -12,6 +12,7 @@ import { AuthService } from '../services/auth.service';
 import { AddEventDialogComponent } from '../dashboard/add-event-dialog/add-event-dialog.component';
 import { ButtonModule } from 'primeng/button';
 import { Subscription, filter } from 'rxjs';
+import { SpinnerComponent } from '../shared/spinner/spinner.component';
 
 @Component({
   selector: 'app-events',
@@ -22,6 +23,7 @@ import { Subscription, filter } from 'rxjs';
     UpcomingBookingsRowComponent,
     AddEventDialogComponent,
     ButtonModule,
+    SpinnerComponent,
   ],
   templateUrl: './events.component.html',
   styleUrl: './events.component.scss',
@@ -192,5 +194,14 @@ export class EventsComponent implements OnInit, OnDestroy {
 
   private isEventsRoute(url: string): boolean {
     return url?.includes('/dashboard/events');
+  }
+
+  get isDashboardLoading(): boolean {
+    return (
+      this.loadingEvents ||
+      this.loadingBlockedEvents ||
+      this.loadingHostedEvents ||
+      this.loadingBookings
+    );
   }
 }
