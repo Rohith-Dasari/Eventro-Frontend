@@ -67,7 +67,10 @@ export class EventsComponent implements OnInit, OnDestroy {
   }
 
   refreshEvents() {
-    this.fetchEvents();
+    this.fetchUnblockedEvents();
+    if (this.role === 'Admin') {
+      this.fetchBlockedEvents();
+    }
   }
 
   loadData() {
@@ -75,7 +78,11 @@ export class EventsComponent implements OnInit, OnDestroy {
       this.fetchCustomerBookings();
     }
 
-    this.fetchEvents();
+    this.fetchUnblockedEvents();
+
+    if (this.role === 'Admin') {
+      this.fetchBlockedEvents();
+    }
 
     if (this.role === 'Host') {
       this.fetchHostedEvents();
@@ -101,43 +108,33 @@ export class EventsComponent implements OnInit, OnDestroy {
     console.log('Opening add event dialog');
   }
 
-  private partitionEvents(events: Event[] | undefined) {
-    const normalizedEvents = (events ?? []).map((event) => ({
-      ...event,
-      is_blocked: this.resolveBlockedFlag(event),
-    }));
-
-    this.events = normalizedEvents.filter((event) => !event.is_blocked);
-    this.blockedEvents = this.role === 'Admin'
-      ? normalizedEvents.filter((event) => event.is_blocked)
-      : [];
-  }
-
-  private resolveBlockedFlag(event: Event): boolean {
-    const possibleFlag = (event as Event & { isBlocked?: boolean }).isBlocked;
-    if (typeof possibleFlag === 'boolean') {
-      return possibleFlag;
-    }
-    if (typeof event.is_blocked === 'boolean') {
-      return event.is_blocked;
-    }
-    return false;
-  }
-
-  private fetchEvents(): void {
+  private fetchUnblockedEvents(): void {
     this.loadingEvents = true;
-    if (this.role === 'Admin') {
-      this.loadingBlockedEvents = true;
-    }
     this.eventService.getEvents().subscribe({
       next: (data) => {
-        this.partitionEvents(data);
+        this.events = data ?? [];
         this.loadingEvents = false;
+      },
+      error: (err) => {
+        console.error('Error loading unblocked events:', err);
+        this.loadingEvents = false;
+      },
+    });
+  }
+
+  private fetchBlockedEvents(): void {
+    if (this.role !== 'Admin') {
+      return;
+    }
+
+    this.loadingBlockedEvents = true;
+    this.eventService.getBlockedEvents().subscribe({
+      next: (data) => {
+        this.blockedEvents = data ?? [];
         this.loadingBlockedEvents = false;
       },
       error: (err) => {
-        console.error('Error loading events:', err);
-        this.loadingEvents = false;
+        console.error('Error loading blocked events:', err);
         this.loadingBlockedEvents = false;
       },
     });
@@ -153,11 +150,7 @@ export class EventsComponent implements OnInit, OnDestroy {
     }
     this.eventService.getEventsofShows(hostId).subscribe({
       next: (data) => {
-        const normalizedEvents = ((data as Event[]) ?? []).map((event) => ({
-          ...event,
-          is_blocked: this.resolveBlockedFlag(event),
-        }));
-        this.hostedEvents = normalizedEvents.filter((event) => !event.is_blocked);
+        this.hostedEvents = (data as Event[]) ?? [];
         this.loadingHostedEvents = false;
       },
       error: (err) => {
@@ -186,7 +179,11 @@ export class EventsComponent implements OnInit, OnDestroy {
       this.fetchCustomerBookings();
     }
 
-    this.fetchEvents();
+    this.fetchUnblockedEvents();
+
+    if (this.role === 'Admin') {
+      this.fetchBlockedEvents();
+    }
 
     if (this.role === 'Host') {
       this.fetchHostedEvents();

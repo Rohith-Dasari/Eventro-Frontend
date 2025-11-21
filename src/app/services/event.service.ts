@@ -9,9 +9,11 @@ import { CreateEventRequest, Event } from '../models/events';
 export class EventService {
   private httpClient = inject(HttpClient);
 
+  //this will only bring unblocked events
   getEvents(): Observable<Event[]> {
-    return this.httpClient.get<Event[]>('events?city=noida');
+    return this.httpClient.get<Event[]>('events?city=noida&isBlocked=false');
   }
+
   getEventByID(id: string): Observable<Event> {
     return this.httpClient.get<Event>(`events/${id}`);
   }
@@ -27,6 +29,7 @@ export class EventService {
     return this.httpClient.get<Event[]>('events', { params });
   }
 
+  //this will only bring blocked events
   getBlockedEvents(): Observable<Event[]> {
     return this.httpClient.get<Event[]>('events?city=noida&isBlocked=true');
   }
