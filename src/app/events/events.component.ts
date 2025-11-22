@@ -166,7 +166,7 @@ export class EventsComponent implements OnInit, OnDestroy {
     this.loadingBookings = true;
     this.bookingService.getBookings().subscribe({
       next: (data) => {
-        this.upcomingBookings = data;
+        this.upcomingBookings = this.filterUpcomingBookings(data);
         this.loadingBookings = false;
       },
       error: (err) => {
@@ -202,6 +202,42 @@ export class EventsComponent implements OnInit, OnDestroy {
       this.loadingBlockedEvents ||
       this.loadingHostedEvents ||
       this.loadingBookings
+    );
+  }
+
+  private filterUpcomingBookings(bookings: Booking[]): Booking[] {
+    const now = Date.now();
+
+    const enriched = bookings.map((booking) => {
+      const rawValue = this.resolveShowDate(booking);
+      const parsed = rawValue
+        ? rawValue instanceof Date
+          ? rawValue
+          : new Date(rawValue)
+        : undefined;
+
+      return {
+        booking,
+        showDate:
+          parsed && !Number.isNaN(parsed.getTime()) ? parsed : undefined,
+      };
+    });
+
+    return enriched
+      .filter((entry) => entry.showDate && entry.showDate.getTime() >= now)
+      .sort((a, b) => (a.showDate!.getTime() - b.showDate!.getTime()))
+      .map((entry) => entry.booking);
+  }
+
+  private resolveShowDate(booking: Booking): string | Date | undefined {
+    return (
+      booking.booking_date ??
+      (booking as any)?.show_date ??
+      (booking as any)?.ShowDate ??
+      (booking as any)?.showDate ??
+      (booking as any)?.Show_date ??
+      (booking as any)?.bookingDate ??
+      (booking as any)?.BookingDate
     );
   }
 }
