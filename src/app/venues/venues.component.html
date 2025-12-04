@@ -9,19 +9,35 @@
   </button>
 </div>
 
+@if(venues.length>0){
 <app-venues-row 
   [venues]="venues"
   (moderateVenue)="refreshVenues()">
 </app-venues-row>
-
-@if(blockedVenues.length>0){
-<h2 class="venues-title">Blocked Venues</h2>
+}
+@else {
+  <div class="empty-state">
+    <i class="pi pi-map-marker"></i>
+    <h3>No Active Venues</h3>
+    <p>Add a venue to start hosting events.</p>
+  </div>
 }
 
-<app-venues-row 
-  [venues]="blockedVenues"
-  (moderateVenue)="refreshVenues()">
-</app-venues-row>
+<h2 class="venues-title">Blocked Venues</h2>
+
+@if(blockedVenues.length>0){
+  <app-venues-row 
+    [venues]="blockedVenues"
+    (moderateVenue)="refreshVenues()">
+  </app-venues-row>
+}
+@else {
+  <div class="empty-state">
+    <i class="pi pi-lock"></i>
+    <h3>No Blocked Venues</h3>
+    <p>All venues are currently active.</p>
+  </div>
+}
 
 <app-add-venue-dialog
   #addVenueDialog

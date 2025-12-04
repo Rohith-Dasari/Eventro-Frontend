@@ -2,20 +2,31 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CreateEventRequest, Event } from '../models/events';
+import { ApiResponse } from '../models/api-response';
+import { mapToData } from '../shared/operators/map-to-data';
+import { LocationService } from './location.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EventService {
   private httpClient = inject(HttpClient);
+  private locationService = inject(LocationService);
 
   //this will only bring unblocked events
   getEvents(): Observable<Event[]> {
-    return this.httpClient.get<Event[]>('events?city=noida&isBlocked=false');
+    const params = new HttpParams()
+      .set('city', this.getSelectedCity())
+      .set('isBlocked', 'false');
+    return this.httpClient
+      .get<ApiResponse<Event[]>>('events', { params })
+      .pipe(mapToData<Event[]>());
   }
 
   getEventByID(id: string): Observable<Event> {
-    return this.httpClient.get<Event>(`events/${id}`);
+    return this.httpClient
+      .get<ApiResponse<Event>>(`events/${id}`)
+      .pipe(mapToData<Event>());
   }
 
   searchEventsByName(
@@ -26,12 +37,16 @@ export class EventService {
     if (category) {
       params = params.set('category', category);
     }
-    return this.httpClient.get<Event[]>('events', { params });
+    return this.httpClient
+      .get<ApiResponse<Event[]>>('events', { params })
+      .pipe(mapToData<Event[]>());
   }
 
   //this will only bring blocked events
   getBlockedEvents(): Observable<Event[]> {
-    return this.httpClient.get<Event[]>('events?city=noida&isBlocked=true');
+    return this.httpClient
+      .get<ApiResponse<Event[]>>('events?isBlocked=true')
+      .pipe(mapToData<Event[]>());
   }
 
   moderateEvent(eventID: string, isBlocked: boolean): Observable<any> {
@@ -39,40 +54,63 @@ export class EventService {
     const requestBody = {
       is_blocked: isBlocked,
     };
-    return this.httpClient.patch(`events/${eventID}`, requestBody, {
-      responseType: 'text' as 'json',
-    });
+    return this.httpClient
+      .patch<ApiResponse<any>>(`events/${eventID}`, requestBody)
+      .pipe(mapToData<any>());
   }
 
   getEventsofShows(hostID: string): Observable<Event[]> {
-    return this.httpClient.get<Event[]>(`hosts/${hostID}/events`);
+    return this.httpClient
+      .get<ApiResponse<Event[]>>(`hosts/${hostID}/events`)
+      .pipe(mapToData<Event[]>());
   }
 
   getShows(eventId: string): Observable<any> {
-    let params = new HttpParams().set('eventID', eventId).set('city', "noida");
-    return this.httpClient.get('shows', { params });
+    const params = new HttpParams()
+      .set('eventID', eventId)
+      .set('city', this.getSelectedCity());
+    return this.httpClient
+      .get<ApiResponse<any>>('shows', { params })
+      .pipe(mapToData<any>());
   }
 
   getShowsByHostAndEvent(eventId: string, hostID: string): Observable<any> {
-    let params = new HttpParams().set('eventID', eventId).set('hostID', hostID).set('city', "noida");
+    const params = new HttpParams()
+      .set('eventID', eventId)
+      .set('hostID', hostID)
+      .set('city', this.getSelectedCity());
 
-    return this.httpClient.get('shows', { params });
+    return this.httpClient
+      .get<ApiResponse<any>>('shows', { params })
+      .pipe(mapToData<any>());
   }
 
   getVenue(venueId: string): Observable<any> {
     let params = new HttpParams().set('venueId', venueId);
-    return this.httpClient.get('venues', { params });
+    return this.httpClient
+      .get<ApiResponse<any>>('venues', { params })
+      .pipe(mapToData<any>());
   }
 
   getShowById(showId: string): Observable<any> {
     let params = new HttpParams().set('showId', showId);
-    return this.httpClient.get('shows', { params });
+    return this.httpClient
+      .get<ApiResponse<any>>('shows', { params })
+      .pipe(mapToData<any>());
   }
   getShowsByHostId(hostId: string): Observable<any> {
     let params = new HttpParams().set('hostId', hostId);
-    return this.httpClient.get('shows', { params });
+    return this.httpClient
+      .get<ApiResponse<any>>('shows', { params })
+      .pipe(mapToData<any>());
   }
   addEvent(eventData: CreateEventRequest): Observable<any> {
-    return this.httpClient.post('events', eventData);
+    return this.httpClient
+      .post<ApiResponse<any>>('events', eventData)
+      .pipe(mapToData<any>());
+  }
+
+  private getSelectedCity(): string {
+    return this.locationService.getCity();
   }
 }

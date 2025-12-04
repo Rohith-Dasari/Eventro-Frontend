@@ -6,11 +6,11 @@
       (click)="onEventClick(event)">
       
       <ng-template pTemplate="header">
-        <img [src]="defaultImage" alt="{{ event.name }}" class="event-img" />
+        <img [src]="defaultImage" alt="{{ event.name | titlecase }}" class="event-img" />
       </ng-template>
 
       <ng-template pTemplate="title">
-        {{ event.name }}
+        {{ event.name | titlecase }}
       </ng-template>
 
       <ng-template pTemplate="subtitle">

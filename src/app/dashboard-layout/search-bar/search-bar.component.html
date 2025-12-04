@@ -33,7 +33,7 @@
         (pointerdown)="onResultsPointerDown()"
         (click)="selectEvent(searchEvent)"
       >
-        <span>{{ searchEvent.name }}</span>
+        <span>{{ searchEvent.name | titlecase }}</span>
         <i
           class="pi"
           [ngClass]="{

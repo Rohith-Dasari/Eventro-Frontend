@@ -6,7 +6,7 @@
       <tr>
         <td class="label-cell">{{ item.label }}</td>
         <td class="value-cell" [class.highlight]="item.label === 'Total Amount'">
-          {{ item.value }}
+          {{ (item.label === 'Event' || item.label === 'Venue' || item.label === 'Address') ? (item.value | titlecase) : item.value }}
         </td>
       </tr>
     </ng-template>

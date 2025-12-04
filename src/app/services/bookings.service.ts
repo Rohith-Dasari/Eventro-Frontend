@@ -2,6 +2,8 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
 import { Observable, of, catchError, tap } from "rxjs";
 import { BookingResponse, Booking } from "../models/bookings";
+import { ApiResponse } from "../models/api-response";
+import { mapToData } from "../shared/operators/map-to-data";
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +23,9 @@ export class BookingService {
     }
     
 
-    return this.httpClient.post<BookingResponse>('bookings', bookingRequest);
+    return this.httpClient
+      .post<ApiResponse<BookingResponse>>('bookings', bookingRequest)
+      .pipe(mapToData<BookingResponse>());
   }
 
   getBookings(): Observable<Booking[]> {
@@ -45,7 +49,8 @@ export class BookingService {
     const endpoint = `users/${userID}/bookings`;
     console.log('booking-service stage: making API call to', endpoint);
     
-    return this.httpClient.get<Booking[]>(endpoint).pipe(
+    return this.httpClient.get<ApiResponse<Booking[]>>(endpoint).pipe(
+      mapToData<Booking[]>(),
       tap(bookings => {
         console.log('booking-service stage: raw API response received:', bookings);
         console.log('booking-service stage: response length:', bookings?.length || 0);

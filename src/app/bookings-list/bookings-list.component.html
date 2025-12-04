@@ -16,11 +16,11 @@
       (click)="onBookingClick(booking)">
       
       <ng-template pTemplate="header">
-        <img [src]="defaultImage" [alt]="getEventName(booking)" class="booking-img" />
+        <img [src]="defaultImage" [alt]="getEventName(booking) | titlecase" class="booking-img" />
       </ng-template>
 
       <ng-template pTemplate="title">
-        {{ getEventName(booking) }}
+        {{ getEventName(booking) | titlecase }}
       </ng-template>
 
       <ng-template pTemplate="subtitle">
@@ -37,8 +37,8 @@
           </div>
           <div class="venue-location">
             <i class="pi pi-map-marker"></i>
-            {{ getVenueName(booking) }}
-            <span *ngIf="getVenueCity(booking)">, {{ getVenueCity(booking) }}</span>
+            {{ getVenueName(booking) | titlecase }}
+            <span *ngIf="getVenueCity(booking)">, {{ getVenueCity(booking) | titlecase }}</span>
           </div>
           <div class="booking-details">
             <span class="seats">

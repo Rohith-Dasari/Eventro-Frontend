@@ -1,10 +1,10 @@
 <div *ngIf="event && !loadingEventDetails" class="event-details-container">
   <div class="event-header">
     <div class="event-image">
-      <img src="./images/hp3.jpg" alt="{{ event.name }}" />
+      <img src="./images/hp3.jpg" alt="{{ event.name | titlecase }}" />
     </div>
     <div class="event-info">
-      <h2 class="event-name">{{ event.name }}</h2>
+      <h2 class="event-name">{{ event.name | titlecase }}</h2>
       <p class="event-artists">
         Artists: {{ event.artist_names.join(", ") || "Unknown" }}
       </p>
@@ -103,7 +103,7 @@
     [priceRange]="rangeValues"
     [showBlocked]="showBlocked"
     [userRole]="role"
-    [eventName]="event?.name"
+    [eventName]="event.name"
   >
   </app-shows>
 

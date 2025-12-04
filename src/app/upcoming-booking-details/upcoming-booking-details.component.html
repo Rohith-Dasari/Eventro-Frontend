@@ -8,10 +8,10 @@
 >
   <div *ngIf="booking" class="booking-details-dialog">
     <div class="dialog-section">
-      <div class="detail-row"><strong>Event:</strong> {{ eventName }}</div>
+      <div class="detail-row"><strong>Event:</strong> {{ eventName | titlecase }}</div>
       <div class="detail-row"><strong>Booking ID:</strong> {{ booking.booking_id }}</div>
-      <div class="detail-row"><strong>Venue:</strong> {{ venueName }}</div>
-      <div class="detail-row"><strong>Address:</strong> {{ venueAddress }}</div>
+      <div class="detail-row"><strong>Venue:</strong> {{ venueName | titlecase }}</div>
+      <div class="detail-row"><strong>Address:</strong> {{ venueAddress | titlecase }}</div>
       <div class="detail-row">
         <strong>Date & Time:</strong> {{ formatDate(showDate) }}, {{ showTime }}
       </div>

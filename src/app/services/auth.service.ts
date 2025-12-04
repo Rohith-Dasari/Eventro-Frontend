@@ -5,6 +5,8 @@ import { AuthResponse} from '../models/login-response';
 import { tap } from 'rxjs';
 import { User, UserProfile } from '../models/user';
 import { jwtDecode } from 'jwt-decode';
+import { ApiResponse } from '../models/api-response';
+import { mapToData } from '../shared/operators/map-to-data';
 
 @Injectable({
   providedIn: 'root'
@@ -24,16 +26,15 @@ export class AuthService {
   }
 
   login(email: string, password: string) {
-    return this.httpClient.post<AuthResponse>('login', {
+    return this.httpClient.post<ApiResponse<AuthResponse | string>>('login', {
       email: email,
       password: password
-    }).pipe(tap(val => {
+    }).pipe(
+      mapToData<AuthResponse | string>(),
+      tap(val => {
       try {
-        const user = this.tokenParser(val.token);
-        this.userSignal.set(user);
-        localStorage.setItem('user', JSON.stringify(user));
-        localStorage.setItem('token',val.token);
-        this.persistUserMetadata(user);
+        const token = this.extractToken(val);
+        this.handleAuthSuccess(token);
       } catch (e) {
         console.log(e);
       }
@@ -63,18 +64,17 @@ export class AuthService {
   }
 
  signup(username:string,email:string,phoneNumber:string,password:string){
-  return this.httpClient.post<AuthResponse>('signup', {
+  return this.httpClient.post<ApiResponse<AuthResponse | string>>('signup', {
     username:username,
     phone_number:phoneNumber,
       email: email,
       password: password
-    }).pipe(tap(val => {
+    }).pipe(
+      mapToData<AuthResponse | string>(),
+      tap(val => {
       try {
-        const user = this.tokenParser(val.token);
-        this.userSignal.set(user);
-        localStorage.setItem('user', JSON.stringify(user));
-        localStorage.setItem('token',val.token);
-        this.persistUserMetadata(user);
+        const token = this.extractToken(val);
+        this.handleAuthSuccess(token);
       } catch (e) {
         console.log(e);
       }
@@ -89,7 +89,9 @@ export class AuthService {
   }
   
   getUserByMailID(email: string) {
-    return this.httpClient.get<UserProfile>(`users/email/${email}`);
+    return this.httpClient
+      .get<ApiResponse<UserProfile>>(`users/email/${email}`)
+      .pipe(mapToData<UserProfile>());
   }
 
   private persistUserMetadata(user: User | null) {
@@ -106,5 +108,26 @@ export class AuthService {
     if (user.role) {
       localStorage.setItem('role', user.role);
     }
+  }
+
+  private extractToken(payload: AuthResponse | string | null | undefined): string {
+    if (!payload) {
+      throw new Error('Missing token payload');
+    }
+    if (typeof payload === 'string') {
+      return payload;
+    }
+    if (payload.token) {
+      return payload.token;
+    }
+    throw new Error('Token not found in response payload');
+  }
+
+  private handleAuthSuccess(token: string) {
+    const user = this.tokenParser(token);
+    this.userSignal.set(user);
+    localStorage.setItem('user', JSON.stringify(user));
+    localStorage.setItem('token', token);
+    this.persistUserMetadata(user);
   }
 }

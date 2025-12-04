@@ -79,6 +79,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 0.75rem;
       padding: 10px 14px;
       cursor: pointer;
       border-bottom: 1px solid #f2f2f2;
@@ -88,9 +89,34 @@
         background: #f8f8ff;
       }
 
+      .result-text {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+
+        .result-title {
+          font-weight: 600;
+          color: #1f2937;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .result-subtitle {
+          color: #6b7280;
+          display: block;
+          margin-top: 2px;
+          font-size: 0.8rem;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+
       i {
         color: #666;
         font-size: 1rem;
+        flex-shrink: 0;
       }
     }
   }
@@ -147,11 +173,9 @@
       padding: 6px;
       font-size: 0.8rem;
 
-      span {
+      .result-title,
+      .result-subtitle {
         max-width: calc(100% - 30px);
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
       }
 
       i {

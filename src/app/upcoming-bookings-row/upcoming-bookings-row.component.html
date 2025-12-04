@@ -1,32 +1,42 @@
 <div class="bookings-row">
   <h2>{{ title }}</h2>
 
-  <div class="cards-container">
-    <p-card 
-      *ngFor="let booking of bookings; let i = index" 
-      class="booking-card"
-      (click)="onBookingClick(booking)">
-      
-      <ng-template pTemplate="header">
-        <img [src]="defaultImage" alt="{{ getEventName(booking, i) }}" class="booking-img" />
-      </ng-template>
+  <ng-container *ngIf="bookings?.length; else noBookings">
+    <div class="cards-container">
+      <p-card 
+        *ngFor="let booking of bookings; let i = index" 
+        class="booking-card"
+        (click)="onBookingClick(booking)">
+        
+        <ng-template pTemplate="header">
+          <img [src]="defaultImage" alt="{{ getEventName(booking, i) | titlecase }}" class="booking-img" />
+        </ng-template>
 
-      <ng-template pTemplate="title">
-        {{ getEventName(booking, i) }}
-      </ng-template>
+        <ng-template pTemplate="title">
+          {{ getEventName(booking, i) | titlecase }}
+        </ng-template>
 
-      <ng-template pTemplate="subtitle">
-        <div class="booking-info">
-          <div class="show-details">
-            <span class="show-date">{{ formatDate(getShowDate(booking)) }}</span>
-            <span class="show-time">{{ getShowTime(booking) }}</span>
+        <ng-template pTemplate="subtitle">
+          <div class="booking-info">
+            <div class="show-details">
+              <span class="show-date">{{ formatDate(getShowDate(booking)) }}</span>
+              <span class="show-time">{{ getShowTime(booking) }}</span>
+            </div>
+            <div class="venue-location">
+              {{ getVenueName(booking) | titlecase }}, {{ getVenueCity(booking) | titlecase }}
+            </div>
           </div>
-          <div class="venue-location">
-            {{ getVenueName(booking) }}, {{ getVenueCity(booking) }}
-          </div>
-        </div>
-      </ng-template>
+        </ng-template>
 
-    </p-card>
-  </div>
+      </p-card>
+    </div>
+  </ng-container>
+
+  <ng-template #noBookings>
+    <div class="empty-state">
+      <i class="pi pi-calendar-times"></i>
+      <h3>No Upcoming Bookings</h3>
+      <p>Your future tickets will appear here once you make a booking.</p>
+    </div>
+  </ng-template>
 </div>

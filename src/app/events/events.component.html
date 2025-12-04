@@ -1,13 +1,22 @@
 <app-spinner [visible]="isDashboardLoading"></app-spinner>
 
-@if(role=="Customer" && upcomingBookings.length>0){
-<app-upcoming-bookings-row 
-  title="Upcoming Bookings"
-  [bookings]="upcomingBookings"
-  [defaultImage]="defaultImage"
-  (bookingClick)="onBookingClick($event)" 
-  >
-</app-upcoming-bookings-row>
+@if(role=="Customer"){
+  @if(upcomingBookings.length>0){
+  <app-upcoming-bookings-row 
+    title="Upcoming Bookings"
+    [bookings]="upcomingBookings"
+    [defaultImage]="defaultImage"
+    (bookingClick)="onBookingClick($event)" 
+    >
+  </app-upcoming-bookings-row>
+  }
+  @else {
+    <div class="empty-state">
+      <i class="pi pi-calendar-times"></i>
+      <h3>No Upcoming Bookings</h3>
+      <p>Browse events nearby to plan your next outing.</p>
+    </div>
+  }
 }
 
 <app-upcoming-booking-details
@@ -16,7 +25,7 @@
 </app-upcoming-booking-details>
 
 <div class="events-header">
-  <h2 class="events-title">{{ role === 'Admin' ? 'Unblocked Events' : 'Events Near You' }}</h2>
+  <h2 class="events-title">{{ role === 'Admin' ? 'Unblocked Events Near You' : 'Events Near You' }}</h2>
 
   <button
     *ngIf="role === 'Admin'||role==='Host'"
@@ -27,20 +36,38 @@
   </button>
 </div>
 
+@if(events.length>0){
 <app-events-row 
   [events]="events"
   [defaultImage]="defaultImage"
   (eventClick)="goToEventDetails($event)">
 </app-events-row>
+}
+@else {
+  <div class="empty-state">
+    <i class="pi pi-calendar"></i>
+    <h3>No Events Nearby</h3>
+    <p>Try another location or check back soon for new events.</p>
+  </div>
+}
 
-@if (role=="Admin" && blockedEvents.length>0){
-<h2 class="events-title">Blocked Events</h2>
+@if (role=="Admin"){
+  <h2 class="events-title">Blocked Events</h2>
 
-<app-events-row 
-  [events]="blockedEvents"
-  [defaultImage]="defaultImage"
-  (eventClick)="goToEventDetails($event)">
-</app-events-row>
+  @if(blockedEvents.length>0){
+  <app-events-row 
+    [events]="blockedEvents"
+    [defaultImage]="defaultImage"
+    (eventClick)="goToEventDetails($event)">
+  </app-events-row>
+  }
+  @else {
+    <div class="empty-state">
+      <i class="pi pi-lock"></i>
+      <h3>No Blocked Events</h3>
+      <p>All events are currently visible to attendees.</p>
+    </div>
+  }
 }
 
 <app-add-event-dialog
@@ -48,12 +75,20 @@
   (eventAdded)="refreshEvents()">
 </app-add-event-dialog>
 
-@if (role=="Host"&&hostedEvents.length>0){
+@if (role=="Host"){
   <h2 class ="events-title">Events Hosted By You</h2>
-  <app-events-row 
-  [events]="hostedEvents"
-  [defaultImage]="defaultImage"
-  (eventClick)="goToEventDetails($event)">
-</app-events-row>
-
+  @if(hostedEvents.length>0){
+    <app-events-row 
+      [events]="hostedEvents"
+      [defaultImage]="defaultImage"
+      (eventClick)="goToEventDetails($event)">
+    </app-events-row>
+  }
+  @else {
+    <div class="empty-state">
+      <i class="pi pi-ticket"></i>
+      <h3>No Hosted Events</h3>
+      <p>Use the add button to create your first event.</p>
+    </div>
+  }
 }

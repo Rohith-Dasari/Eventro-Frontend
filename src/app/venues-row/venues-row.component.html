@@ -2,11 +2,11 @@
   <div class="cards-container">
     <p-card *ngFor="let venue of venues" class="venue-card">
       <ng-template pTemplate="title">
-        {{ venue.Name }}
+        {{ venue.Name|titlecase }}
       </ng-template>
 
       <ng-template pTemplate="subtitle">
-        {{ venue.City }}, {{ venue.State }}
+        {{ venue.City|titlecase }}, {{ venue.State|titlecase }}
       </ng-template>
 
       <ng-template pTemplate="content">

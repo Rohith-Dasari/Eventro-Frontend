@@ -1,6 +1,6 @@
 <div class="venues" *ngIf="venues.length">
   <div class="venue-card" *ngFor="let venue of venues">
-    <h4 class="venue-name">{{ venue.name }}</h4>
+    <h4 class="venue-name">{{ venue.name |titlecase }}</h4>
     <p class="show-timings-label">Show Timings:</p>
     <div class="show-timings">
       <div

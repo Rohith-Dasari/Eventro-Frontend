@@ -18,6 +18,7 @@
       [(ngModel)]="selectedLocation"
       optionLabel="label"
       placeholder="Select Location"
+      (onChange)="onLocationChange($event.value)"
       class="location-dropdown"
     ></p-dropdown>
   </div>

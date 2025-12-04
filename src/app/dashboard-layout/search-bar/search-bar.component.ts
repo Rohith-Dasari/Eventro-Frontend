@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output, OnDestroy, ViewChild, ElementRef, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subject, debounceTime, distinctUntilChanged, switchMap, takeUntil } from 'rxjs';
+import { Subject, debounceTime, distinctUntilChanged, map, switchMap, takeUntil } from 'rxjs';
 import { EventService } from '../../services/event.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';

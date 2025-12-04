@@ -9,6 +9,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { MenubarModule } from 'primeng/menubar';
 import { filter } from 'rxjs/operators';
 import { SearchBarComponent } from './search-bar/search-bar.component';
+import { LocationService } from '../services/location.service';
 
 @Component({
   selector: 'app-dashboard-layout',
@@ -33,7 +34,7 @@ export class DashboardLayoutComponent {
 
   navItems: NavItem[] = [];
 
-  constructor(private auth: AuthService, private router: Router) {
+  constructor(private auth: AuthService, private router: Router, private locationService: LocationService) {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: NavigationEnd) => {
@@ -52,6 +53,7 @@ export class DashboardLayoutComponent {
     }
 
     this.selectedLocation = this.locations[0];
+    this.locationService.setCity(this.selectedLocation?.value);
     this.setNavItems();
     
     this.currentRoute = this.router.url;
@@ -94,6 +96,10 @@ export class DashboardLayoutComponent {
   goToEvents(event?: Event) {
     event?.preventDefault();
     this.router.navigate(['/dashboard/events']);
+  }
+
+  onLocationChange(location: { label: string; value: string } | null) {
+    this.locationService.setCity(location?.value);
   }
 
 

@@ -11,8 +11,9 @@ import { UpcomingBookingDetailsComponent } from '../upcoming-booking-details/upc
 import { AuthService } from '../services/auth.service';
 import { AddEventDialogComponent } from '../dashboard/add-event-dialog/add-event-dialog.component';
 import { ButtonModule } from 'primeng/button';
-import { Subscription, filter } from 'rxjs';
+import { Subscription, filter, distinctUntilChanged, skip } from 'rxjs';
 import { SpinnerComponent } from '../shared/spinner/spinner.component';
+import { LocationService } from '../services/location.service';
 
 @Component({
   selector: 'app-events',
@@ -34,7 +35,9 @@ export class EventsComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private eventService = inject(EventService);
   private bookingService = inject(BookingService);
+  private locationService = inject(LocationService);
   private navigationSub?: Subscription;
+  private locationSub?: Subscription;
 
   upcomingBookings: Booking[] = [];
   events: Event[] = [];
@@ -62,16 +65,26 @@ export class EventsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadData();
+
+    this.locationSub = this.locationService.city$
+      .pipe(distinctUntilChanged(), skip(1))
+      .subscribe(() => {
+        this.refreshEvents();
+      });
   }
 
   ngOnDestroy(): void {
     this.navigationSub?.unsubscribe();
+    this.locationSub?.unsubscribe();
   }
 
   refreshEvents() {
     this.fetchUnblockedEvents();
     if (this.role === 'Admin') {
       this.fetchBlockedEvents();
+    }
+    if (this.role === 'Host') {
+      this.fetchHostedEvents();
     }
   }
 
