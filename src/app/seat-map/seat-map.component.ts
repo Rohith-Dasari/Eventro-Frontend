@@ -44,6 +44,7 @@ export class SeatMapComponent implements OnInit, OnChanges {
   userNotFound = false;
 
   bookingSummary = `Total Number of Tickets Booked: 0   Total Sale: ₹0`;
+  blockedNotice = '';
 
   @Input() visible = false;
   @Output() visibleChange = new EventEmitter<boolean>();
@@ -60,12 +61,14 @@ export class SeatMapComponent implements OnInit, OnChanges {
       this.initializeSeats();
     }
     this.updateBookingSummary();
+    this.updateBlockedNotice();
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['show'] && changes['show'].currentValue) {
       this.initializeSeats();
       this.updateBookingSummary();
+      this.updateBlockedNotice();
     }
 
     if (changes['price']) {
@@ -113,6 +116,9 @@ export class SeatMapComponent implements OnInit, OnChanges {
 
   toggleSeat(row: number, seat: number) {
     if (this.role == 'Host') {
+      return;
+    }
+    if (this.isShowBlocked) {
       return;
     }
     const seatObj = this.seats.find((s) => s.row === row && s.seat === seat);
@@ -205,6 +211,10 @@ export class SeatMapComponent implements OnInit, OnChanges {
   }
 
   makeBookingData() {
+    if (this.isShowBlocked) {
+      this.errorMessage = 'This show is currently blocked. Please try again later.';
+      return;
+    }
     if (this.selectedSeats.length === 0) {
       this.errorMessage = 'Please select at least one seat.';
       return;
@@ -297,6 +307,10 @@ export class SeatMapComponent implements OnInit, OnChanges {
             (this.show as any).is_blocked = shouldBlock;
           }
         }
+        if (shouldBlock) {
+          this.clearSelectedSeats();
+        }
+        this.updateBlockedNotice();
 
         this.messageService.add({
           severity: 'success',
@@ -379,5 +393,21 @@ export class SeatMapComponent implements OnInit, OnChanges {
 
   private isShowCurrentlyBlocked(): boolean {
     return !!((this.show as any)?.is_blocked ?? (this.show as any)?.IsBlocked);
+  }
+
+  private updateBlockedNotice() {
+    if (this.isShowBlocked && this.role !== 'Host') {
+      this.blockedNotice =
+        'This show is currently blocked. Seat selection is disabled until it is unblocked.';
+    } else {
+      this.blockedNotice = '';
+      if (this.errorMessage === 'This show is currently blocked. Please try again later.') {
+        this.errorMessage = '';
+      }
+    }
+  }
+
+  private clearSelectedSeats() {
+    this.seats = this.seats.map((seat) => ({ ...seat, isSelected: false }));
   }
 }
