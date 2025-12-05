@@ -13,7 +13,6 @@ export class BookingService {
 
   addBooking(showId: string, seats: string[], userIdentifier?: string | null): Observable<BookingResponse> {
     const bookingRequest: any = {
-      user_id:userIdentifier,
       show_id: showId,
       seats: seats,
     };

@@ -154,7 +154,11 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
     }
     
     console.log('API call stage: calling addBooking');
-    this.bookingService.addBooking(this.showId, seats, this.bookingData.customerEmail).subscribe({
+    this.bookingService.addBooking(
+      this.showId,
+      seats,
+      isAdminBooking ? adminUserIdentifier : null
+    ).subscribe({
       next: (response) => {
         console.log('API success stage: response:', response);
         
