@@ -39,7 +39,7 @@ export class SeatMapComponent implements OnInit, OnChanges {
   private messageService = inject(MessageService);
   isBlocking = false;
 
-  role = this.auth.getRole();
+  role = (this.auth.getRole() || '').toLowerCase();
   adminUserEmail = '';
   userNotFound = false;
 
@@ -115,7 +115,7 @@ export class SeatMapComponent implements OnInit, OnChanges {
   errorMessage: string = '';
 
   toggleSeat(row: number, seat: number) {
-    if (this.role == 'Host') {
+    if (this.role === 'host') {
       return;
     }
     if (this.isShowBlocked) {
@@ -174,13 +174,13 @@ export class SeatMapComponent implements OnInit, OnChanges {
     this.bookingData = this.makeBookingData();
     if (!this.bookingData) return;
 
-    const role = this.auth.getRole();
+    const role = (this.auth.getRole() || '').toLowerCase();
 
-    if (role === 'Customer') {
+    if (role === 'customer') {
       this.bookingData.userID = this.auth.getID();
       this.persistBookingContext(this.show?.ID || '');
       this.onConfirmBooking(this.bookingData);
-    } else if (role === 'Admin') {
+    } else if (role === 'admin') {
       const mailID = this.adminUserEmail.trim();
       if (!mailID) {
         this.errorMessage = 'Please enter a user email before confirming.';
@@ -396,7 +396,7 @@ export class SeatMapComponent implements OnInit, OnChanges {
   }
 
   private updateBlockedNotice() {
-    if (this.isShowBlocked && this.role !== 'Host') {
+    if (this.isShowBlocked && this.role !== 'host') {
       this.blockedNotice =
         'This show is currently blocked. Seat selection is disabled until it is unblocked.';
     } else {

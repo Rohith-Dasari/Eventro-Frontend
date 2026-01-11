@@ -8,7 +8,7 @@
 >
   <ng-template pTemplate="header">
     <div class="header-bar">
-      <ng-container *ngIf="role === 'Host'||role==='Admin'; else customerHeader">
+      <ng-container *ngIf="role === 'host'||role==='admin'; else customerHeader">
         <div class="host-summary">
           <span class="summary-item">
             Tickets Sold: <b>{{ bookedSeatsCount }}</b>
@@ -55,7 +55,7 @@
           <button
             *ngFor="let col of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
             (click)="toggleSeat(row, col)"
-            [disabled]="getSeat(row, col)?.isBooked || isShowBlocked || role === 'Host'"
+            [disabled]="getSeat(row, col)?.isBooked || isShowBlocked || role === 'host'"
             [class]="getSeatClass(getSeat(row, col)!)"
             [attr.data-seat]="getRowLetter(row) + col"
             [attr.data-booked]="getSeat(row, col)?.isBooked"
@@ -81,7 +81,7 @@
           <div class="total">Total: ₹{{ totalPrice }}</div>
         </div>
 
-        <div *ngIf="role === 'Admin'" class="admin-input-box">
+        <div *ngIf="role === 'admin'" class="admin-input-box">
           <input
             id="adminEmail"
             type="email"

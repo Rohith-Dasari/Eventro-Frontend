@@ -31,13 +31,14 @@ export class LoginComponent {
 
     const loginSubscription=this.authService.login(this.email,this.password).subscribe({
       next:()=>{
+        this.loading = false;
         this.router.navigate(['dashboard','events'])
       },
       error: (err) => {
         console.error('Login failed:', err);
         this.loginError = true;
         this.loading = false;
-        setTimeout(() => (this.loading = false), 3000);
+        setTimeout(() => (this.loginError = false), 3000);
       }
     })
     

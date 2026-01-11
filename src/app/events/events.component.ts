@@ -31,7 +31,7 @@ import { LocationService } from '../services/location.service';
 })
 export class EventsComponent implements OnInit, OnDestroy {
   private auth = inject(AuthService);
-  role = this.auth.getRole();
+  role = (this.auth.getRole() || '').toLowerCase();
   private router = inject(Router);
   private eventService = inject(EventService);
   private bookingService = inject(BookingService);
@@ -80,26 +80,26 @@ export class EventsComponent implements OnInit, OnDestroy {
 
   refreshEvents() {
     this.fetchUnblockedEvents();
-    if (this.role === 'Admin') {
+    if (this.role === 'admin') {
       this.fetchBlockedEvents();
     }
-    if (this.role === 'Host') {
+    if (this.role === 'host') {
       this.fetchHostedEvents();
     }
   }
 
   loadData() {
-    if (this.role === 'Customer') {
+    if (this.role === 'customer') {
       this.fetchCustomerBookings();
     }
 
     this.fetchUnblockedEvents();
 
-    if (this.role === 'Admin') {
+    if (this.role === 'admin') {
       this.fetchBlockedEvents();
     }
 
-    if (this.role === 'Host') {
+    if (this.role === 'host') {
       this.fetchHostedEvents();
     }
 
@@ -138,7 +138,7 @@ export class EventsComponent implements OnInit, OnDestroy {
   }
 
   private fetchBlockedEvents(): void {
-    if (this.role !== 'Admin') {
+    if (this.role !== 'admin') {
       return;
     }
 
@@ -190,17 +190,17 @@ export class EventsComponent implements OnInit, OnDestroy {
   }
 
   private refreshDataOnNavigation(): void {
-    if (this.role === 'Customer') {
+    if (this.role === 'customer') {
       this.fetchCustomerBookings();
     }
 
     this.fetchUnblockedEvents();
 
-    if (this.role === 'Admin') {
+    if (this.role === 'admin') {
       this.fetchBlockedEvents();
     }
 
-    if (this.role === 'Host') {
+    if (this.role === 'host') {
       this.fetchHostedEvents();
     }
   }

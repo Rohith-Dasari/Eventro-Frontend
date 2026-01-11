@@ -136,8 +136,8 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
     }
 
     const seats = this.bookingData.seats || [];
-    const role = this.authService.getRole();
-    const isAdminBooking = role === 'Admin';
+    const role = (this.authService.getRole() || '').toLowerCase();
+    const isAdminBooking = role === 'admin';
     const adminUserIdentifier = isAdminBooking
       ? this.bookingData.bookedForEmail || this.bookingData.customerEmail || ''
       : null;
@@ -198,7 +198,7 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (role === 'Customer') {
+    if (role === 'customer') {
       const currentUserId = this.authService.getID();
       if (currentUserId) {
         this.bookingData.userID = currentUserId;
@@ -208,7 +208,7 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (role === 'Admin') {
+    if (role === 'admin') {
       const customerEmail = this.bookingData.bookedForEmail || this.bookingData.customerEmail;
       if (!customerEmail) {
         console.warn('user resolution stage: admin booking missing customer email');

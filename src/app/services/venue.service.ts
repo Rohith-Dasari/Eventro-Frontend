@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { createVenue, Venues } from '../models/venues';
@@ -15,13 +15,21 @@ export class VenueService {
 
   getVenues(hostId: string): Observable<Venues[]> {
     return this.httpClient
-      .get<ApiResponse<Venues[]>>(`host/${hostId}/venues`)
+      .get<ApiResponse<Venues[]>>(`hosts/${hostId}/venues`)
+      .pipe(mapToData<Venues[]>());
+  }
+
+  getUnblockedVenues(hostId: string): Observable<Venues[]> {
+    const params = new HttpParams().set('is_blocked', 'false');
+    return this.httpClient
+      .get<ApiResponse<Venues[]>>(`hosts/${hostId}/venues`, { params })
       .pipe(mapToData<Venues[]>());
   }
 
   getBlockedVenues(hostId: string): Observable<Venues[]> {
+    const params = new HttpParams().set('is_blocked', 'true');
     return this.httpClient
-      .get<ApiResponse<Venues[]>>(`host/${hostId}/venues?isBlocked=true`)
+      .get<ApiResponse<Venues[]>>(`hosts/${hostId}/venues`, { params })
       .pipe(mapToData<Venues[]>());
   }
 

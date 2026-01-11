@@ -54,7 +54,7 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
   visible = false;
 
   ngOnInit(): void {
-    this.role = this.authService.getRole() as string;
+    this.role = (this.authService.getRole() || '').toLowerCase();
     this.event = history.state?.selectedEvent;
   //  this.eventService.getEventByID(this.event.id);
     console.log("event-details stage: event from history",this.event);
@@ -102,7 +102,7 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
     }
     let shows$;
 
-    if (this.role === 'Host') {
+    if (this.role === 'host') {
       const hostID = this.authService.getID();
       if (!hostID) {
         console.warn('Host ID missing, unable to load host-specific shows');

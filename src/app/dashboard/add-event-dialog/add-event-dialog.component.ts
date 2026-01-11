@@ -26,10 +26,9 @@ export class AddEventDialogComponent {
   newEvent: CreateEventRequest = {
     name: '',
     description: '',
-    duration: '',
+    duration: 0,
     category: '',
-    artist_ids: ['1'],
-    artist_names: ['Artist1']
+    artist_ids: ['d4ded874-ffd1-435a-8dc3-6b2ca0f216cf']
   };
 
   durationInt: number | null = null;
@@ -61,10 +60,9 @@ export class AddEventDialogComponent {
     this.newEvent = {
       name: '',
       description: '',
-      duration: '',
+      duration: 0,
       category: '',
-      artist_ids: ['1'],
-      artist_names: ['Artist1']
+      artist_ids: ['d4ded874-ffd1-435a-8dc3-6b2ca0f216cf']
     };
     this.durationInt = null;
   }
@@ -88,7 +86,7 @@ export class AddEventDialogComponent {
 
     const payload: CreateEventRequest = {
       ...this.newEvent,
-      duration: this.transform(this.durationInt as number),
+      duration: this.durationInt as number,
     };
 
     const eventName = this.newEvent.name;
@@ -117,11 +115,4 @@ export class AddEventDialogComponent {
     });
   }
 
-  transform(minutes:number): string {
-    if (minutes === null || minutes === undefined) {
-      return '';
-    }
-    const decimalHours = minutes / 60;
-    return `${decimalHours.toFixed(1)}h`;
-  }
 }

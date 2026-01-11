@@ -20,56 +20,56 @@ export const routes: Routes = [
         loadComponent:()=>
           import('./events/events.component').then(m=>m.EventsComponent),
         canActivate: [AuthGuard],
-        data: { roles: ['Customer', 'Admin', 'Host'] },
+        data: { roles: ['customer', 'admin', 'host'] },
       },
       {
         path: 'events/:id',
         loadComponent:()=>
           import('./event-details/event-details.component').then(m=>m.EventDetailsComponent),
         canActivate: [AuthGuard],
-        data: { roles: ['Customer', 'Admin','Host'] },
+        data: { roles: ['customer', 'admin','host'] },
       },
       {
         path: 'booking-confirmation',
         loadComponent:()=>
           import('./booking-confirmation/booking-confirmation.component').then(m=>m.BookingConfirmationComponent),
         canActivate: [AuthGuard],
-        data: { roles: ['Customer','Admin'] },
+        data: { roles: ['customer','admin'] },
       },
       {
         path: 'payment-success',
         loadComponent:()=>
           import('./payment-success/payment-success.component').then(m=>m.PaymentSuccessComponent),
         canActivate: [AuthGuard],
-        data: { roles: ['Customer','Admin'] },
+        data: { roles: ['customer','admin'] },
       },
       {
         path: 'profile',
         loadComponent:()=>
           import('./profile/profile.component').then(m=>m.ProfileComponent),
         canActivate: [AuthGuard],
-        data: { roles: ['Customer', 'Host', 'Admin'] },
+        data: { roles: ['customer', 'host', 'admin'] },
       },
       {
         path: 'artists',
         loadComponent:()=>
           import('./artists/artists.component').then(m=>m.ArtistsComponent),
         canActivate: [AuthGuard],
-        data: { roles: ['Admin'] },
+        data: { roles: ['admin'] },
       },
       {
         path: 'venues',
         loadComponent:()=>
           import('./venues/venues.component').then(m=>m.VenuesComponent),
         canActivate: [AuthGuard],
-        data: { roles: ['Host'] },
+        data: { roles: ['host'] },
       },
       {
         path: 'bookings',
         loadComponent:()=>
           import('./bookings-list/bookings-list.component').then(m=>m.BookingsListComponent),
         canActivate: [AuthGuard],
-        data: { roles: ['Customer'] },
+        data: { roles: ['customer'] },
       },
       { path: '', redirectTo: 'events', pathMatch: 'full' },
     ],

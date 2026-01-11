@@ -47,9 +47,9 @@ export class DashboardLayoutComponent {
 
     if (user) {
       this.username = user.email;
-      this.role = user.role;
+      this.role = (user.role || '').toLowerCase();
     } else {
-      this.role = 'Customer'; 
+      this.role = 'customer'; 
     }
 
     this.selectedLocation = this.locations[0];
@@ -61,14 +61,14 @@ export class DashboardLayoutComponent {
 
   setNavItems() {
     switch (this.role) {
-      case 'Customer':
+      case 'customer':
         this.navItems = [
           { label: 'Events', path: '/dashboard/events' },       
           { label: 'Profile', path: '/dashboard/profile' },
         ];
         break;
 
-      case 'Host':
+      case 'host':
         this.navItems = [          
           { label: 'Events', path: '/dashboard/events' },
           { label: 'Venues', path: '/dashboard/venues' },
@@ -76,7 +76,7 @@ export class DashboardLayoutComponent {
         ];
         break;
 
-      case 'Admin':
+      case 'admin':
         this.navItems = [
           { label: 'Events', path: '/dashboard/events' },
           { label: 'Profile', path: '/dashboard/profile' },

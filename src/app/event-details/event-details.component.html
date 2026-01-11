@@ -14,7 +14,7 @@
       <p class="event-description">
         {{ event.description || "No description available." }}
       </p>
-      @if(role=="Admin"){
+      @if(role=="admin"){
       <div class="moderation-controls">
         <p>{{ status }}</p>
         <p-toggleswitch
@@ -22,10 +22,10 @@
           (ngModelChange)="onToggle($event)"
           onLabel="Blocked"
           offLabel="Active"
-          [disabled]="role !== 'Admin' || isModerating"
+          [disabled]="role !== 'admin' || isModerating"
         />
       </div>
-      } @if(role=="Host" && !event.is_blocked){
+      } @if(role=="host" && !event.is_blocked){
       <p-button
         label="Add Show"
         severity="success"
@@ -72,7 +72,7 @@
         </div>
         <span class="price-label max-price">₹{{ rangeValues[1] }}</span>
 
-        @if(role=='Admin'||role=='Host'){
+        @if(role=='admin'||role=='host'){
         <div class="show-status-toggle">
           <span class="status-label">
             {{ showBlocked ? 'Blocked Shows Only' : 'All Shows' }}

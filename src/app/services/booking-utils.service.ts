@@ -29,9 +29,8 @@ export class BookingUtilsService {
       eventId: booking.event_id,
       eventName: booking.event_name,
       showId: booking.show_id,
-      userEmail: booking.user_email,
       seats: booking.seats,
-      numTickets: booking.num_tickets_booked,
+      numTickets: booking.seats.length,
       totalAmount: booking.total_price,
       showDate: showDateValue,
       showTime: this.formatTime(showDateValue),
@@ -112,20 +111,19 @@ export class BookingUtilsService {
     yPos = this.addSection(doc, 'Booking Details', [
       { label: 'Booking ID', value: booking.booking_id },
       { label: 'Seats', value: booking.seats.join(', ') || 'N/A' },
-      { label: 'Number of Tickets', value: `${booking.num_tickets_booked}` },
+      { label: 'No. of Tickets', value: `${booking.seats.length}` },
       { label: 'Total Amount', value: `Rs. ${booking.total_price}` },
-      { label: 'Booked On', value: this.formatDate(booking.time_booked) }
     ], marginX, yPos, usableWidth - 20);
 
-    yPos += 15;
+    yPos += 12;
     doc.setFontSize(10);
     doc.setTextColor(52, 73, 94);
-    doc.text('Contains booking verification data. Arrive 30 mins early.', marginX, yPos);
-    
+    doc.text('Contains booking verification data. Please carry a valid ID.', marginX, yPos);
+
     doc.setFontSize(10);
     doc.setTextColor(100, 100, 100);
-    doc.text('Thank you for choosing EVENTRO!', 105, 280, { align: 'center' });
-    doc.text('Please arrive 30 minutes before the show time.', 105, 290, { align: 'center' });
+    doc.text('Thank you for choosing EVENTRO!', 105, 285, { align: 'center' });
+    doc.text('Arrive 30 minutes before show time.', 105, 293, { align: 'center' });
     
     const safeEventName = eventName.replace(/[^a-zA-Z0-9]/g, '_');
     const fileName = `EVENTRO_Ticket_${booking.booking_id}_${safeEventName}.pdf`;

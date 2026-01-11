@@ -13,8 +13,7 @@ export interface Event{
 export interface CreateEventRequest {
     name: string;
     description: string;
-    duration: string;
+    duration: number;
     category: string;
     artist_ids: string[];
-    artist_names?: string[];
 }

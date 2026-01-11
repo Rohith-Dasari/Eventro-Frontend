@@ -17,7 +17,7 @@
       </div>
       <div class="detail-row"><strong>Seat Numbers:</strong> {{ booking.seats.join(', ') }}</div>
       <div class="detail-row"><strong>Total Amount:</strong> ₹{{ booking.total_price }}</div>
-      <div class="detail-row"><strong>Number of Tickets:</strong> {{ booking.num_tickets_booked }}</div>
+      <div class="detail-row"><strong>Number of Tickets:</strong> {{ booking.seats.length }}</div>
     </div>
 
     <div class="dialog-actions">

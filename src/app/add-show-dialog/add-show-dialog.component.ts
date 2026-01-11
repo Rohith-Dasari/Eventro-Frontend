@@ -89,9 +89,15 @@ export class AddShowDialogComponent {
 
     this.venueService.getVenues(hostId).subscribe({
       next: (data) => {
-        this.venues = data
-        .filter((v) => !v.IsBlocked)
-        .map((v) => ({ id: v.ID, name: v.Name }));
+        const normalized = (Array.isArray(data) ? data : data ? [data] : []).map((v: any) => ({
+          ID: v?.ID ?? v?.id ?? '',
+          Name: v?.Name ?? v?.name ?? '',
+          IsBlocked: v?.IsBlocked ?? v?.is_blocked ?? false,
+        }));
+
+        this.venues = normalized
+          .filter((v) => !v.IsBlocked)
+          .map((v) => ({ id: v.ID, name: v.Name }));
       },
       error: (err) => console.error('Error loading venues:', err),
     });

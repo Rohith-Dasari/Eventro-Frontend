@@ -11,9 +11,9 @@ import { mapToData } from '../shared/operators/map-to-data';
 export class UserService {
   private httpClient = inject(HttpClient);
 
-  getProfile(email: string): Observable<UserProfile> {
+  getProfile(user_id: string): Observable<UserProfile> {
     return this.httpClient
-      .get<ApiResponse<UserProfile>>(`users/email/${email}`)
+      .get<ApiResponse<UserProfile>>(`users/${user_id}`)
       .pipe(mapToData<UserProfile>());
   }
 

@@ -1,6 +1,6 @@
 <app-spinner [visible]="isDashboardLoading"></app-spinner>
 
-@if(role=="Customer"){
+@if(role=="customer"){
   @if(upcomingBookings.length>0){
   <app-upcoming-bookings-row 
     title="Upcoming Bookings"
@@ -25,10 +25,10 @@
 </app-upcoming-booking-details>
 
 <div class="events-header">
-  <h2 class="events-title">{{ role === 'Admin' ? 'Unblocked Events Near You' : 'Events Near You' }}</h2>
+  <h2 class="events-title">{{ role === 'admin' ? 'Unblocked Events Near You' : 'Events Near You' }}</h2>
 
   <button
-    *ngIf="role === 'Admin'||role==='Host'"
+    *ngIf="role === 'admin'||role==='host'"
     pButton
     icon="pi pi-plus"
     class="add-btn"
@@ -51,7 +51,7 @@
   </div>
 }
 
-@if (role=="Admin"){
+@if (role=="admin"){
   <h2 class="events-title">Blocked Events</h2>
 
   @if(blockedEvents.length>0){
@@ -75,7 +75,7 @@
   (eventAdded)="refreshEvents()">
 </app-add-event-dialog>
 
-@if (role=="Host"){
+@if (role=="host"){
   <h2 class ="events-title">Events Hosted By You</h2>
   @if(hostedEvents.length>0){
     <app-events-row 

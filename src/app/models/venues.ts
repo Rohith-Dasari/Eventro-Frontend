@@ -5,7 +5,6 @@ export interface Venues{
         "HostID": string,
         "City": string,
         "State": string,
-        "IsSeatLayoutRequired": boolean,
         "IsBlocked": boolean
 }
 

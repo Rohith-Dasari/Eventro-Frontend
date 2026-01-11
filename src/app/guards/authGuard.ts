@@ -29,8 +29,8 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     }
 
     const user = this.auth.userSignal();
-    const userRole = user?.role || localStorage.getItem('role');
-    const allowedRoles = route.data?.['roles'] as string[] | undefined;
+    const userRole = (user?.role || localStorage.getItem('role'))?.toLowerCase();
+    const allowedRoles = (route.data?.['roles'] as string[] | undefined)?.map(r => r.toLowerCase());
 
     if (!allowedRoles || allowedRoles.length === 0) {
       return true;
@@ -40,9 +40,9 @@ export class AuthGuard implements CanActivate, CanActivateChild {
       return true;
     }
 
-    if (userRole === 'Customer') return this.router.parseUrl('/dashboard/events');
-    if (userRole === 'Host') return this.router.parseUrl('/dashboard/venues');
-    if (userRole === 'Admin') return this.router.parseUrl('/dashboard/events');
+    if (userRole === 'customer') return this.router.parseUrl('/dashboard/events');
+    if (userRole === 'host') return this.router.parseUrl('/dashboard/venues');
+    if (userRole === 'admin') return this.router.parseUrl('/dashboard/events');
 
     return this.router.parseUrl('/login');
   }

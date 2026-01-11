@@ -17,7 +17,7 @@ export class EventService {
   getEvents(): Observable<Event[]> {
     const params = new HttpParams()
       .set('city', this.getSelectedCity())
-      .set('isBlocked', 'false');
+      .set('is_blocked', 'false');
     return this.httpClient
       .get<ApiResponse<Event[]>>('events', { params })
       .pipe(mapToData<Event[]>());
@@ -44,8 +44,9 @@ export class EventService {
 
   //this will only bring blocked events
   getBlockedEvents(): Observable<Event[]> {
+    const params = new HttpParams().set('is_blocked', 'true');
     return this.httpClient
-      .get<ApiResponse<Event[]>>('events?isBlocked=true')
+      .get<ApiResponse<Event[]>>('events', { params })
       .pipe(mapToData<Event[]>());
   }
 
@@ -67,7 +68,7 @@ export class EventService {
 
   getShows(eventId: string): Observable<any> {
     const params = new HttpParams()
-      .set('eventID', eventId)
+      .set('event_id', eventId)
       .set('city', this.getSelectedCity());
     return this.httpClient
       .get<ApiResponse<any>>('shows', { params })
@@ -76,8 +77,8 @@ export class EventService {
 
   getShowsByHostAndEvent(eventId: string, hostID: string): Observable<any> {
     const params = new HttpParams()
-      .set('eventID', eventId)
-      .set('hostID', hostID)
+      .set('event_id', eventId)
+      .set('host_id', hostID)
       .set('city', this.getSelectedCity());
 
     return this.httpClient
@@ -86,20 +87,20 @@ export class EventService {
   }
 
   getVenue(venueId: string): Observable<any> {
-    let params = new HttpParams().set('venueId', venueId);
+    let params = new HttpParams().set('venue_id', venueId);
     return this.httpClient
       .get<ApiResponse<any>>('venues', { params })
       .pipe(mapToData<any>());
   }
 
   getShowById(showId: string): Observable<any> {
-    let params = new HttpParams().set('showId', showId);
+    let params = new HttpParams().set('show_id', showId);
     return this.httpClient
       .get<ApiResponse<any>>('shows', { params })
       .pipe(mapToData<any>());
   }
   getShowsByHostId(hostId: string): Observable<any> {
-    let params = new HttpParams().set('hostId', hostId);
+    let params = new HttpParams().set('host_id', hostId);
     return this.httpClient
       .get<ApiResponse<any>>('shows', { params })
       .pipe(mapToData<any>());

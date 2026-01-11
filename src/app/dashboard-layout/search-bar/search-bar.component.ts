@@ -47,7 +47,7 @@ export class SearchBarComponent implements OnDestroy {
       )
       .subscribe(results => {
         this.searchResults = results;
-        if (this.authService.getRole() === 'Customer') {
+        if ((this.authService.getRole() || '').toLowerCase() === 'customer') {
           this.searchResults = this.searchResults.filter(event => !event.is_blocked);
         }
         this.showResults = this.searchResults.length > 0;
