@@ -31,20 +31,25 @@ export class EventService {
 
   searchEventsByName(
     name: string,
-    category: string | null
+    category: string | null,
+    includeCity = false
   ): Observable<Event[]> {
     let params = new HttpParams().set('name', name);
     if (category) {
       params = params.set('category', category);
+    }
+    if (includeCity) {
+      params = params.set('city', this.getSelectedCity());
     }
     return this.httpClient
       .get<ApiResponse<Event[]>>('events', { params })
       .pipe(mapToData<Event[]>());
   }
 
-  //this will only bring blocked events
   getBlockedEvents(): Observable<Event[]> {
-    const params = new HttpParams().set('is_blocked', 'true');
+    const params = new HttpParams()
+      .set('city', this.getSelectedCity())
+      .set('is_blocked', 'true');
     return this.httpClient
       .get<ApiResponse<Event[]>>('events', { params })
       .pipe(mapToData<Event[]>());

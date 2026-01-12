@@ -26,6 +26,8 @@ export class SearchBarComponent implements OnDestroy {
   private searchTerm = new Subject<string>();
   private destroy$ = new Subject<void>();
   private authService = inject(AuthService);
+  private readonly isCustomer =
+    (this.authService.getRole() || '').toLowerCase() === 'customer';
 
   @Output() searchTriggered = new EventEmitter<string>();
 
@@ -42,12 +44,18 @@ export class SearchBarComponent implements OnDestroy {
       .pipe(
         debounceTime(500),
         distinctUntilChanged(),
-        switchMap(term => this.eventService.searchEventsByName(term, this.selectedCategory)),
+        switchMap(term =>
+          this.eventService.searchEventsByName(
+            term,
+            this.selectedCategory,
+            this.isCustomer
+          )
+        ),
         takeUntil(this.destroy$)
       )
       .subscribe(results => {
         this.searchResults = results;
-        if ((this.authService.getRole() || '').toLowerCase() === 'customer') {
+        if (this.isCustomer) {
           this.searchResults = this.searchResults.filter(event => !event.is_blocked);
         }
         this.showResults = this.searchResults.length > 0;
