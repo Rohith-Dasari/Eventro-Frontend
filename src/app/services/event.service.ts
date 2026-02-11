@@ -13,7 +13,6 @@ export class EventService {
   private httpClient = inject(HttpClient);
   private locationService = inject(LocationService);
 
-  //this will only bring unblocked events
   getEvents(): Observable<Event[]> {
     const params = new HttpParams()
       .set('city', this.getSelectedCity())
@@ -32,7 +31,7 @@ export class EventService {
   searchEventsByName(
     name: string,
     category: string | null,
-    includeCity = false
+    includeCity = false,
   ): Observable<Event[]> {
     let params = new HttpParams().set('name', name);
     if (category) {
