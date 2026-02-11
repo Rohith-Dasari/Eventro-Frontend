@@ -1,6 +1,21 @@
-import { Component, EventEmitter, Output, OnDestroy, ViewChild, ElementRef, inject } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Output,
+  OnDestroy,
+  ViewChild,
+  ElementRef,
+  inject,
+} from '@angular/core';
 import { Router } from '@angular/router';
-import { Subject, debounceTime, distinctUntilChanged, map, switchMap, takeUntil } from 'rxjs';
+import {
+  Subject,
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  switchMap,
+  takeUntil,
+} from 'rxjs';
 import { EventService } from '../../services/event.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -12,9 +27,8 @@ import { AuthService } from '../../services/auth.service';
   selector: 'app-search-bar',
   templateUrl: './search-bar.component.html',
   styleUrl: './search-bar.component.scss',
-  imports: [CommonModule, FormsModule, InputTextModule]
+  imports: [CommonModule, FormsModule, InputTextModule],
 })
-
 export class SearchBarComponent implements OnDestroy {
   @ViewChild('searchInput') searchInput?: ElementRef<HTMLInputElement>;
   isFocused = false;
@@ -44,7 +58,7 @@ export class SearchBarComponent implements OnDestroy {
       .pipe(
         debounceTime(500),
         distinctUntilChanged(),
-        switchMap(term =>
+        switchMap((term) =>
           this.eventService.searchEventsByName(
             term,
             this.selectedCategory,
@@ -53,10 +67,12 @@ export class SearchBarComponent implements OnDestroy {
         ),
         takeUntil(this.destroy$)
       )
-      .subscribe(results => {
+      .subscribe((results) => {
         this.searchResults = results;
         if (this.isCustomer) {
-          this.searchResults = this.searchResults.filter(event => !event.is_blocked);
+          this.searchResults = this.searchResults.filter(
+            (event) => !event.is_blocked
+          );
         }
         this.showResults = this.searchResults.length > 0;
       });
@@ -82,9 +98,11 @@ export class SearchBarComponent implements OnDestroy {
     const navigationExtras = { state: { selectedEvent: event } };
 
     if (this.router.url === targetUrl) {
-      this.router.navigateByUrl('/dashboard/events', { skipLocationChange: true }).then(() => {
-        this.router.navigate([targetUrl], navigationExtras);
-      });
+      this.router
+        .navigateByUrl('/dashboard/events', { skipLocationChange: true })
+        .then(() => {
+          this.router.navigate([targetUrl], navigationExtras);
+        });
     } else {
       this.router.navigate([targetUrl], navigationExtras);
     }
